@@ -1,0 +1,10 @@
+# Xcode
+#
+
+# Cocoapods
+Pods/
+
+# MacOS
+.DS_Store
+
+*.lock

@@ -1,0 +1,24 @@
+/* 
+  Localizable.strings
+  VOLCDemo
+
+  Created by wangzhiyong on 2021/5/31.
+  
+*/
+
+"Setting_Hard_Decode" = "hard decode";
+"Setting_H265" = "H265";
+"Setting_Preload" = "preload";
+"Setting_Engine_ReportLog" = "engine log report";
+"Setting_MDL_ReportLog" = "MDL log report";
+"Setting_Device_Id" = "device id";
+"Setting_Device_Copy" = "copy device id";
+
+"tip_copy_success" = "copy success!";
+"tip_clean_success" = "clean success!";
+"tip_net_not_reachable" = "net not reachable";
+"tip_net_reachable_wifi" = "wifi reachable";
+"tip_net_reachable_4g" = "4g reachable";
+
+"title_small_video" = "small video";
+"title_clean_cache" = "clean cache";
