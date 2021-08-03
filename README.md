@@ -9,8 +9,8 @@ VOLCDemo基于TTSDK点播SDK构建，当前版本以小视频场景演示，后�
 
 ```
 ├─ TTSDK 
-|  ├─ TTSDKFramework-1.17.2.3-premium-ta.zip  // 解压后是高级版动态库
-|  ├─ TTSDKFramework-1.17.2.3-standard-ta.zip // 解压后是基础版动态库
+|  ├─ TTSDKFramework-x.x.x.x-premium-ta.zip  // 解压后是高级版动态库
+|  ├─ TTSDKFramework-x.x.x.x-standard-ta.zip // 解压后是基础版动态库
 ├─ VOLCDemo 
 └── VOLCDemo
     ├── Base    // Appdelegate
@@ -23,7 +23,7 @@ VOLCDemo基于TTSDK点播SDK构建，当前版本以小视频场景演示，后�
 
 ## VOLCDemo运行
 
-1. 进入 VOLCDemo/VOLCDemo 文件夹
+1. 进入 VEVodDemo-iOS/VOLCDemo 文件夹
 2. 执行 pod install
 3. 打开 VOLCDemo.xcworkspace 编译运行
 
