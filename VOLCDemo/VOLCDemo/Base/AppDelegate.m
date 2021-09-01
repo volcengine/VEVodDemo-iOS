@@ -17,6 +17,11 @@
 #endif
 
 
+#define kAppId      @"229234"
+#define kAppName    @"ToB_Demo"
+#define kChannel    @"test_channel"
+
+
 FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseDidAdd;
 FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseInfoDidUpdate;;
 FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
@@ -63,37 +68,22 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
 #pragma mark - TTSDK init
 
 - (void)initTTSDKWithOptions:(NSDictionary *)launchOptions {
-    NSString *appId = @"229234";
-    NSString *appName = @"ToB_Demo";
-    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSString *bundleId = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"];
-    NSString *channelName = @"test_channel"; // channel name
-    
     /// Initialize TTSDK, configure Lisence ，this step cannot be skipped !!!!!
     /// TTSDK default config app log, appLog depends on RangersAppLog SDK.
     /// If your APP has been connected to RangersAppLog SDK before, please set "configuration.shouldInitAppLog = NO".
-    TTSDKConfiguration *configuration = [TTSDKConfiguration defaultConfigurationWithAppID:appId];
-    configuration.appName = appName;
-    configuration.channel = channelName;
-    configuration.bundleID = bundleId;
+    TTSDKConfiguration *configuration = [TTSDKConfiguration defaultConfigurationWithAppID:kAppId];
+    configuration.appName = kAppName;
+    configuration.channel = kChannel;
     configuration.shouldInitAppLog = YES;
     configuration.serviceVendor = TTSDKServiceVendorCN;
+    configuration.bundleID = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"];
+    configuration.appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     configuration.licenseFilePath = [NSBundle.mainBundle pathForResource:@"VOLC-PlayerDemo.lic" ofType:nil];
 #if DEBUG
     /// add lisence observer，suggest debug open
     [self addLicenseObserver];
 #endif
     [TTSDKManager startWithConfiguration:configuration];
-    
-    
-    /// Initialize TTVideoEngine
-    NSDictionary *appInfo = @{TTVideoEngineAID: [NSNumber numberWithLongLong:[appId longLongValue]],
-                              TTVideoEngineAppName:appName,
-                              TTVideoEngineChannel:channelName,
-                              TTVideoEngineAppVersion:appVersion,
-                              TTVideoEngineServiceVendor:@(TTVideoEngineServiceVendorCN)
-    };
-    [TTVideoEngine configureAppInfo:appInfo];
     
     
     /// Configuration data loading module MDL (Media Data Loader)

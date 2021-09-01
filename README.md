@@ -61,7 +61,23 @@ pod 'TTSDK', 'x.x.x.x', :subspecs => [ # 推荐使用最新稳定版，具体版
 
 ## ChangeLog
 
-### Version 基础版：1.18.2.4-standard；高级版：1.18.2.4-premium（推荐使用） #
+
+#### Version 基础版：1.19.2.1-standard；高级版：1.19.2.1-premium（推荐使用）
+2021.08.23
+
+New Features:
+bugfix
+
+#### Version 基础版：1.19.1.1-standard；高级版：1.19.1.1-premium 
+2021.08.10
+
+New Features:
+logcat支持查看license 2.0相关信息
+和VESDK、CVSDK冲突依赖的问题修复 (boringssl)
+支持画中画小窗播放
+其它bugfix
+
+#### Version 基础版：1.18.2.4-standard；高级版：1.18.2.4-premium #
 2021.07.26
 
 New Features:
@@ -72,62 +88,6 @@ license过期后，支持回退至系统播放器
 其它bugfix
 
 
-### Version 基础版：1.18.1.3-standard；高级版：1.18.1.3-premium #
-2021.07.12
-
-New Features:
-支持对接火山引擎的httpdns服务
-倍速播放支持3倍速
-静态库解决符号库冲突的问题
-其它bugfix
-
-
-### Version 基础版：1.17.2.3-standard；高级版：1.17.2.3-premium（推荐使用） 
-2021.06.28
-
-New Features:
-1. 支持外挂字幕，支持全链路方案对接和纯客户端方案对接
-2. 支持dir_url播放方式下的h265/h264的软硬解灵活配置
-3. 上传SDK支持素材上传
-
-### Version 基础版：1.17.1.2-standard；高级版：1.17.1.2-premium 
-2021.06.15
-
-New Features:
-1. 提供 httpdns 接口
-2. 提供获取实时下载网速接口
-3. FFmpeg 支持本地 m3u8 中的 http 协议播放
-
-
-### Version 基础版：1.16.2.2-standard；高级版：1.16.2.2-premium 
-2021.05.31
-
-Bug Fix:
-1. 修复蒙版弹幕相关bug
-
-
-### Version 基础版：1.16.1.5-standard；高级版：1.16.1.5-premium 
-2021.05.17
-
-New Features:
-1. 支持蒙版弹幕
-
-
-### Version 基础版：1.15.2.2-standard；高级版：1.15.2.2-premium 
-2021.04.27
-
-New Features:
-1. h265 接口改造
-
-
-### Version 基础版：1.14.0.9-standard；高级版：1.14.0.9-premium 
-2021.04.13
-
-New Features:
-1. SDK 进行基础版、高级版和增值服务拆分，各版的功能说明请参考点播 SDK 介绍。
-2. License 鉴权全面升级为 License 2.0，支持 License 变更/续期和在线更新.
-3. License 2.0 介绍请参考应用管理；
-4. 新用户 SDK 集成请参考集成准备 ；
-5. 老用户 SDK 及 License 升级请参考License 2.0 升级说明。
+- [更多版本](https://www.volcengine.com/docs/4/66438)
 
 

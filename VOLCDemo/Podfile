@@ -6,7 +6,7 @@ source 'https://github.com/volcengine/volcengine-specs.git'
 platform :ios, '9.0'
 
 target 'VOLCDemo' do
-  pod 'TTSDK', '1.18.2.4-premium', :subspecs => [
+  pod 'TTSDK', '1.19.2.1-premium', :subspecs => [
     'Player',
   ]
   pod 'Masonry'
