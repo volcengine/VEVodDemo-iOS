@@ -77,16 +77,12 @@ NSString * const kSmallVideoFeedCellIdentifier = @"kSmallVideoFeedCellIdentifier
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         self.requestOffset = 0;
         [self loadVideoData:self.requestOffset];
-        [self.tableView.mj_header endRefreshing];
     }];
     
     @weakify(self);
     MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            @strongify(self);
-            [self loadVideoData:self.requestOffset];
-            [self.tableView.mj_footer endRefreshing];
-        });
+        @strongify(self);
+        [self loadVideoData:self.requestOffset];
     }];
     self.tableView.mj_footer = footer;
     
@@ -137,7 +133,7 @@ NSString * const kSmallVideoFeedCellIdentifier = @"kSmallVideoFeedCellIdentifier
 #pragma mark - Load Data
 
 - (void)loadVideoData:(NSInteger)requestOffset {
-    NSDictionary *paramDic = @{ @"userID" : @"small-video", @"offset" : @(requestOffset), @"pageSize" : @(5) };
+    NSDictionary *paramDic = @{ @"userID" : @"small-video", @"offset" : @(requestOffset), @"pageSize" : @(20) };
     @weakify(self);
     [VENetworkHelper requestDataWithUrl:VOLCSmallVideoRequestVideoModels httpMethod:@"POST" parameters:paramDic success:^(id  _Nonnull responseObject) {
         @strongify(self);
@@ -158,6 +154,9 @@ NSString * const kSmallVideoFeedCellIdentifier = @"kSmallVideoFeedCellIdentifier
             [self.videoModels addObjectsFromArray:tempVideoModles];
             [self.tableView reloadData];
             [self __play];
+            
+            /// update refresh view status
+            [self uddateRefreshViewStatus:requestOffset == 0 hasMoreData:tempVideoModles.count];
         }
     } failure:^(NSString * _Nonnull errorMessage) {
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -167,6 +166,17 @@ NSString * const kSmallVideoFeedCellIdentifier = @"kSmallVideoFeedCellIdentifier
     }];
 }
 
+- (void)uddateRefreshViewStatus:(BOOL)refresh hasMoreData:(BOOL)hasMore {
+    if (refresh) {
+        [self.tableView.mj_header endRefreshing];
+    } else {
+        if (hasMore) {
+            [self.tableView.mj_footer endRefreshing];
+        } else {
+            [self.tableView.footer endRefreshingWithNoMoreData];
+        }
+    }
+}
 
 #pragma mark - UITableView delegate
 
