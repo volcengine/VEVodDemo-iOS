@@ -7,8 +7,8 @@
 //
 
 #import "AppDelegate.h"
-#import "VOLCMainViewController.h"
-#import "VOLCUserGlobalConfiguration.h"
+#import "VEMainViewController.h"
+#import "VEUserGlobalConfiguration.h"
 #import <TTSDK/TTSDKManager.h>
 #import <TTSDK/TTVideoEngineHeader.h>
 
@@ -17,17 +17,14 @@
 #endif
 
 
-#define kAppId      @"229234"
-#define kAppName    @"ToB_Demo"
-#define kChannel    @"test_channel"
-
-
 FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseDidAdd;
 FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseInfoDidUpdate;;
 FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
 
 
 @interface AppDelegate ()
+
+@property (nonatomic, assign) UIInterfaceOrientation screenDirection;
 
 @end
 
@@ -39,14 +36,13 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
     self.window.frame = UIScreen.mainScreen.bounds;
     self.window.backgroundColor = [UIColor blackColor];
  
-    VOLCMainViewController *mainController = [VOLCMainViewController new];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:mainController];
+    VEMainViewController *mainController = [VEMainViewController new];
     
-    self.window.rootViewController = navigationController;
+    self.window.rootViewController = mainController;
     [self.window makeKeyAndVisible];
     
     /// global config
-    [VOLCUserGlobalConfiguration sharedInstance];
+    [VEUserGlobalConfiguration sharedInstance];
     
     /// init ttsdk
     [self initTTSDKWithOptions:launchOptions];
@@ -68,23 +64,28 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
 #pragma mark - TTSDK init
 
 - (void)initTTSDKWithOptions:(NSDictionary *)launchOptions {
+    NSString *appId = @"229234";
+    NSString *appName = @"ToB_Demo";
+    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSString *bundleId = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"];
+    NSString *channelName = @"test_channel"; // channel name
+    
     /// Initialize TTSDK, configure Lisence ，this step cannot be skipped !!!!!
     /// TTSDK default config app log, appLog depends on RangersAppLog SDK.
     /// If your APP has been connected to RangersAppLog SDK before, please set "configuration.shouldInitAppLog = NO".
-    TTSDKConfiguration *configuration = [TTSDKConfiguration defaultConfigurationWithAppID:kAppId];
-    configuration.appName = kAppName;
-    configuration.channel = kChannel;
+    TTSDKConfiguration *configuration = [TTSDKConfiguration defaultConfigurationWithAppID:appId];
+    configuration.appName = appName;
+    configuration.channel = channelName;
+    configuration.bundleID = bundleId;
+    configuration.appVersion = appVersion;
     configuration.shouldInitAppLog = YES;
     configuration.serviceVendor = TTSDKServiceVendorCN;
-    configuration.bundleID = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"];
-    configuration.appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     configuration.licenseFilePath = [NSBundle.mainBundle pathForResource:@"VOLC-PlayerDemo.lic" ofType:nil];
 #if DEBUG
     /// add lisence observer，suggest debug open
     [self addLicenseObserver];
 #endif
     [TTSDKManager startWithConfiguration:configuration];
-    
     
     /// Configuration data loading module MDL (Media Data Loader)
     /// When TTVideoEngine play video, MDL to download video data and manage video cache. MDL will act as a proxy for the player's I/O module. When there is no buffer, it can play while buffering, reducing playback pauses. When there is a cache, use the cache to start broadcasting to improve the speed of starting broadcasting.
@@ -96,7 +97,7 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
     
 #ifdef DEBUG
     // print debug log，suggest debug open
-    [TTVideoEngine setLogFlag:TTVideoEngineLogFlagPrint];
+    [TTVideoEngine setLogFlag:TTVideoEngineLogFlagEngine];
 #endif
 }
 
