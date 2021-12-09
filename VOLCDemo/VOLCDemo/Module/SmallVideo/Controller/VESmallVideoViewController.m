@@ -74,12 +74,13 @@ NSString * const kSmallVideoFeedCellIdentifier = @"kSmallVideoFeedCellIdentifier
     }];
     [self.tableView registerClass:[VESmallVideoFeedCell class] forCellReuseIdentifier:kSmallVideoFeedCellIdentifier];
     
+    @weakify(self);
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        @strongify(self);
         self.requestOffset = 0;
         [self loadVideoData:self.requestOffset];
     }];
     
-    @weakify(self);
     MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
         @strongify(self);
         [self loadVideoData:self.requestOffset];
@@ -173,7 +174,7 @@ NSString * const kSmallVideoFeedCellIdentifier = @"kSmallVideoFeedCellIdentifier
         if (hasMore) {
             [self.tableView.mj_footer endRefreshing];
         } else {
-            [self.tableView.footer endRefreshingWithNoMoreData];
+            [self.tableView.mj_footer endRefreshingWithNoMoreData];
         }
     }
 }

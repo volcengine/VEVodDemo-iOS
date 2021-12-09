@@ -304,8 +304,8 @@
 		2B3B6D32275F8B2500E3A479 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				2B3B6D33275F8B2500E3A479 /* VESmallVideoFeedCell.m */,
 				2B3B6D34275F8B2500E3A479 /* VESmallVideoFeedCell.h */,
+				2B3B6D33275F8B2500E3A479 /* VESmallVideoFeedCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
