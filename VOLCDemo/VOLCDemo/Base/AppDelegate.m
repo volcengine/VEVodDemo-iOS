@@ -7,8 +7,8 @@
 //
 
 #import "AppDelegate.h"
-#import "VOLCMainViewController.h"
-#import "VOLCUserGlobalConfiguration.h"
+#import "VEMainViewController.h"
+#import "VEUserGlobalConfiguration.h"
 #import <TTSDK/TTSDKManager.h>
 #import <TTSDK/TTVideoEngineHeader.h>
 
@@ -24,6 +24,8 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
 
 @interface AppDelegate ()
 
+@property (nonatomic, assign) UIInterfaceOrientation screenDirection;
+
 @end
 
 @implementation AppDelegate
@@ -34,14 +36,13 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
     self.window.frame = UIScreen.mainScreen.bounds;
     self.window.backgroundColor = [UIColor blackColor];
  
-    VOLCMainViewController *mainController = [VOLCMainViewController new];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:mainController];
+    VEMainViewController *mainController = [VEMainViewController new];
     
-    self.window.rootViewController = navigationController;
+    self.window.rootViewController = mainController;
     [self.window makeKeyAndVisible];
     
     /// global config
-    [VOLCUserGlobalConfiguration sharedInstance];
+    [VEUserGlobalConfiguration sharedInstance];
     
     /// init ttsdk
     [self initTTSDKWithOptions:launchOptions];
@@ -76,6 +77,7 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
     configuration.appName = appName;
     configuration.channel = channelName;
     configuration.bundleID = bundleId;
+    configuration.appVersion = appVersion;
     configuration.shouldInitAppLog = YES;
     configuration.serviceVendor = TTSDKServiceVendorCN;
     configuration.licenseFilePath = [NSBundle.mainBundle pathForResource:@"VOLC-PlayerDemo.lic" ofType:nil];
@@ -84,17 +86,6 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
     [self addLicenseObserver];
 #endif
     [TTSDKManager startWithConfiguration:configuration];
-    
-    
-    /// Initialize TTVideoEngine
-    NSDictionary *appInfo = @{TTVideoEngineAID: [NSNumber numberWithLongLong:[appId longLongValue]],
-                              TTVideoEngineAppName:appName,
-                              TTVideoEngineChannel:channelName,
-                              TTVideoEngineAppVersion:appVersion,
-                              TTVideoEngineServiceVendor:@(TTVideoEngineServiceVendorCN)
-    };
-    [TTVideoEngine configureAppInfo:appInfo];
-    
     
     /// Configuration data loading module MDL (Media Data Loader)
     /// When TTVideoEngine play video, MDL to download video data and manage video cache. MDL will act as a proxy for the player's I/O module. When there is no buffer, it can play while buffering, reducing playback pauses. When there is a cache, use the cache to start broadcasting to improve the speed of starting broadcasting.
@@ -106,7 +97,7 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
     
 #ifdef DEBUG
     // print debug log，suggest debug open
-    [TTVideoEngine setLogFlag:TTVideoEngineLogFlagPrint];
+    [TTVideoEngine setLogFlag:TTVideoEngineLogFlagEngine];
 #endif
 }
 
