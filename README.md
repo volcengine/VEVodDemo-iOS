@@ -58,7 +58,7 @@ pod 'TTSDK', 'x.x.x.x', :subspecs => [ # 推荐使用最新稳定版，具体版
 - [基础功能接入](https://www.volcengine.com/docs/4/65779)
 - [高级功能接入](https://www.volcengine.com/docs/4/67626)
 - [预加载功能接入](https://www.volcengine.com/docs/4/65780)
-- [控件层使用]（https://bytedance.feishu.cn/docx/doxcnqF1Y9NIzOQH0m8OVQ0cPFo）
+- [控件层使用](https://bytedance.feishu.cn/docx/doxcnqF1Y9NIzOQH0m8OVQ0cPFo)
 
 
 
