@@ -66,8 +66,14 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
 - (void)initTTSDKWithOptions:(NSDictionary *)launchOptions {
     NSString *appId = @"229234";
     
-    /// Initialize TTSDK, configure Lisence ，this step cannot be skipped !!!!!
+    /// initialize ttsdk, configure Lisence ，this step cannot be skipped !!!!!
     TTSDKConfiguration *configuration = [TTSDKConfiguration defaultConfigurationWithAppID:appId licenseName:@"VOLC-PlayerDemo"];
+    
+    /// config vod cache size
+    TTSDKVodConfiguration *vodConfig = [[TTSDKVodConfiguration alloc] init];
+    vodConfig.cacheMaxSize = 100 * 1024 *1024;
+    configuration.vodConfiguration = vodConfig;
+    
 #if DEBUG
     /// add lisence observer，suggest debug open
     [self addLicenseObserver];
