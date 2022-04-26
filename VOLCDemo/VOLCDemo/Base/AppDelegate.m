@@ -65,35 +65,14 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
 
 - (void)initTTSDKWithOptions:(NSDictionary *)launchOptions {
     NSString *appId = @"229234";
-    NSString *appName = @"ToB_Demo";
-    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSString *bundleId = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"];
-    NSString *channelName = @"test_channel"; // channel name
     
     /// Initialize TTSDK, configure Lisence ，this step cannot be skipped !!!!!
-    /// TTSDK default config app log, appLog depends on RangersAppLog SDK.
-    /// If your APP has been connected to RangersAppLog SDK before, please set "configuration.shouldInitAppLog = NO".
-    TTSDKConfiguration *configuration = [TTSDKConfiguration defaultConfigurationWithAppID:appId];
-    configuration.appName = appName;
-    configuration.channel = channelName;
-    configuration.bundleID = bundleId;
-    configuration.appVersion = appVersion;
-    configuration.shouldInitAppLog = YES;
-    configuration.serviceVendor = TTSDKServiceVendorCN;
-    configuration.licenseFilePath = [NSBundle.mainBundle pathForResource:@"VOLC-PlayerDemo.lic" ofType:nil];
+    TTSDKConfiguration *configuration = [TTSDKConfiguration defaultConfigurationWithAppID:appId licenseName:@"VOLC-PlayerDemo"];
 #if DEBUG
     /// add lisence observer，suggest debug open
     [self addLicenseObserver];
 #endif
     [TTSDKManager startWithConfiguration:configuration];
-    
-    /// Configuration data loading module MDL (Media Data Loader)
-    /// When TTVideoEngine play video, MDL to download video data and manage video cache. MDL will act as a proxy for the player's I/O module. When there is no buffer, it can play while buffering, reducing playback pauses. When there is a cache, use the cache to start broadcasting to improve the speed of starting broadcasting.
-    /// Note: Please configure and enable the MDL module before creating the TTVideoEngine instance.
-    TTVideoEngine.ls_localServerConfigure.maxCacheSize = 300 * 1024 * 1024; // example 300M （default 100M）
-    NSString *cacheDir = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"com.video.cache"];
-    TTVideoEngine.ls_localServerConfigure.cachDirectory = cacheDir; // cache path
-    [TTVideoEngine ls_start]; // start MDL
     
 #ifdef DEBUG
     // print debug log，suggest debug open
