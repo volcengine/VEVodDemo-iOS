@@ -103,9 +103,6 @@ NSString * const kSmallVideoFeedCellIdentifier = @"kSmallVideoFeedCellIdentifier
 #pragma mark - Engine Strategy
 
 - (void)enableVideoEngineStategy {
-    if ([[VEUserGlobalConfiguration sharedInstance] commonStrategyEnabled]) {
-        [TTVideoEngine enableEngineStrategy:TTVideoEngineStrategyTypeCommon scene:TTVEngineStrategySceneSmallVideo];
-    }
     if ([[VEUserGlobalConfiguration sharedInstance] preloadStrategyEnabled]) {
         [TTVideoEngine enableEngineStrategy:TTVideoEngineStrategyTypePreload scene:TTVEngineStrategySceneSmallVideo];
     }

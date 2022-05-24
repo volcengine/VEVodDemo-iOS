@@ -13,15 +13,12 @@
 
 typedef NS_ENUM(NSUInteger, UserGlobalConfigType) {
     // strategy
-    UserGlobalConfigCommonStrategy,
     UserGlobalConfigPreloadStrategy,
     UserGlobalConfigPreRenderStrategy,
     
     // common
     UserGlobalConfigH265,
     UserGlobalConfigHardDecode,
-    UserGlobalConfigEngineReportLog,
-    UserGlobalConfigMDLReportLog,
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -29,15 +26,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface VEUserGlobalConfiguration : NSObject<NSCoding>
 
 // strategy
-@property (nonatomic, assign, readonly) BOOL commonStrategyEnabled;
 @property (nonatomic, assign, readonly) BOOL preloadStrategyEnabled;
 @property (nonatomic, assign, readonly) BOOL preRenderStrategyEnabled;
 
 // common
 @property (nonatomic, assign, readonly) BOOL isH265Enabled;
 @property (nonatomic, assign, readonly) BOOL isHardDecodeOn;
-@property (nonatomic, assign, readonly) BOOL isEngineReportLog;
-@property (nonatomic, assign, readonly) BOOL isMDLReportLog;
 
 + (VEUserGlobalConfiguration *)sharedInstance;
 
