@@ -41,49 +41,47 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
     self.window.rootViewController = mainController;
     [self.window makeKeyAndVisible];
     
-    /// global config
+    /// Deme全局设置，业务不要设置
     [VEUserGlobalConfiguration sharedInstance];
     
-    /// init ttsdk
+    /// 初始化SDK
     [self initTTSDKWithOptions:launchOptions];
     
     return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-    /// Don’t forget, this code must be added ！！！
-    [TTVideoEngine stopOpenGLESActivity];
+    /// TTSDK 1.28.1 以下版本需要设置，否则会出现有声音没画面问题
+//    [TTVideoEngine stopOpenGLESActivity];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    /// Don’t forget, this code must be added ！！！
-    [TTVideoEngine startOpenGLESActivity];
+    /// TTSDK 1.28.1 以下版本需要设置，否则会出现有声音没画面问题
+//    [TTVideoEngine startOpenGLESActivity];
 }
 
 
 #pragma mark - TTSDK init
 
 - (void)initTTSDKWithOptions:(NSDictionary *)launchOptions {
+#ifdef DEBUG
+    /// 建议Debug期间打开Log开关
+    [TTVideoEngine setLogFlag:TTVideoEngineLogFlagEngine];
+    /// 建议Debug期间打开，监听 license 是否加载成功，
+    [self addLicenseObserver];
+#endif
+    
     NSString *appId = @"229234";
     
     /// initialize ttsdk, configure Lisence ，this step cannot be skipped !!!!!
     TTSDKConfiguration *configuration = [TTSDKConfiguration defaultConfigurationWithAppID:appId licenseName:@"VOLC-PlayerDemo"];
     
-    /// config vod cache size
+    /// 播放器CacheSize，默认100M，建议设置 300M
     TTSDKVodConfiguration *vodConfig = [[TTSDKVodConfiguration alloc] init];
-    vodConfig.cacheMaxSize = 100 * 1024 *1024;
+    vodConfig.cacheMaxSize = 300 * 1024 *1024; // 300M
     configuration.vodConfiguration = vodConfig;
     
-#if DEBUG
-    /// add lisence observer，suggest debug open
-    [self addLicenseObserver];
-#endif
     [TTSDKManager startWithConfiguration:configuration];
-    
-#ifdef DEBUG
-    // print debug log，suggest debug open
-    [TTVideoEngine setLogFlag:TTVideoEngineLogFlagEngine];
-#endif
 }
 
 

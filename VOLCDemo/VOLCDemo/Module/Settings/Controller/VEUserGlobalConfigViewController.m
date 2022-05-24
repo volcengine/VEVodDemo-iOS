@@ -177,17 +177,6 @@ NSString *const kSettingDeviceIdViewCellIdentifier = @"kSettingDeviceIdViewCellI
                 case VESettingTypeH265:
                     [globalConfigs setSwitch:model.isSwitchOn forType:UserGlobalConfigH265];
                     break;
-                case VESettingTypeEngineReportLog:
-                    [globalConfigs setSwitch:model.isSwitchOn forType:UserGlobalConfigEngineReportLog];
-                    break;
-                case VESettingTypeMDLReportLog: {
-                    [globalConfigs setSwitch:model.isSwitchOn forType:UserGlobalConfigMDLReportLog];
-                    [TTVideoEngine ls_localServerConfigure].reportNetLogEnable = model.isSwitchOn;
-                }
-                    break;
-                case VESettingTypeCommonStrategy:
-                    [globalConfigs setSwitch:model.isSwitchOn forType:UserGlobalConfigCommonStrategy];
-                    break;
                 case VESettingTypePreloadStrategy:
                     [globalConfigs setSwitch:model.isSwitchOn forType:UserGlobalConfigPreloadStrategy];
                     break;
@@ -239,11 +228,6 @@ NSString *const kSettingDeviceIdViewCellIdentifier = @"kSettingDeviceIdViewCellI
     if (!_datasource) {
         VEUserGlobalConfiguration *globalConfig = [VEUserGlobalConfiguration sharedInstance];
         
-        VEGlobalConfigModel *commonStrategy = [[VEGlobalConfigModel alloc] init];
-        commonStrategy.title = NSLocalizedString(@"Setting_Strategy_Common", nil);
-        commonStrategy.isSwitchOn = globalConfig.commonStrategyEnabled;
-        commonStrategy.settingType = VESettingTypeCommonStrategy;
-        
         VEGlobalConfigModel *preloadStrategy = [[VEGlobalConfigModel alloc] init];
         preloadStrategy.title = NSLocalizedString(@"Setting_Strategy_Preload", nil);
         preloadStrategy.isSwitchOn = globalConfig.preloadStrategyEnabled;
@@ -266,35 +250,22 @@ NSString *const kSettingDeviceIdViewCellIdentifier = @"kSettingDeviceIdViewCellI
         h265Config.isSwitchOn = globalConfig.isH265Enabled;
         h265Config.settingType = VESettingTypeH265;
         
-        // engine report log
-        VEGlobalConfigModel *engineLog = [[VEGlobalConfigModel alloc] init];
-        engineLog.title = NSLocalizedString(@"Setting_Engine_ReportLog", nil);
-        engineLog.isSwitchOn = globalConfig.isEngineReportLog;
-        engineLog.settingType = VESettingTypeEngineReportLog;
-        
-        // mdl report log
-        VEGlobalConfigModel *mdlLog = [[VEGlobalConfigModel alloc] init];
-        mdlLog.title = NSLocalizedString(@"Setting_MDL_ReportLog", nil);
-        mdlLog.isSwitchOn = globalConfig.isMDLReportLog;
-        mdlLog.settingType = VESettingTypeMDLReportLog;
-        
         // copy device id
         VEGlobalConfigModel *deviceId = [[VEGlobalConfigModel alloc] init];
         deviceId.title = NSLocalizedString(@"Setting_Device_Id", nil);
-        deviceId.deviceId = [[BDAutoTrack sharedTrack] rangersDeviceID] ?: @"null";
+        deviceId.deviceId = [[BDAutoTrack trackWithAppID:@"229234"] rangersDeviceID] ?: @"null";
         deviceId.settingType = VESettingTypeCopyDeviceId;
-        
         
         // section 1
         NSArray *sectionSource = nil;
         if (self.sence == VESenceType_SmallVideo) {
-            sectionSource = @[commonStrategy, preloadStrategy, preRenderStrategy];
+            sectionSource = @[preloadStrategy, preRenderStrategy];
         }
 
         // section 2
         NSArray *sectionSource2 = nil;
         if (self.sence == VESenceType_SmallVideo) {
-            sectionSource2 = @[hardDecode, h265Config, engineLog, mdlLog, deviceId];
+            sectionSource2 = @[hardDecode, h265Config, deviceId];
         }
         
         _datasource = @[sectionSource, sectionSource2];

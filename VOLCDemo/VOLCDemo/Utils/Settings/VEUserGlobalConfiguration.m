@@ -54,9 +54,6 @@ NSString * _Nullable kUserDefaultGlobalConfig = @"kUserDefaultGlobalConfig";
 - (void)setSwitch:(BOOL)isOn forType:(UserGlobalConfigType)type {
     //make sure here is no warnning
     switch (type) {
-        case UserGlobalConfigCommonStrategy:
-            self.commonStrategyEnabled = isOn;
-            break;
         case UserGlobalConfigPreloadStrategy:
             self.preloadStrategyEnabled = isOn;
             break;
@@ -69,11 +66,6 @@ NSString * _Nullable kUserDefaultGlobalConfig = @"kUserDefaultGlobalConfig";
         case UserGlobalConfigHardDecode:
             self.isHardDecodeOn = isOn;
             break;
-        case UserGlobalConfigEngineReportLog:
-            self.isEngineReportLog = isOn;
-            break;
-        case UserGlobalConfigMDLReportLog:
-            self.isMDLReportLog = isOn;
             break;
     }
 }

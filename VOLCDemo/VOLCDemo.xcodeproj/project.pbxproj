@@ -728,7 +728,7 @@
 					"$(PROJECT_DIR)/VOLCDemo/Utils/OneKit/StartUp",
 					"$(PROJECT_DIR)/VOLCDemo/Utils/OneKit/BaseKit",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.volc.voddemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -759,7 +759,7 @@
 					"$(PROJECT_DIR)/VOLCDemo/Utils/OneKit/StartUp",
 					"$(PROJECT_DIR)/VOLCDemo/Utils/OneKit/BaseKit",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.volc.voddemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
