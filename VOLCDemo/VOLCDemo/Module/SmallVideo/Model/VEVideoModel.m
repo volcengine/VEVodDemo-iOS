@@ -42,13 +42,4 @@
     return source;
 }
 
-+ (TTVideoEngineMultiEncodingUrlSource *)videoEngineCodecUrlSource:(VEVideoModel *)videoModel {
-    TTVideoEngineMultiEncodingUrlSource *codecUrlSource = [[TTVideoEngineMultiEncodingUrlSource alloc] initWithVideoId:videoModel.videoId];
-    [codecUrlSource addUrl:videoModel.playUrl forCodec:TTVideoEngineH264 withCacheKey:videoModel.playUrl.vloc_md5String andVideoId:videoModel.videoId andDecryptionKey:nil];
-    [codecUrlSource addUrl:videoModel.h265PlayUrl forCodec:TTVideoEngineh265 withCacheKey:videoModel.h265PlayUrl.vloc_md5String andVideoId:videoModel.videoId andDecryptionKey:nil];
-    codecUrlSource.title = videoModel.title;
-    codecUrlSource.cover = videoModel.coverUrl;
-    return codecUrlSource;
-}
-
 @end
