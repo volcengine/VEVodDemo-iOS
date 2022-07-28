@@ -428,6 +428,7 @@
 				2BEC93BF2657907300C64503 /* Frameworks */,
 				2BEC93C02657907300C64503 /* Resources */,
 				7ECE482F4A5502C5B185868F /* [CP] Copy Pods Resources */,
+				B10AFD87F4D86340305B849C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -524,6 +525,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-VOLCDemo/Pods-VOLCDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B10AFD87F4D86340305B849C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-VOLCDemo/Pods-VOLCDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-VOLCDemo/Pods-VOLCDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-VOLCDemo/Pods-VOLCDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -742,7 +760,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Volcano Engine Technology Co.,Ltd. (3XMD9D6A65)";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 0;
 				DEVELOPMENT_TEAM = 3XMD9D6A65;
 				ENABLE_BITCODE = NO;
@@ -762,6 +781,7 @@
 				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.volc.voddemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = com.bytedance.volc.voddemo;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

@@ -6,7 +6,10 @@ source 'https://github.com/volcengine/volcengine-specs.git'
 platform :ios, '9.0'
 
 target 'VOLCDemo' do
-  pod 'TTSDK', '1.28.1.1-premium', :subspecs => ['Player']
+  # 添加 TTSDK
+  pod 'TTSDK', '1.30.2.1-premium', :subspecs => ['Player']
+  
+  # 添加 Demo 运行需要依赖的三方库
   pod 'Masonry'
   pod 'SDWebImage'
   pod 'MBProgressHUD', '~> 1.2.0'

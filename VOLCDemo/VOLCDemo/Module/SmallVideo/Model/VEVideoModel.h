@@ -37,8 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (TTVideoEngineUrlSource *)videoEngineUrlSource:(VEVideoModel *)videoModel;
 
-+ (TTVideoEngineMultiEncodingUrlSource *)videoEngineCodecUrlSource:(VEVideoModel *)videoModel;
-
 @end
 
 NS_ASSUME_NONNULL_END

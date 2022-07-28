@@ -3,17 +3,10 @@
 VOLCDemo基于TTSDK点播SDK构建，当前版本以小视频场景演示，后续会持续迭代，短视频、长视频场景的使用；
 目标帮助业务侧快速集成的点播模块，通过迭代短视频、小视频、长视频等场景帮助业务侧快速实现接入最佳实践；
 
-TTSDK v_1.23.1.4 版本增加播放器策略模块，一期上线小视频策略：通用策略、预加载、预渲染；
-
-
-
-
 ## 目录结构说明
 
 ```
 ├─ TTSDK 
-|  ├─ TTSDKFramework-x.x.x.x-premium-ta.zip  // 解压后是高级版动态库
-|  ├─ TTSDKFramework-x.x.x.x-standard-ta.zip // 解压后是基础版动态库
 ├─ VOLCDemo 
 └── VOLCDemo
     ├── Base    // Appdelegate
@@ -22,8 +15,6 @@ TTSDK v_1.23.1.4 版本增加播放器策略模块，一期上线小视频策略
     └── Utils   // 工具类
 ```
 
-
-
 ## VOLCDemo运行
 
 1. 进入 VEVodDemo-iOS/VOLCDemo 文件夹
@@ -31,25 +22,47 @@ TTSDK v_1.23.1.4 版本增加播放器策略模块，一期上线小视频策略
 3. 打开 VOLCDemo.xcworkspace 编译运行
 
 
-
 ## TTSDK点播SDK 集成方式
 
-### 方式一：CocoaPods集成【推荐】
+### 方式一：CocoaPods集成静态库
 1. 添加pod依赖
 ```
+source 'https://github.com/CocoaPods/Specs.git'
 source 'https://github.com/volcengine/volcengine-specs.git'
-pod 'TTSDK', 'x.x.x.x', :subspecs => [ # 推荐使用最新稳定版，具体版本号请参考最下方的ChangeLog 
-  'Player',   # 点播SDK
-]
+
+platform :ios, '9.0'
+
+target 'VOLCDemo' do
+  
+  #这里需要明确指定使用 subspecs => Player
+  #可在 ChangeLog 获取版本号，推荐使用最新版本
+  pod 'TTSDK', 'x.x.x.x-premium', :subspecs => ['Player']
+
+end
 ```
 
 2. 执行 pod install
-3. import <TTSDK/TTVideoEngineHeader.h>
 
+### 方式二：CocoaPods集成动态库
+1. 添加pod依赖
+```
+source 'https://github.com/CocoaPods/Specs.git'
+source 'https://github.com/volcengine/volcengine-specs.git'
 
-### 方式二：动态库方式手动集成
-我们强烈推荐使用CocoaPods在线方式集成方式，但从业务测反馈业务侧接入时可能三方库存在冲突问题，这时候需要使用动态库方式手动集成；
-- [手动集成文档](https://www.volcengine.com/docs/4/65775#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E6%89%8B%E5%B7%A5%E9%9B%86%E6%88%90)
+platform :ios, '9.0'
+
+target 'VOLCDemo' do
+  
+  #添加TTSDKFramework动态库，版本号同静态库版本号
+  pod 'TTSDKFramework', 'x.x.x.x-premium'
+  
+  #添加日志上报SDK，用于点播日志上传
+  pod 'RangersAppLog', '6.9.1', :subspecs =>['Core','Log','Host/CN']
+
+end
+```
+
+2. 执行 pod install
 
 
 ### 更多集成相关文档链接
@@ -60,8 +73,6 @@ pod 'TTSDK', 'x.x.x.x', :subspecs => [ # 推荐使用最新稳定版，具体版
 - [预加载功能接入](https://www.volcengine.com/docs/4/65780)
 - [控件层使用](https://bytedance.feishu.cn/docx/doxcnqF1Y9NIzOQH0m8OVQ0cPFo)
    - [快速开始](https://bytedance.feishu.cn/docx/doxcnMlusNTzjPb7jn2wMf1s7oe)
-
-
 
 
 ## ChangeLog
