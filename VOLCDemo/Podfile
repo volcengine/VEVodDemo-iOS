@@ -7,7 +7,7 @@ platform :ios, '9.0'
 
 target 'VOLCDemo' do
   # 添加 TTSDK
-  pod 'TTSDK', '1.31.1.4-premium', :subspecs => ['Player']
+  pod 'TTSDK', '1.31.2.2-premium', :subspecs => ['Player']
   
   # 添加 Demo 运行需要依赖的三方库
   pod 'Masonry'
