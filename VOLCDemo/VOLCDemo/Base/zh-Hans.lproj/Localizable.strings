@@ -6,28 +6,11 @@
   
 */
 
-"Setting_Title" = "播放设置";
-"Setting_Title_Strategy" = "策略优化";
-"Setting_Title_Common" = "通用配置";
-"Setting_Strategy_Common" = "通用优化策略";
-"Setting_Strategy_Preload" = "预加载策略";
-"Setting_Strategy_PreRender" = "预渲染策略";
-
-"Setting_Hard_Decode" = "视频硬解码";
-"Setting_H265" = "H265";
-"Setting_Preload" = "预加载";
-"Setting_Engine_ReportLog" = "TTVideoEngine 埋点上报";
-"Setting_MDL_ReportLog" = "MDL 埋点上报";
-"Setting_Device_Id" = "Device Id";
-"Setting_Device_Copy" = "点击复制";
-
-"tip_copy_success" = "复制成功";
-"tip_clean_success" = "清理成功";
-"tip_net_not_reachable" = "网络连接失败，请检查网络";
-"tip_net_reachable_wifi" = "wifi 连接成功";
-"tip_net_reachable_4g" = "4G 连接成功";
-"tip_play_error_normal" = "播放失败!!!";
-
-"title_small_video" = "小视频";
+"title_short_video" = "短视频";
+"title_feed_video" = "中视频";
 "title_long_video" = "长视频";
 "title_clean_cache" = "清理缓存";
+"title_video_setting" = "播放设置";
+
+
+"tip_clean_success" = "缓存清理成功";

@@ -9,4 +9,6 @@
 
 @property (nonatomic, strong) UIWindow *window;
 
+- (void)forceRotate;
+
 @end

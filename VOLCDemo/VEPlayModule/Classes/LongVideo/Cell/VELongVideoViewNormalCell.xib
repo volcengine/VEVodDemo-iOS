@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="gTV-IL-0wX" customClass="VELongVideoViewNormalCell">
+            <rect key="frame" x="0.0" y="0.0" width="186" height="150"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="186" height="150"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fake_long_normal_holder" translatesAutoresizingMaskIntoConstraints="NO" id="gca-8q-vY3">
+                        <rect key="frame" x="0.0" y="0.0" width="186" height="107"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="火山引擎" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fRU-Zj-BCX">
+                        <rect key="frame" x="12" y="115" width="162" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="qYn-2y-H1b"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </view>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="gca-8q-vY3" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="FHf-m1-HAc"/>
+                <constraint firstAttribute="trailing" secondItem="fRU-Zj-BCX" secondAttribute="trailing" constant="12" id="HZj-bw-u52"/>
+                <constraint firstItem="fRU-Zj-BCX" firstAttribute="top" secondItem="gca-8q-vY3" secondAttribute="bottom" constant="8" id="Ibe-S9-K9w"/>
+                <constraint firstAttribute="bottom" secondItem="fRU-Zj-BCX" secondAttribute="bottom" constant="14" id="eof-IA-XTb"/>
+                <constraint firstItem="fRU-Zj-BCX" firstAttribute="top" secondItem="gca-8q-vY3" secondAttribute="bottom" constant="8" id="i8U-Dv-r97"/>
+                <constraint firstAttribute="trailing" secondItem="gca-8q-vY3" secondAttribute="trailing" id="jSJ-Nu-oJ5"/>
+                <constraint firstItem="gca-8q-vY3" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="sCZ-T5-lGs"/>
+                <constraint firstItem="fRU-Zj-BCX" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="12" id="t8r-g7-ZGq"/>
+            </constraints>
+            <size key="customSize" width="256" height="145"/>
+            <connections>
+                <outlet property="coverImgView" destination="gca-8q-vY3" id="TNS-ka-T44"/>
+                <outlet property="titleLabel" destination="fRU-Zj-BCX" id="4hJ-WB-sHj"/>
+            </connections>
+            <point key="canvasLocation" x="286.95652173913044" y="124.21875"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="fake_long_normal_holder" width="186" height="107"/>
+    </resources>
+</document>

@@ -1,20 +1,27 @@
 
 source 'https://github.com/CocoaPods/Specs.git'
-source 'https://github.com/bytedance/cocoapods_sdk_source_repo.git'
 source 'https://github.com/volcengine/volcengine-specs.git'
 
 platform :ios, '9.0'
 
 target 'VOLCDemo' do
-  # 添加 TTSDK
+  # vod SDK
   pod 'TTSDK', '1.31.2.2-premium', :subspecs => ['Player']
+  # vod all scene exhibition
+  pod 'VEPlayModule', :path=> './VEPlayModule/' 
+  # vod player kit
+  pod 'VEPlayerKit', :path=> './VEPlayerKit/'
+  # vod player control UI kit
+  pod 'VEPlayerUIModule', :path=> './VEPlayerUIModule/'
+  # vod short scene kit
+  pod 'VESceneKit', :path=> './VESceneKit/'
   
-  # 添加 Demo 运行需要依赖的三方库
+  # public SDK
   pod 'Masonry'
   pod 'SDWebImage'
   pod 'MBProgressHUD', '~> 1.2.0'
   pod 'Reachability'
-  pod 'MJRefresh'
+  pod 'JSONModel'
   
 end
 

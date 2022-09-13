@@ -7,36 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2B3B6D56275F8B2500E3A479 /* VEUserGlobalConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D0A275F8B2500E3A479 /* VEUserGlobalConfiguration.m */; };
-		2B3B6D57275F8B2500E3A479 /* NSString+VE.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D0F275F8B2500E3A479 /* NSString+VE.m */; };
-		2B3B6D58275F8B2500E3A479 /* UITableView+VE.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D10275F8B2500E3A479 /* UITableView+VE.m */; };
-		2B3B6D59275F8B2500E3A479 /* NSTimer+VE.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D12275F8B2500E3A479 /* NSTimer+VE.m */; };
-		2B3B6D5A275F8B2500E3A479 /* VENetworkHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D15275F8B2500E3A479 /* VENetworkHelper.m */; };
-		2B3B6D5B275F8B2500E3A479 /* VEViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D19275F8B2500E3A479 /* VEViewController.m */; };
-		2B3B6D5C275F8B2500E3A479 /* VECustomHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D1B275F8B2500E3A479 /* VECustomHeaderView.m */; };
-		2B3B6D5D275F8B2500E3A479 /* VEUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D1D275F8B2500E3A479 /* VEUtils.m */; };
-		2B3B6D5E275F8B2500E3A479 /* VEUserGlobalConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D22275F8B2500E3A479 /* VEUserGlobalConfigViewController.m */; };
-		2B3B6D5F275F8B2500E3A479 /* VEGlobalConfigModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D25275F8B2500E3A479 /* VEGlobalConfigModel.m */; };
-		2B3B6D60275F8B2500E3A479 /* VEGlobalConfigDeviceIdViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D28275F8B2500E3A479 /* VEGlobalConfigDeviceIdViewCell.m */; };
-		2B3B6D61275F8B2500E3A479 /* VEGlobalConfigSwitchViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D29275F8B2500E3A479 /* VEGlobalConfigSwitchViewCell.m */; };
-		2B3B6D62275F8B2500E3A479 /* VESmallVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D2E275F8B2500E3A479 /* VESmallVideoViewController.m */; };
-		2B3B6D63275F8B2500E3A479 /* VEVideoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D31275F8B2500E3A479 /* VEVideoModel.m */; };
-		2B3B6D64275F8B2500E3A479 /* VESmallVideoFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D33275F8B2500E3A479 /* VESmallVideoFeedCell.m */; };
-		2B3B6D65275F8B2500E3A479 /* VEMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D37275F8B2500E3A479 /* VEMainViewController.m */; };
-		2B3B6D66275F8B2500E3A479 /* UIButton+MainViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D38275F8B2500E3A479 /* UIButton+MainViewItem.m */; };
-		2B3B6D67275F8B2500E3A479 /* VEMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2B3B6D39275F8B2500E3A479 /* VEMainViewController.xib */; };
-		2B3B6D68275F8B2500E3A479 /* VEVideoPlayerViewController+DebugTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D3E275F8B2500E3A479 /* VEVideoPlayerViewController+DebugTool.m */; };
-		2B3B6D69275F8B2600E3A479 /* VEVideoPlayerViewController+Resolution.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D3F275F8B2500E3A479 /* VEVideoPlayerViewController+Resolution.m */; };
-		2B3B6D6A275F8B2600E3A479 /* VEVideoPlayerViewController+Observer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D41275F8B2500E3A479 /* VEVideoPlayerViewController+Observer.m */; };
-		2B3B6D6B275F8B2600E3A479 /* VEVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D42275F8B2500E3A479 /* VEVideoPlayerViewController.m */; };
-		2B3B6D6C275F8B2600E3A479 /* VEVideoPlayerViewController+Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D44275F8B2500E3A479 /* VEVideoPlayerViewController+Options.m */; };
-		2B3B6D6D275F8B2600E3A479 /* TTVideoEngineMultiEncodingUrlSource+VECodecUrlSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D46275F8B2500E3A479 /* TTVideoEngineMultiEncodingUrlSource+VECodecUrlSource.m */; };
-		2B3B6D6E275F8B2600E3A479 /* TTVideoEngineUrlSource+VEUrlSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D47275F8B2500E3A479 /* TTVideoEngineUrlSource+VEUrlSource.m */; };
-		2B3B6D6F275F8B2600E3A479 /* TTVideoEngineVidSource+VEVidSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D4B275F8B2500E3A479 /* TTVideoEngineVidSource+VEVidSource.m */; };
-		2B3B6D70275F8B2600E3A479 /* VEPlayerToolControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D50275F8B2500E3A479 /* VEPlayerToolControlView.m */; };
-		2B3B6D71275F8B2600E3A479 /* VESmallVideoPlaybackPanelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D51275F8B2500E3A479 /* VESmallVideoPlaybackPanelViewController.m */; };
-		2B3B6D72275F8B2600E3A479 /* VEPlayerSliderControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B6D52275F8B2500E3A479 /* VEPlayerSliderControlView.m */; };
-		2B3B72A92760A5AD00E3A479 /* VEVideoPlayerViewController+Tips.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3B72A72760A5AD00E3A479 /* VEVideoPlayerViewController+Tips.m */; };
 		2B3B72AB2761A6DF00E3A479 /* MetalPerformanceShaders.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B3B72AA2761A6DF00E3A479 /* MetalPerformanceShaders.framework */; };
 		2B3B72AD2761A6E800E3A479 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B3B72AC2761A6E800E3A479 /* MetalKit.framework */; };
 		2B7BED42265B589D005D7FB8 /* VOLC-PlayerDemo.lic in Resources */ = {isa = PBXBuildFile; fileRef = 2B7BED41265B589D005D7FB8 /* VOLC-PlayerDemo.lic */; };
@@ -45,72 +15,26 @@
 		2BEC93DF265790E900C64503 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2BEC93DE265790E900C64503 /* Assets.xcassets */; };
 		2BEC93ED2657915100C64503 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BEC93E92657915100C64503 /* main.m */; };
 		2BEC93EE2657915100C64503 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BEC93EA2657915100C64503 /* AppDelegate.m */; };
+		2BFBC50628C09E83008B6A35 /* VEMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BFBC50328C09E83008B6A35 /* VEMainViewController.m */; };
+		2BFBC50728C09E83008B6A35 /* VEMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2BFBC50428C09E83008B6A35 /* VEMainViewController.xib */; };
 		BCFC76EE035A2971ADE4D5A3 /* libPods-VOLCDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8816910B24DE9DA73B4723 /* libPods-VOLCDemo.a */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		2BEF203B28CAE58C00B55D34 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0C8816910B24DE9DA73B4723 /* libPods-VOLCDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-VOLCDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2B3B6D09275F8B2500E3A479 /* VEUserGlobalConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEUserGlobalConfiguration.h; sourceTree = "<group>"; };
-		2B3B6D0A275F8B2500E3A479 /* VEUserGlobalConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VEUserGlobalConfiguration.m; sourceTree = "<group>"; };
-		2B3B6D0B275F8B2500E3A479 /* VEUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEUtils.h; sourceTree = "<group>"; };
-		2B3B6D0D275F8B2500E3A479 /* UITableView+VE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+VE.h"; sourceTree = "<group>"; };
-		2B3B6D0E275F8B2500E3A479 /* NSTimer+VE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+VE.h"; sourceTree = "<group>"; };
-		2B3B6D0F275F8B2500E3A479 /* NSString+VE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+VE.m"; sourceTree = "<group>"; };
-		2B3B6D10275F8B2500E3A479 /* UITableView+VE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+VE.m"; sourceTree = "<group>"; };
-		2B3B6D11275F8B2500E3A479 /* NSString+VE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+VE.h"; sourceTree = "<group>"; };
-		2B3B6D12275F8B2500E3A479 /* NSTimer+VE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+VE.m"; sourceTree = "<group>"; };
-		2B3B6D14275F8B2500E3A479 /* VENetworkHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VENetworkHelper.h; sourceTree = "<group>"; };
-		2B3B6D15275F8B2500E3A479 /* VENetworkHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VENetworkHelper.m; sourceTree = "<group>"; };
-		2B3B6D18275F8B2500E3A479 /* VEViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEViewController.h; sourceTree = "<group>"; };
-		2B3B6D19275F8B2500E3A479 /* VEViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VEViewController.m; sourceTree = "<group>"; };
-		2B3B6D1B275F8B2500E3A479 /* VECustomHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VECustomHeaderView.m; sourceTree = "<group>"; };
-		2B3B6D1C275F8B2500E3A479 /* VECustomHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VECustomHeaderView.h; sourceTree = "<group>"; };
-		2B3B6D1D275F8B2500E3A479 /* VEUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VEUtils.m; sourceTree = "<group>"; };
-		2B3B6D21275F8B2500E3A479 /* VEUserGlobalConfigViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEUserGlobalConfigViewController.h; sourceTree = "<group>"; };
-		2B3B6D22275F8B2500E3A479 /* VEUserGlobalConfigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VEUserGlobalConfigViewController.m; sourceTree = "<group>"; };
-		2B3B6D24275F8B2500E3A479 /* VEGlobalConfigModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEGlobalConfigModel.h; sourceTree = "<group>"; };
-		2B3B6D25275F8B2500E3A479 /* VEGlobalConfigModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VEGlobalConfigModel.m; sourceTree = "<group>"; };
-		2B3B6D27275F8B2500E3A479 /* VEGlobalConfigSwitchViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEGlobalConfigSwitchViewCell.h; sourceTree = "<group>"; };
-		2B3B6D28275F8B2500E3A479 /* VEGlobalConfigDeviceIdViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VEGlobalConfigDeviceIdViewCell.m; sourceTree = "<group>"; };
-		2B3B6D29275F8B2500E3A479 /* VEGlobalConfigSwitchViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VEGlobalConfigSwitchViewCell.m; sourceTree = "<group>"; };
-		2B3B6D2A275F8B2500E3A479 /* VEGlobalConfigDeviceIdViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEGlobalConfigDeviceIdViewCell.h; sourceTree = "<group>"; };
-		2B3B6D2D275F8B2500E3A479 /* VESmallVideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VESmallVideoViewController.h; sourceTree = "<group>"; };
-		2B3B6D2E275F8B2500E3A479 /* VESmallVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VESmallVideoViewController.m; sourceTree = "<group>"; };
-		2B3B6D30275F8B2500E3A479 /* VEVideoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEVideoModel.h; sourceTree = "<group>"; };
-		2B3B6D31275F8B2500E3A479 /* VEVideoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VEVideoModel.m; sourceTree = "<group>"; };
-		2B3B6D33275F8B2500E3A479 /* VESmallVideoFeedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VESmallVideoFeedCell.m; sourceTree = "<group>"; };
-		2B3B6D34275F8B2500E3A479 /* VESmallVideoFeedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VESmallVideoFeedCell.h; sourceTree = "<group>"; };
-		2B3B6D36275F8B2500E3A479 /* UIButton+MainViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+MainViewItem.h"; sourceTree = "<group>"; };
-		2B3B6D37275F8B2500E3A479 /* VEMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VEMainViewController.m; sourceTree = "<group>"; };
-		2B3B6D38275F8B2500E3A479 /* UIButton+MainViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+MainViewItem.m"; sourceTree = "<group>"; };
-		2B3B6D39275F8B2500E3A479 /* VEMainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VEMainViewController.xib; sourceTree = "<group>"; };
-		2B3B6D3A275F8B2500E3A479 /* VEMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEMainViewController.h; sourceTree = "<group>"; };
-		2B3B6D3C275F8B2500E3A479 /* VEVideoPlayerViewController+Options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VEVideoPlayerViewController+Options.h"; sourceTree = "<group>"; };
-		2B3B6D3D275F8B2500E3A479 /* VEVideoPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEVideoPlayerViewController.h; sourceTree = "<group>"; };
-		2B3B6D3E275F8B2500E3A479 /* VEVideoPlayerViewController+DebugTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VEVideoPlayerViewController+DebugTool.m"; sourceTree = "<group>"; };
-		2B3B6D3F275F8B2500E3A479 /* VEVideoPlayerViewController+Resolution.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VEVideoPlayerViewController+Resolution.m"; sourceTree = "<group>"; };
-		2B3B6D40275F8B2500E3A479 /* VEVideoPlaybackPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEVideoPlaybackPanel.h; sourceTree = "<group>"; };
-		2B3B6D41275F8B2500E3A479 /* VEVideoPlayerViewController+Observer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VEVideoPlayerViewController+Observer.m"; sourceTree = "<group>"; };
-		2B3B6D42275F8B2500E3A479 /* VEVideoPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VEVideoPlayerViewController.m; sourceTree = "<group>"; };
-		2B3B6D43275F8B2500E3A479 /* VEVideoPlayback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEVideoPlayback.h; sourceTree = "<group>"; };
-		2B3B6D44275F8B2500E3A479 /* VEVideoPlayerViewController+Options.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VEVideoPlayerViewController+Options.m"; sourceTree = "<group>"; };
-		2B3B6D46275F8B2500E3A479 /* TTVideoEngineMultiEncodingUrlSource+VECodecUrlSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TTVideoEngineMultiEncodingUrlSource+VECodecUrlSource.m"; sourceTree = "<group>"; };
-		2B3B6D47275F8B2500E3A479 /* TTVideoEngineUrlSource+VEUrlSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TTVideoEngineUrlSource+VEUrlSource.m"; sourceTree = "<group>"; };
-		2B3B6D48275F8B2500E3A479 /* TTVideoEngineVidSource+VEVidSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TTVideoEngineVidSource+VEVidSource.h"; sourceTree = "<group>"; };
-		2B3B6D49275F8B2500E3A479 /* TTVideoEngineMultiEncodingUrlSource+VECodecUrlSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TTVideoEngineMultiEncodingUrlSource+VECodecUrlSource.h"; sourceTree = "<group>"; };
-		2B3B6D4A275F8B2500E3A479 /* TTVideoEngineUrlSource+VEUrlSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TTVideoEngineUrlSource+VEUrlSource.h"; sourceTree = "<group>"; };
-		2B3B6D4B275F8B2500E3A479 /* TTVideoEngineVidSource+VEVidSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TTVideoEngineVidSource+VEVidSource.m"; sourceTree = "<group>"; };
-		2B3B6D4D275F8B2500E3A479 /* VESmallVideoPlaybackPanelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VESmallVideoPlaybackPanelViewController.h; sourceTree = "<group>"; };
-		2B3B6D4E275F8B2500E3A479 /* VEPlayerToolControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEPlayerToolControlView.h; sourceTree = "<group>"; };
-		2B3B6D4F275F8B2500E3A479 /* VEPlayerSliderControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEPlayerSliderControlView.h; sourceTree = "<group>"; };
-		2B3B6D50275F8B2500E3A479 /* VEPlayerToolControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VEPlayerToolControlView.m; sourceTree = "<group>"; };
-		2B3B6D51275F8B2500E3A479 /* VESmallVideoPlaybackPanelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VESmallVideoPlaybackPanelViewController.m; sourceTree = "<group>"; };
-		2B3B6D52275F8B2500E3A479 /* VEPlayerSliderControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VEPlayerSliderControlView.m; sourceTree = "<group>"; };
-		2B3B6D53275F8B2500E3A479 /* VEVideoPlayerViewController+DebugTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VEVideoPlayerViewController+DebugTool.h"; sourceTree = "<group>"; };
-		2B3B6D54275F8B2500E3A479 /* VEVideoPlayerViewController+Resolution.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VEVideoPlayerViewController+Resolution.h"; sourceTree = "<group>"; };
-		2B3B6D55275F8B2500E3A479 /* VEVideoPlayerViewController+Observer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VEVideoPlayerViewController+Observer.h"; sourceTree = "<group>"; };
-		2B3B72A72760A5AD00E3A479 /* VEVideoPlayerViewController+Tips.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VEVideoPlayerViewController+Tips.m"; sourceTree = "<group>"; };
-		2B3B72A82760A5AD00E3A479 /* VEVideoPlayerViewController+Tips.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VEVideoPlayerViewController+Tips.h"; sourceTree = "<group>"; };
 		2B3B72AA2761A6DF00E3A479 /* MetalPerformanceShaders.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalPerformanceShaders.framework; path = System/Library/Frameworks/MetalPerformanceShaders.framework; sourceTree = SDKROOT; };
 		2B3B72AC2761A6E800E3A479 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		2B7BED41265B589D005D7FB8 /* VOLC-PlayerDemo.lic */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "VOLC-PlayerDemo.lic"; sourceTree = "<group>"; };
@@ -124,6 +48,12 @@
 		2BEC93EA2657915100C64503 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		2BEC93EB2657915100C64503 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2BEC93F02657917D00C64503 /* VOLCDemoPrefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VOLCDemoPrefix.pch; sourceTree = "<group>"; };
+		2BEF202628CAE58C00B55D34 /* fwfew.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fwfew.h; sourceTree = "<group>"; };
+		2BEF202728CAE58C00B55D34 /* fwfew.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = fwfew.docc; sourceTree = "<group>"; };
+		2BEF203428CAE58C00B55D34 /* fwfewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fwfewTests.m; sourceTree = "<group>"; };
+		2BFBC50328C09E83008B6A35 /* VEMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VEMainViewController.m; sourceTree = "<group>"; };
+		2BFBC50428C09E83008B6A35 /* VEMainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VEMainViewController.xib; sourceTree = "<group>"; };
+		2BFBC50528C09E83008B6A35 /* VEMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEMainViewController.h; sourceTree = "<group>"; };
 		7521C104E6C0DCC76F01AB33 /* Pods-VOLCDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VOLCDemo.release.xcconfig"; path = "Target Support Files/Pods-VOLCDemo/Pods-VOLCDemo.release.xcconfig"; sourceTree = "<group>"; };
 		B7AC4A35A8320428AB49F805 /* Pods-VOLCDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VOLCDemo.debug.xcconfig"; path = "Target Support Files/Pods-VOLCDemo/Pods-VOLCDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -161,220 +91,12 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		2B3B6D07275F8B2500E3A479 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D0B275F8B2500E3A479 /* VEUtils.h */,
-				2B3B6D08275F8B2500E3A479 /* Settings */,
-				2B3B6D0C275F8B2500E3A479 /* Category */,
-				2B3B6D13275F8B2500E3A479 /* Network */,
-				2B3B6D17275F8B2500E3A479 /* Arch */,
-				2B3B6D1A275F8B2500E3A479 /* View */,
-				2B3B6D1D275F8B2500E3A479 /* VEUtils.m */,
-			);
-			path = Utils;
-			sourceTree = "<group>";
-		};
-		2B3B6D08275F8B2500E3A479 /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D09275F8B2500E3A479 /* VEUserGlobalConfiguration.h */,
-				2B3B6D0A275F8B2500E3A479 /* VEUserGlobalConfiguration.m */,
-			);
-			path = Settings;
-			sourceTree = "<group>";
-		};
-		2B3B6D0C275F8B2500E3A479 /* Category */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D11275F8B2500E3A479 /* NSString+VE.h */,
-				2B3B6D0F275F8B2500E3A479 /* NSString+VE.m */,
-				2B3B6D0E275F8B2500E3A479 /* NSTimer+VE.h */,
-				2B3B6D12275F8B2500E3A479 /* NSTimer+VE.m */,
-				2B3B6D0D275F8B2500E3A479 /* UITableView+VE.h */,
-				2B3B6D10275F8B2500E3A479 /* UITableView+VE.m */,
-			);
-			path = Category;
-			sourceTree = "<group>";
-		};
-		2B3B6D13275F8B2500E3A479 /* Network */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D14275F8B2500E3A479 /* VENetworkHelper.h */,
-				2B3B6D15275F8B2500E3A479 /* VENetworkHelper.m */,
-			);
-			path = Network;
-			sourceTree = "<group>";
-		};
-		2B3B6D17275F8B2500E3A479 /* Arch */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D18275F8B2500E3A479 /* VEViewController.h */,
-				2B3B6D19275F8B2500E3A479 /* VEViewController.m */,
-			);
-			path = Arch;
-			sourceTree = "<group>";
-		};
-		2B3B6D1A275F8B2500E3A479 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D1B275F8B2500E3A479 /* VECustomHeaderView.m */,
-				2B3B6D1C275F8B2500E3A479 /* VECustomHeaderView.h */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		2B3B6D1E275F8B2500E3A479 /* Module */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D1F275F8B2500E3A479 /* Settings */,
-				2B3B6D2B275F8B2500E3A479 /* SmallVideo */,
-				2B3B6D35275F8B2500E3A479 /* Main */,
-			);
-			path = Module;
-			sourceTree = "<group>";
-		};
-		2B3B6D1F275F8B2500E3A479 /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D20275F8B2500E3A479 /* Controller */,
-				2B3B6D23275F8B2500E3A479 /* Model */,
-				2B3B6D26275F8B2500E3A479 /* View */,
-			);
-			path = Settings;
-			sourceTree = "<group>";
-		};
-		2B3B6D20275F8B2500E3A479 /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D21275F8B2500E3A479 /* VEUserGlobalConfigViewController.h */,
-				2B3B6D22275F8B2500E3A479 /* VEUserGlobalConfigViewController.m */,
-			);
-			path = Controller;
-			sourceTree = "<group>";
-		};
-		2B3B6D23275F8B2500E3A479 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D24275F8B2500E3A479 /* VEGlobalConfigModel.h */,
-				2B3B6D25275F8B2500E3A479 /* VEGlobalConfigModel.m */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		2B3B6D26275F8B2500E3A479 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D2A275F8B2500E3A479 /* VEGlobalConfigDeviceIdViewCell.h */,
-				2B3B6D28275F8B2500E3A479 /* VEGlobalConfigDeviceIdViewCell.m */,
-				2B3B6D27275F8B2500E3A479 /* VEGlobalConfigSwitchViewCell.h */,
-				2B3B6D29275F8B2500E3A479 /* VEGlobalConfigSwitchViewCell.m */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		2B3B6D2B275F8B2500E3A479 /* SmallVideo */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D2C275F8B2500E3A479 /* Controller */,
-				2B3B6D2F275F8B2500E3A479 /* Model */,
-				2B3B6D32275F8B2500E3A479 /* View */,
-			);
-			path = SmallVideo;
-			sourceTree = "<group>";
-		};
-		2B3B6D2C275F8B2500E3A479 /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D2D275F8B2500E3A479 /* VESmallVideoViewController.h */,
-				2B3B6D2E275F8B2500E3A479 /* VESmallVideoViewController.m */,
-			);
-			path = Controller;
-			sourceTree = "<group>";
-		};
-		2B3B6D2F275F8B2500E3A479 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D30275F8B2500E3A479 /* VEVideoModel.h */,
-				2B3B6D31275F8B2500E3A479 /* VEVideoModel.m */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		2B3B6D32275F8B2500E3A479 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D34275F8B2500E3A479 /* VESmallVideoFeedCell.h */,
-				2B3B6D33275F8B2500E3A479 /* VESmallVideoFeedCell.m */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		2B3B6D35275F8B2500E3A479 /* Main */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D36275F8B2500E3A479 /* UIButton+MainViewItem.h */,
-				2B3B6D38275F8B2500E3A479 /* UIButton+MainViewItem.m */,
-				2B3B6D3A275F8B2500E3A479 /* VEMainViewController.h */,
-				2B3B6D37275F8B2500E3A479 /* VEMainViewController.m */,
-				2B3B6D39275F8B2500E3A479 /* VEMainViewController.xib */,
-			);
-			path = Main;
-			sourceTree = "<group>";
-		};
-		2B3B6D3B275F8B2500E3A479 /* Player */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D45275F8B2500E3A479 /* Model */,
-				2B3B6D43275F8B2500E3A479 /* VEVideoPlayback.h */,
-				2B3B6D40275F8B2500E3A479 /* VEVideoPlaybackPanel.h */,
-				2B3B6D3D275F8B2500E3A479 /* VEVideoPlayerViewController.h */,
-				2B3B6D42275F8B2500E3A479 /* VEVideoPlayerViewController.m */,
-				2B3B6D53275F8B2500E3A479 /* VEVideoPlayerViewController+DebugTool.h */,
-				2B3B6D3E275F8B2500E3A479 /* VEVideoPlayerViewController+DebugTool.m */,
-				2B3B6D55275F8B2500E3A479 /* VEVideoPlayerViewController+Observer.h */,
-				2B3B6D41275F8B2500E3A479 /* VEVideoPlayerViewController+Observer.m */,
-				2B3B6D3C275F8B2500E3A479 /* VEVideoPlayerViewController+Options.h */,
-				2B3B6D44275F8B2500E3A479 /* VEVideoPlayerViewController+Options.m */,
-				2B3B6D54275F8B2500E3A479 /* VEVideoPlayerViewController+Resolution.h */,
-				2B3B6D3F275F8B2500E3A479 /* VEVideoPlayerViewController+Resolution.m */,
-				2B3B72A82760A5AD00E3A479 /* VEVideoPlayerViewController+Tips.h */,
-				2B3B72A72760A5AD00E3A479 /* VEVideoPlayerViewController+Tips.m */,
-				2B3B6D4C275F8B2500E3A479 /* View */,
-			);
-			path = Player;
-			sourceTree = "<group>";
-		};
-		2B3B6D45275F8B2500E3A479 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D46275F8B2500E3A479 /* TTVideoEngineMultiEncodingUrlSource+VECodecUrlSource.m */,
-				2B3B6D47275F8B2500E3A479 /* TTVideoEngineUrlSource+VEUrlSource.m */,
-				2B3B6D48275F8B2500E3A479 /* TTVideoEngineVidSource+VEVidSource.h */,
-				2B3B6D49275F8B2500E3A479 /* TTVideoEngineMultiEncodingUrlSource+VECodecUrlSource.h */,
-				2B3B6D4A275F8B2500E3A479 /* TTVideoEngineUrlSource+VEUrlSource.h */,
-				2B3B6D4B275F8B2500E3A479 /* TTVideoEngineVidSource+VEVidSource.m */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		2B3B6D4C275F8B2500E3A479 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				2B3B6D4F275F8B2500E3A479 /* VEPlayerSliderControlView.h */,
-				2B3B6D52275F8B2500E3A479 /* VEPlayerSliderControlView.m */,
-				2B3B6D4E275F8B2500E3A479 /* VEPlayerToolControlView.h */,
-				2B3B6D50275F8B2500E3A479 /* VEPlayerToolControlView.m */,
-				2B3B6D4D275F8B2500E3A479 /* VESmallVideoPlaybackPanelViewController.h */,
-				2B3B6D51275F8B2500E3A479 /* VESmallVideoPlaybackPanelViewController.m */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
 		2BEC93B92657907300C64503 = {
 			isa = PBXGroup;
 			children = (
 				2BEC93C42657907300C64503 /* VOLCDemo */,
+				2BEF202528CAE58C00B55D34 /* fwfew */,
+				2BEF203328CAE58C00B55D34 /* fwfewTests */,
 				2BEC93C32657907300C64503 /* Products */,
 				11A450BA8D65420C5D8DB56A /* Pods */,
 				2337FE9CBA85BBA551F8F546 /* Frameworks */,
@@ -392,9 +114,7 @@
 		2BEC93C42657907300C64503 /* VOLCDemo */ = {
 			isa = PBXGroup;
 			children = (
-				2B3B6D1E275F8B2500E3A479 /* Module */,
-				2B3B6D3B275F8B2500E3A479 /* Player */,
-				2B3B6D07275F8B2500E3A479 /* Utils */,
+				2BFBC50228C09E83008B6A35 /* Entry */,
 				2BEC93E62657915100C64503 /* Base */,
 				2BEC93DE265790E900C64503 /* Assets.xcassets */,
 			);
@@ -416,6 +136,33 @@
 			path = Base;
 			sourceTree = "<group>";
 		};
+		2BEF202528CAE58C00B55D34 /* fwfew */ = {
+			isa = PBXGroup;
+			children = (
+				2BEF202628CAE58C00B55D34 /* fwfew.h */,
+				2BEF202728CAE58C00B55D34 /* fwfew.docc */,
+			);
+			path = fwfew;
+			sourceTree = "<group>";
+		};
+		2BEF203328CAE58C00B55D34 /* fwfewTests */ = {
+			isa = PBXGroup;
+			children = (
+				2BEF203428CAE58C00B55D34 /* fwfewTests.m */,
+			);
+			path = fwfewTests;
+			sourceTree = "<group>";
+		};
+		2BFBC50228C09E83008B6A35 /* Entry */ = {
+			isa = PBXGroup;
+			children = (
+				2BFBC50528C09E83008B6A35 /* VEMainViewController.h */,
+				2BFBC50328C09E83008B6A35 /* VEMainViewController.m */,
+				2BFBC50428C09E83008B6A35 /* VEMainViewController.xib */,
+			);
+			path = Entry;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -428,7 +175,8 @@
 				2BEC93BF2657907300C64503 /* Frameworks */,
 				2BEC93C02657907300C64503 /* Resources */,
 				7ECE482F4A5502C5B185868F /* [CP] Copy Pods Resources */,
-				B10AFD87F4D86340305B849C /* [CP] Embed Pods Frameworks */,
+				93072FCB55305E80C28B1036 /* [CP] Embed Pods Frameworks */,
+				2BEF203B28CAE58C00B55D34 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -481,7 +229,7 @@
 				2B7BED42265B589D005D7FB8 /* VOLC-PlayerDemo.lic in Resources */,
 				2BEC93DF265790E900C64503 /* Assets.xcassets in Resources */,
 				2B82C5532673407E006CE7CD /* LaunchScreen.storyboard in Resources */,
-				2B3B6D67275F8B2500E3A479 /* VEMainViewController.xib in Resources */,
+				2BFBC50728C09E83008B6A35 /* VEMainViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -527,7 +275,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-VOLCDemo/Pods-VOLCDemo-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B10AFD87F4D86340305B849C /* [CP] Embed Pods Frameworks */ = {
+		93072FCB55305E80C28B1036 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -551,37 +299,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B3B6D6A275F8B2600E3A479 /* VEVideoPlayerViewController+Observer.m in Sources */,
-				2B3B6D5A275F8B2500E3A479 /* VENetworkHelper.m in Sources */,
-				2B3B6D6E275F8B2600E3A479 /* TTVideoEngineUrlSource+VEUrlSource.m in Sources */,
-				2B3B6D58275F8B2500E3A479 /* UITableView+VE.m in Sources */,
-				2B3B6D65275F8B2500E3A479 /* VEMainViewController.m in Sources */,
-				2B3B72A92760A5AD00E3A479 /* VEVideoPlayerViewController+Tips.m in Sources */,
-				2B3B6D61275F8B2500E3A479 /* VEGlobalConfigSwitchViewCell.m in Sources */,
-				2B3B6D5E275F8B2500E3A479 /* VEUserGlobalConfigViewController.m in Sources */,
 				2BEC93EE2657915100C64503 /* AppDelegate.m in Sources */,
 				2BEC93ED2657915100C64503 /* main.m in Sources */,
-				2B3B6D62275F8B2500E3A479 /* VESmallVideoViewController.m in Sources */,
-				2B3B6D6F275F8B2600E3A479 /* TTVideoEngineVidSource+VEVidSource.m in Sources */,
-				2B3B6D6B275F8B2600E3A479 /* VEVideoPlayerViewController.m in Sources */,
-				2B3B6D60275F8B2500E3A479 /* VEGlobalConfigDeviceIdViewCell.m in Sources */,
-				2B3B6D71275F8B2600E3A479 /* VESmallVideoPlaybackPanelViewController.m in Sources */,
-				2B3B6D69275F8B2600E3A479 /* VEVideoPlayerViewController+Resolution.m in Sources */,
-				2B3B6D57275F8B2500E3A479 /* NSString+VE.m in Sources */,
-				2B3B6D6C275F8B2600E3A479 /* VEVideoPlayerViewController+Options.m in Sources */,
-				2B3B6D5C275F8B2500E3A479 /* VECustomHeaderView.m in Sources */,
-				2B3B6D5F275F8B2500E3A479 /* VEGlobalConfigModel.m in Sources */,
-				2B3B6D68275F8B2500E3A479 /* VEVideoPlayerViewController+DebugTool.m in Sources */,
-				2B3B6D5D275F8B2500E3A479 /* VEUtils.m in Sources */,
-				2B3B6D66275F8B2500E3A479 /* UIButton+MainViewItem.m in Sources */,
-				2B3B6D64275F8B2500E3A479 /* VESmallVideoFeedCell.m in Sources */,
-				2B3B6D70275F8B2600E3A479 /* VEPlayerToolControlView.m in Sources */,
-				2B3B6D63275F8B2500E3A479 /* VEVideoModel.m in Sources */,
-				2B3B6D56275F8B2500E3A479 /* VEUserGlobalConfiguration.m in Sources */,
-				2B3B6D59275F8B2500E3A479 /* NSTimer+VE.m in Sources */,
-				2B3B6D6D275F8B2600E3A479 /* TTVideoEngineMultiEncodingUrlSource+VECodecUrlSource.m in Sources */,
-				2B3B6D5B275F8B2500E3A479 /* VEViewController.m in Sources */,
-				2B3B6D72275F8B2600E3A479 /* VEPlayerSliderControlView.m in Sources */,
+				2BFBC50628C09E83008B6A35 /* VEMainViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -612,6 +332,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -672,6 +393,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -726,11 +448,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B7AC4A35A8320428AB49F805 /* Pods-VOLCDemo.debug.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3XMD9D6A65;
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -746,7 +469,7 @@
 					"$(PROJECT_DIR)/VOLCDemo/Utils/OneKit/StartUp",
 					"$(PROJECT_DIR)/VOLCDemo/Utils/OneKit/BaseKit",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.volc.voddemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -757,12 +480,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7521C104E6C0DCC76F01AB33 /* Pods-VOLCDemo.release.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Volcano Engine Technology Co.,Ltd. (3XMD9D6A65)";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 0;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3XMD9D6A65;
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -778,10 +501,9 @@
 					"$(PROJECT_DIR)/VOLCDemo/Utils/OneKit/StartUp",
 					"$(PROJECT_DIR)/VOLCDemo/Utils/OneKit/BaseKit",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.volc.voddemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = com.bytedance.volc.voddemo;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="gTV-IL-0wX" customClass="VELongVideoViewTopCell">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="212"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="212"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fake_long_top_holder" translatesAutoresizingMaskIntoConstraints="NO" id="swF-by-w3m">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="212"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="火山引擎是一个综合平台" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lys-fk-ZNL">
+                        <rect key="frame" x="12" y="180" width="351" height="24"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="24" id="7uD-rc-oY6"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="swF-by-w3m" secondAttribute="bottom" id="BrV-m9-Yh7"/>
+                <constraint firstAttribute="trailing" secondItem="Lys-fk-ZNL" secondAttribute="trailing" constant="12" id="Ihe-rf-RqX"/>
+                <constraint firstItem="swF-by-w3m" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="LQb-r2-CKP"/>
+                <constraint firstItem="swF-by-w3m" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="ONy-AP-Unn"/>
+                <constraint firstItem="Lys-fk-ZNL" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="12" id="a2e-8J-3l4"/>
+                <constraint firstAttribute="bottom" secondItem="Lys-fk-ZNL" secondAttribute="bottom" constant="8" id="dsj-fo-chH"/>
+                <constraint firstAttribute="trailing" secondItem="swF-by-w3m" secondAttribute="trailing" id="pfc-GI-Mzx"/>
+            </constraints>
+            <size key="customSize" width="261" height="233"/>
+            <connections>
+                <outlet property="coverImgView" destination="swF-by-w3m" id="F2n-0W-4VZ"/>
+                <outlet property="titleLabel" destination="Lys-fk-ZNL" id="fXT-LT-vCC"/>
+            </connections>
+            <point key="canvasLocation" x="290.57971014492756" y="153.68303571428569"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="fake_long_top_holder" width="375" height="211"/>
+    </resources>
+</document>

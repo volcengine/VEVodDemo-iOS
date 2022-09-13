@@ -8,7 +8,6 @@
 
 #import "AppDelegate.h"
 #import "VEMainViewController.h"
-#import "VEUserGlobalConfiguration.h"
 #import <TTSDK/TTSDKManager.h>
 #import <TTSDK/TTVideoEngineHeader.h>
 
@@ -31,61 +30,63 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
     self.window = [UIWindow new];
     self.window.frame = UIScreen.mainScreen.bounds;
     self.window.backgroundColor = [UIColor blackColor];
- 
     VEMainViewController *mainController = [VEMainViewController new];
-    
-    self.window.rootViewController = mainController;
+    UINavigationController *mainNav = [[UINavigationController alloc] initWithRootViewController:mainController];
+    self.window.rootViewController = mainNav;
     [self.window makeKeyAndVisible];
-    
-    /// Deme全局设置，业务不要设置
-    [VEUserGlobalConfiguration sharedInstance];
-    
     /// 初始化SDK
-    [self initTTSDKWithOptions:launchOptions];
+    [self initTTSDK];
     
     return YES;
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application {
-    /// TTSDK 1.28.1 以下版本需要设置，否则会出现有声音没画面问题
-//    [TTVideoEngine stopOpenGLESActivity];
+
+#pragma mark ----- Rotate
+
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    if (self.screenDirection == UIInterfaceOrientationLandscapeRight) {
+        return UIInterfaceOrientationMaskLandscapeRight;
+    } else {
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-    /// TTSDK 1.28.1 以下版本需要设置，否则会出现有声音没画面问题
-//    [TTVideoEngine startOpenGLESActivity];
+- (void)forceRotate {
+    // 只考虑landscape right 和 portrait
+    UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
+    UIInterfaceOrientation destinationOrientation = UIInterfaceOrientationUnknown;
+    if (currentOrientation == UIInterfaceOrientationPortrait) {
+        destinationOrientation = UIInterfaceOrientationLandscapeRight;
+    } else {
+        destinationOrientation = UIInterfaceOrientationPortrait;
+    }
+    self.screenDirection = destinationOrientation;
+    [[UIDevice currentDevice] setValue:@(destinationOrientation) forKey:@"orientation"];
+    [UIViewController attemptRotationToDeviceOrientation];
 }
 
 
-#pragma mark - TTSDK init
+#pragma mark - TTSDK
 
-- (void)initTTSDKWithOptions:(NSDictionary *)launchOptions {
+- (void)initTTSDK {
 #ifdef DEBUG
     /// 建议Debug期间打开Log开关
-    [TTVideoEngine setLogFlag:TTVideoEngineLogFlagEngine];
+    [TTVideoEngine setLogFlag:TTVideoEngineLogFlagAll];
     /// 建议Debug期间打开，监听 license 是否加载成功，
     [self addLicenseObserver];
 #endif
-    
     NSString *appId = @"229234";
-    
-    /// initialize ttsdk, configure Lisence ，this step cannot be skipped !!!!!
+    /// initialize ttsdk, configure Liscene ，this step cannot be skipped !!!!!
     TTSDKConfiguration *configuration = [TTSDKConfiguration defaultConfigurationWithAppID:appId licenseName:@"VOLC-PlayerDemo"];
-    
     /// 播放器CacheSize，默认100M，建议设置 300M
     TTSDKVodConfiguration *vodConfig = [[TTSDKVodConfiguration alloc] init];
-    vodConfig.cacheMaxSize = 300 * 1024 *1024; // 300M
+    vodConfig.cacheMaxSize = 300 * 1024 * 1024; // 300M
     configuration.vodConfiguration = vodConfig;
-    
     [TTSDKManager startWithConfiguration:configuration];
 }
-
-
-#pragma mark - Add license observer
 
 - (void)addLicenseObserver {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(licenseDidAdd:) name:TTLicenseNotificationLicenseDidAdd object:nil];
