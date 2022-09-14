@@ -78,6 +78,7 @@ end
 - [预加载功能接入](https://www.volcengine.com/docs/4/65780)
 - [控件层使用](https://bytedance.feishu.cn/docx/doxcnqF1Y9NIzOQH0m8OVQ0cPFo)
    - [快速开始](https://bytedance.feishu.cn/docx/doxcnMlusNTzjPb7jn2wMf1s7oe)
+- [短视频场景封装层使用](https://bytedance.feishu.cn/docx/doxcnprOaYpOREMnnW8U2mxGajb)
 
 
 ## ChangeLog
