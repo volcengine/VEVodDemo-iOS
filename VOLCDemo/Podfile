@@ -6,7 +6,7 @@ platform :ios, '9.0'
 
 target 'VOLCDemo' do
   # vod SDK
-  pod 'TTSDK', '1.31.2.2-premium', :subspecs => ['Player']
+  pod 'TTSDK', '1.32.1.1-premium', :subspecs => ['Player']
   # vod all scene exhibition
   pod 'VEPlayModule', :path=> './VEPlayModule/' 
   # vod player kit

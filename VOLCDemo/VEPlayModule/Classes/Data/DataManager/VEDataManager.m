@@ -10,11 +10,11 @@
 #import "VENetworkHelper.h"
 #import "VEVideoModel.h"
 
-static NSString *longVideoZone = @"player_test-long";
+static NSString *longVideoZone = @"long-video";
 
-static NSString *feedVideoZone = @"player_test-short";
+static NSString *feedVideoZone = @"feedvideo";
 
-static NSString *shortVideoZone = @"small-video";
+static NSString *shortVideoZone = @"short-video";
 
 @implementation VEDataManager
 
@@ -33,8 +33,7 @@ static NSString *shortVideoZone = @"small-video";
         } else {
             param = @{@"userID" : key};
         }
-        // http://vevod-demo-server.volcvod.com/
-        NSString *urlString = @"http://vod-app-server.snssdk.com/api/general/v1/getFeedStreamWithPlayAuthToken";
+        NSString *urlString = @"https://vevod-demo-server.volcvod.com/api/general/v1/getFeedStreamWithPlayAuthToken";
         [VENetworkHelper requestDataWithUrl:urlString httpMethod:@"POST" parameters:param success:^(id _Nonnull responseObject) {
             if (responseObject && [responseObject isKindOfClass:[NSDictionary class]]) {
                 NSArray* results = [responseObject objectForKey:@"result"];

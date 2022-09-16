@@ -48,9 +48,6 @@
 		2BEC93EA2657915100C64503 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		2BEC93EB2657915100C64503 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2BEC93F02657917D00C64503 /* VOLCDemoPrefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VOLCDemoPrefix.pch; sourceTree = "<group>"; };
-		2BEF202628CAE58C00B55D34 /* fwfew.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fwfew.h; sourceTree = "<group>"; };
-		2BEF202728CAE58C00B55D34 /* fwfew.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = fwfew.docc; sourceTree = "<group>"; };
-		2BEF203428CAE58C00B55D34 /* fwfewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fwfewTests.m; sourceTree = "<group>"; };
 		2BFBC50328C09E83008B6A35 /* VEMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VEMainViewController.m; sourceTree = "<group>"; };
 		2BFBC50428C09E83008B6A35 /* VEMainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VEMainViewController.xib; sourceTree = "<group>"; };
 		2BFBC50528C09E83008B6A35 /* VEMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEMainViewController.h; sourceTree = "<group>"; };
@@ -95,8 +92,6 @@
 			isa = PBXGroup;
 			children = (
 				2BEC93C42657907300C64503 /* VOLCDemo */,
-				2BEF202528CAE58C00B55D34 /* fwfew */,
-				2BEF203328CAE58C00B55D34 /* fwfewTests */,
 				2BEC93C32657907300C64503 /* Products */,
 				11A450BA8D65420C5D8DB56A /* Pods */,
 				2337FE9CBA85BBA551F8F546 /* Frameworks */,
@@ -134,23 +129,6 @@
 				2B98E96E26650EFE00CBF214 /* Localizable.strings */,
 			);
 			path = Base;
-			sourceTree = "<group>";
-		};
-		2BEF202528CAE58C00B55D34 /* fwfew */ = {
-			isa = PBXGroup;
-			children = (
-				2BEF202628CAE58C00B55D34 /* fwfew.h */,
-				2BEF202728CAE58C00B55D34 /* fwfew.docc */,
-			);
-			path = fwfew;
-			sourceTree = "<group>";
-		};
-		2BEF203328CAE58C00B55D34 /* fwfewTests */ = {
-			isa = PBXGroup;
-			children = (
-				2BEF203428CAE58C00B55D34 /* fwfewTests.m */,
-			);
-			path = fwfewTests;
 			sourceTree = "<group>";
 		};
 		2BFBC50228C09E83008B6A35 /* Entry */ = {
@@ -453,7 +431,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = 3XMD9D6A65;
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -472,7 +450,10 @@
 				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.volc.voddemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -485,7 +466,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = 3XMD9D6A65;
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -504,7 +485,10 @@
 				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.volc.voddemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
