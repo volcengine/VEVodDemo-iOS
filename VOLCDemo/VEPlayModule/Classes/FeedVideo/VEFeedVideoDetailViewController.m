@@ -1,11 +1,11 @@
 //
-//  VELongVideoDetailViewController.m
-//  VOLCDemo
+//  VEFeedVideoDetailViewController.m
+//  VEPlayModule
 //
-//  Created by RealZhao on 2021/12/23.
+//  Created by real on 2022/10/9.
 //
 
-#import "VELongVideoDetailViewController.h"
+#import "VEFeedVideoDetailViewController.h"
 #import "VEVideoModel.h"
 #import "VESettingManager.h"
 
@@ -15,7 +15,7 @@
 #import <Masonry/Masonry.h>
 #import "UIViewController+Orientation.h"
 
-@interface VELongVideoDetailViewController () <VEInterfaceDelegate>
+@interface VEFeedVideoDetailViewController () <VEInterfaceDelegate>
 
 @property (nonatomic, strong) VEVideoPlayerController *playerController; // player Container
 
@@ -25,7 +25,7 @@
 
 @end
 
-@implementation VELongVideoDetailViewController
+@implementation VEFeedVideoDetailViewController
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -79,11 +79,16 @@
 
 - (void)setVideoModel:(VEVideoModel *)videoModel {
     _videoModel = videoModel;
+    VEVideoPlayerController *mayPlayer = [self.delegate currentPlayerController:videoModel];
     self.playerController.playerTitle = videoModel.title;
-    TTVideoEngineVidSource *vidSource = [VEVideoModel videoEngineVidSource:videoModel];
-    [self playerOptions];
-    [self.playerController playWithMediaSource:vidSource];
-    [self.playerController play];
+    if ([mayPlayer isKindOfClass:[VEVideoPlayerController class]]) {
+        self.playerController = mayPlayer;
+    } else {
+        TTVideoEngineVidSource *vidSource = [VEVideoModel videoEngineVidSource:videoModel];
+        [self playerOptions];
+        [self.playerController playWithMediaSource:vidSource];
+        [self.playerController play];
+    }
 }
 
 - (UIView *)playContainerView {
@@ -135,7 +140,6 @@
 
 
 #pragma mark ----- VEInterfaceDelegate
-
 
 - (void)interfaceCallScreenRotation:(UIView *)interface {
     UIDeviceOrientation oriention = ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) ? UIDeviceOrientationLandscapeRight : UIDeviceOrientationPortrait;

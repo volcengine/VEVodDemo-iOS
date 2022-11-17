@@ -56,12 +56,19 @@
     [self layoutIfNeeded];
 }
 
-- (void)cellDidEndDisplay {
+- (void)cellDidEndDisplay:(BOOL)force {
     [self.centerContainerView bringSubviewToFront:self.playIconView];
     self.playIconView.hidden = NO;
     [self.contentView bringSubviewToFront:self.playIconView];
     self.coverImgView.hidden = NO;
-    [self playerStop];
+    [self.playerControlInterface removeFromSuperview];
+    [self.playerControlInterface destory];
+    self.playerControlInterface = nil;
+    if (force) {
+        [self.playerController stop];
+        [self.playerController.view removeFromSuperview];
+        self.playerController = nil;
+    }
 }
 
 
@@ -109,19 +116,11 @@
 }
 
 - (void)playerStart {
-    if (!self.playerController.isPlaying) {
+    if (self.playerController.isPlaying || self.playerController.isPause) {
+        [self.playerController play];
+    } else {
         [self playerOptions];
         [self.playerController playWithMediaSource:[VEVideoModel videoEngineVidSource:self.videoModel]];
-    }
-}
-
-- (void)playerStop {
-    @autoreleasepool {
-        [self.playerController stop];
-        [self.playerControlInterface destory];
-        self.playerControlInterface = nil;
-        [self.playerController.view removeFromSuperview];
-        self.playerController = nil;
     }
 }
 

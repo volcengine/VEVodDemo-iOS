@@ -45,7 +45,8 @@ TTVideoEngineResolutionDelegate>
 
 @property (nonatomic, strong) TTVideoEngine *videoEngine;
 
-@property (nonatomic, strong) id<TTVideoEngineMediaSource> currentMediaSource;
+@property (nonatomic, strong) id<TTVideoEngineMediaSource> mediaSource;
+
 @property (nonatomic, strong) UIImageView *posterImageView;
 
 @property (nonatomic, strong) UIView *playerPanelContainerView;
@@ -190,15 +191,12 @@ TTVideoEngineResolutionDelegate>
 
 - (void)resetVideoEngine:(TTVideoEngine * _Nonnull)videoEngine mediaSource:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource {
     self.videoEngine = nil;
-    self.currentMediaSource = mediaSource;
+    self.mediaSource = mediaSource;
     self.videoEngine = videoEngine;
-    
-    [self configVideoEngine];
-    [self.videoEngine setVideoEngineVideoSource:mediaSource];
 }
 
 - (void)setMediaSource:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource {
-    self.currentMediaSource = mediaSource;
+    _mediaSource = mediaSource;
     [self configVideoEngine];
     [self.videoEngine setVideoEngineVideoSource:mediaSource];
 }
@@ -343,7 +341,7 @@ TTVideoEngineResolutionDelegate>
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayer:key:hitVideoPreloadDataSize:)]) {
         [self.delegate videoPlayer:self key:key hitVideoPreloadDataSize:cacheSize];
     }
-    NSLog(@"EngineStrategy: ===== hitCacheSze %@, vid = %@", @(cacheSize), [self.currentMediaSource getUniqueId]);
+    NSLog(@"EngineStrategy: ===== hitCacheSze %@, vid = %@", @(cacheSize), [self.mediaSource getUniqueId]);
 }
 
 - (void)videoEngineUserStopped:(TTVideoEngine *)videoEngine {

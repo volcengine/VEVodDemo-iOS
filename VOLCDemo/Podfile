@@ -16,12 +16,15 @@ target 'VOLCDemo' do
   # vod short scene kit
   pod 'VESceneKit', :path=> './VESceneKit/'
   
+  
+  
   # public SDK
   pod 'Masonry'
   pod 'SDWebImage'
   pod 'MBProgressHUD', '~> 1.2.0'
   pod 'Reachability'
   pod 'JSONModel'
+  pod 'YYKit'
   
 end
 

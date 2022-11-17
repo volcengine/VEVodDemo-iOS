@@ -22,6 +22,7 @@
 
 - (void)viewDidLoad {
     self.versionLabel.text = [NSString stringWithFormat:@"TTSDK - %@", [TTSDKManager SDKVersionString]];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {

@@ -11,11 +11,12 @@
 #import "VEVideoModel.h"
 #import "VEDataManager.h"
 #import "VEVideoPlayerController.h"
+#import "VEFeedVideoDetailViewController.h"
 #import <Masonry/Masonry.h>
 
 static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
 
-@interface VEFeedVideoViewController () <UITableViewDelegate, UITableViewDataSource, VEFeedVideoNormalCellDelegate>
+@interface VEFeedVideoViewController () <UITableViewDelegate, UITableViewDataSource, VEFeedVideoNormalCellDelegate, VEFeedVideoDetailProtocol>
 
 @property (nonatomic, strong) UITableView *tableView;
 
@@ -38,9 +39,9 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
     [self.navigationController setNavigationBarHidden:NO];
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    [self stopVideos];
+- (void)dealloc {
+    [self.playerController stop];
+    self.playerController = nil;
 }
 
 #pragma mark ----- Base
@@ -76,8 +77,8 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
 }
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([cell respondsToSelector:@selector(cellDidEndDisplay)]) {
-        [cell performSelector:@selector(cellDidEndDisplay)];
+    if ([cell respondsToSelector:@selector(cellDidEndDisplay:)]) {
+        [(VEFeedVideoNormalCell *)cell cellDidEndDisplay:YES];
     }
 }
 
@@ -86,17 +87,28 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
     return [VEFeedVideoNormalCell cellHeight:videoModel];
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    VEVideoModel *videoModel = [self.videoModels objectAtIndex:indexPath.row];
+    BOOL shouldGoOn = [self willPlayCurrentSource:videoModel];
+    [self stopVideos:!shouldGoOn];
+    VEFeedVideoDetailViewController *detailViewController = [VEFeedVideoDetailViewController new];
+    detailViewController.delegate = self;
+    detailViewController.videoModel = videoModel;
+    [self.navigationController pushViewController:detailViewController animated:YES];
+}
+
 - (id)feedVideoCellShouldPlay:(VEFeedVideoNormalCell *)cell {
-    [self stopVideos];
-    self.playerController = [[VEVideoPlayerController alloc] init];
+    if ([self willPlayCurrentSource:cell.videoModel]) {
+    } else {
+        [self stopVideos:YES];
+        self.playerController = [[VEVideoPlayerController alloc] init];
+    }
     return self.playerController;
 }
 
-- (void)stopVideos {
-    if (self.playerController) {
-        for (VEFeedVideoNormalCell *cell in self.tableView.visibleCells) {
-            [cell cellDidEndDisplay];
-        }
+- (void)stopVideos:(BOOL)force {
+    for (VEFeedVideoNormalCell *cell in self.tableView.visibleCells) {
+        [cell cellDidEndDisplay:force];
     }
 }
 
@@ -134,6 +146,31 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
             [self.tableView reloadData];
         });
     }];
+}
+
+
+#pragma mark ----- VEFeedVideoDetailProtocol
+
+- (VEVideoPlayerController *)currentPlayerController:(VEVideoModel *)videoModel {
+    if ([self willPlayCurrentSource:videoModel]) {
+        VEVideoPlayerController *c = self.playerController;
+        self.playerController = nil;
+        return c;
+    } else {
+        return nil;
+    }
+}
+
+- (BOOL)willPlayCurrentSource:(VEVideoModel *)videoModel {
+    NSString *currentVid = @"";
+    if (self.playerController && [self.playerController.mediaSource isKindOfClass:[TTVideoEngineVidSource class]]) {
+        currentVid = [self.playerController.mediaSource performSelector:@selector(vid)];
+    }
+    if ([currentVid isEqualToString:videoModel.videoId]) {
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 @end

@@ -22,7 +22,7 @@
 
 @property (nonatomic, weak) id<VEFeedVideoNormalCellDelegate> delegate;
 
-- (void)cellDidEndDisplay;
+- (void)cellDidEndDisplay:(BOOL)force;
 
 + (CGFloat)cellHeight:(VEVideoModel *)videoModel;
 

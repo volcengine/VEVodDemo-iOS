@@ -69,10 +69,11 @@ typedef NS_ENUM(NSInteger, VEVideoLoadState) {
 @property (nonatomic, assign) BOOL looping;
 @property (nonatomic, strong, nullable) NSString *playerTitle;
 
-
 /// Set play media source, initialization TTVideoEngine
 /// @param mediaSource media source
 - (void)setMediaSource:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource;
+
+- (id<TTVideoEngineMediaSource>_Nullable)mediaSource;
 
 /// Reset video engien, initialization TTVideoEngine,  example pre render
 /// @param videoEngine  ttsdk video engine

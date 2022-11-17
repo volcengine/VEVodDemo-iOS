@@ -39,33 +39,31 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
     [self.window makeKeyAndVisible];
     /// 初始化SDK
     [self initTTSDK];
-    
     return YES;
 }
 
 
 #pragma mark ----- Rotate
-
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
-    if (self.screenDirection == UIInterfaceOrientationLandscapeRight) {
+    if (self.shouldRotation) {
         return UIInterfaceOrientationMaskLandscapeRight;
-    } else {
-        return UIInterfaceOrientationMaskPortrait;
     }
+    return UIInterfaceOrientationMaskPortrait;
 }
 
-- (void)forceRotate {
-    // 只考虑landscape right 和 portrait
-    UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
-    UIInterfaceOrientation destinationOrientation = UIInterfaceOrientationUnknown;
-    if (currentOrientation == UIInterfaceOrientationPortrait) {
-        destinationOrientation = UIInterfaceOrientationLandscapeRight;
-    } else {
-        destinationOrientation = UIInterfaceOrientationPortrait;
+- (void)setShouldRotation:(BOOL)shouldRotation {
+    _shouldRotation = shouldRotation;
+    if (!shouldRotation) {
+        if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
+            SEL selector = NSSelectorFromString(@"setOrientation:");
+            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[UIDevice instanceMethodSignatureForSelector:selector]];
+            [invocation setSelector:selector];
+            [invocation setTarget:[UIDevice currentDevice]];
+            int val = UIInterfaceOrientationPortrait;
+            [invocation setArgument:&val atIndex:2];
+            [invocation invoke];
+        }
     }
-    self.screenDirection = destinationOrientation;
-    [[UIDevice currentDevice] setValue:@(destinationOrientation) forKey:@"orientation"];
-    [UIViewController attemptRotationToDeviceOrientation];
 }
 
 
@@ -80,7 +78,7 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
 #endif
     NSString *appId = @"229234";
     /// initialize ttsdk, configure Liscene ，this step cannot be skipped !!!!!
-    TTSDKConfiguration *configuration = [TTSDKConfiguration defaultConfigurationWithAppID:appId licenseName:@"VOLC-PlayerDemo"];
+    TTSDKConfiguration *configuration = [TTSDKConfiguration defaultConfigurationWithAppID:appId licenseName:@"VEVod"];
     /// 播放器CacheSize，默认100M，建议设置 300M
     TTSDKVodConfiguration *vodConfig = [[TTSDKVodConfiguration alloc] init];
     vodConfig.cacheMaxSize = 300 * 1024 * 1024; // 300M

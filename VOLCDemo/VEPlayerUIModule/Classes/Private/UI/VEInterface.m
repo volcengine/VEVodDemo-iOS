@@ -35,9 +35,14 @@ extern NSString *const VEPlayProgressSliderGestureEnable;
         self.backgroundColor = [UIColor clearColor];
         [self loadKit];
         [self registEvents];
+        [self addObserver];
         [self initializeEventWithCore:core scene:scene];
     }
     return self;
+}
+
+- (void)addObserver {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenOrientationChanged:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
 }
 
 - (void)dealloc {
@@ -78,7 +83,6 @@ extern NSString *const VEPlayProgressSliderGestureEnable;
     // 让外部旋转屏幕
     if ([self.delegate respondsToSelector:@selector(interfaceCallScreenRotation:)]) {
         [self.delegate interfaceCallScreenRotation:self];
-        [[VEEventMessageBus universalBus] postEvent:VEUIEventScreenOrientationChanged withObject:nil rightNow:YES];   
     }
 }
 
@@ -111,11 +115,19 @@ extern NSString *const VEPlayProgressSliderGestureEnable;
 }
 
 
+#pragma mark ----- UIInterfaceOrientation
+
+- (void)screenOrientationChanged:(NSNotification *)notification {
+    [[VEEventMessageBus universalBus] postEvent:VEUIEventScreenOrientationChanged withObject:nil rightNow:YES];
+}
+
+
 #pragma mark ----- Tool
 
 static inline BOOL normalScreenBehaivor () {
     return ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait);
 }
+
 
 
 @end
