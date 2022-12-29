@@ -1,19 +1,24 @@
 ## VOLCDemo介绍
 
-VOLCDemo基于TTSDK点播SDK构建，当前版本以小视频场景演示，后续会持续迭代，短视频、长视频场景的使用；
-目标帮助业务侧快速集成的点播模块，通过迭代短视频、小视频、长视频等场景帮助业务侧快速实现接入最佳实践；
+VOLCDemo基于TTSDK点播SDK开发，目前完成了短、中、长等场景的视频基础能力展示。并提供了一些示例使用方式和工具层，后续会持续迭代。
+通过展示各种场景化解决方案来协助业务侧快速完成各类视频业务的快速搭建。
 
 ## 目录结构说明
 
 ```
-├─ TTSDK 
 ├─ VOLCDemo 
 └── VOLCDemo
-    ├── Base    // Appdelegate
-    ├── Player  // 播放器
-    ├── Module  // 实现模块：小视频等
-    └── Utils   // 工具类
+    ├── Base    // AppDelegate等App基本文件
+    ├── Entry   // 入口ViewController
+└── Pods
+    ├── TTSDK   // 火山引擎SDK（点播SDK载体）
+        ...
+    ├── VEPlayModule        // 火山引擎场景模块（短、中、长视频模块示例）
+    ├── VEPlayerKit         // 火山引擎点播播放器封装层
+    ├── VEPlayerUIModule    // 火山引擎点播UI控件封装层
+    ├── VESceneKit          // 火山引擎短视频业务场景框架    
 ```
+
 
 ## VOLCDemo运行
 
@@ -73,6 +78,7 @@ end
 - [预加载功能接入](https://www.volcengine.com/docs/4/65780)
 - [控件层使用](https://bytedance.feishu.cn/docx/doxcnqF1Y9NIzOQH0m8OVQ0cPFo)
    - [快速开始](https://bytedance.feishu.cn/docx/doxcnMlusNTzjPb7jn2wMf1s7oe)
+- [短视频场景封装层使用](https://bytedance.feishu.cn/docx/doxcnprOaYpOREMnnW8U2mxGajb)
 
 
 ## ChangeLog
