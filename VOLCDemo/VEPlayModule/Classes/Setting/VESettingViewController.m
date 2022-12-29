@@ -91,8 +91,8 @@ extern NSString *universalActionSectionKey;
         return ({
             UILabel *headerLabel = [UILabel new];
             headerLabel.text = [NSString stringWithFormat:@"    %@", sectionKey];
-            headerLabel.font = [UIFont systemFontOfSize:14.0];
-            headerLabel.textColor = [UIColor colorWithRGB:0x86909C alpha:1.0];
+            headerLabel.font = [UIFont boldSystemFontOfSize:16.0];
+            headerLabel.textColor = [UIColor darkGrayColor];
             headerLabel;
         });
     }

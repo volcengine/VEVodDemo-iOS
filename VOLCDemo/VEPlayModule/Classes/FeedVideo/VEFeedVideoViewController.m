@@ -53,7 +53,7 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
-    self.title = NSLocalizedString(@"title_feed_video", nil);
+    self.title = NSLocalizedString(@"title_middle_video", nil);
     self.navigationItem.leftBarButtonItem = ({
         UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back"] style:UIBarButtonItemStylePlain target:self action:@selector(close)];
         leftItem.tintColor = [UIColor blackColor];

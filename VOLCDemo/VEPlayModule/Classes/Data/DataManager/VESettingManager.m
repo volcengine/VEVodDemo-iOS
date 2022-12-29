@@ -12,11 +12,11 @@
 
 #import <MBProgressHUD/MBProgressHUD.h>
 
-const NSString *shortVideoSectionKey = @"短视频策略";
+const NSString *shortVideoSectionKey = @"title_setting_short_strategy";
 
-const NSString *universalSectionKey = @"通用选项";
+const NSString *universalSectionKey = @"title_setting_common_option";
 
-const NSString *universalActionSectionKey = @"通用操作"; // clear, log out?
+const NSString *universalActionSectionKey = @"universal_action"; // clear, log out?
 
 @interface VESettingManager ()
 
@@ -48,7 +48,7 @@ static dispatch_once_t onceToken;
     NSMutableArray *shortVideoSection = [NSMutableArray array];
     [shortVideoSection addObject:({
         VESettingModel *model = [VESettingModel new];
-        model.displayText = @"预加载策略";
+        model.displayText = NSLocalizedString(@"title_setting_short_strategy_preload", nil);
         model.settingKey = VESettingKeyShortVideoPreloadStrategy;
         model.open = YES;
         model.settingType = VESettingTypeSwitcher;
@@ -56,18 +56,18 @@ static dispatch_once_t onceToken;
     })];
     [shortVideoSection addObject:({
         VESettingModel *model = [VESettingModel new];
-        model.displayText = @"预渲染策略";
+        model.displayText = NSLocalizedString(@"title_setting_short_strategy_preRender", nil);
         model.settingKey = VESettingKeyShortVideoPreRenderStrategy;
         model.open = YES;
         model.settingType = VESettingTypeSwitcher;
         model;
     })];
-    [self.settings setValue:shortVideoSection forKey:shortVideoSectionKey];
+    [self.settings setValue:shortVideoSection forKey:NSLocalizedString(shortVideoSectionKey.copy, nil)];
     
     NSMutableArray *universalSection = [NSMutableArray array];
     [universalSection addObject:({
         VESettingModel *model = [VESettingModel new];
-        model.displayText = @"H.265";
+        model.displayText = NSLocalizedString(@"title_setting_common_option_h265", nil);
         model.settingKey = VESettingKeyUniversalH265;
         model.open = YES;
         model.settingType = VESettingTypeSwitcher;
@@ -75,7 +75,7 @@ static dispatch_once_t onceToken;
     })];
     [universalSection addObject:({
         VESettingModel *model = [VESettingModel new];
-        model.displayText = @"硬件解码";
+        model.displayText = NSLocalizedString(@"title_setting_common_option_hardware", nil);
         model.settingKey = VESettingKeyUniversalHardwareDecode;
         model.open = YES;
         model.settingType = VESettingTypeSwitcher;
@@ -83,18 +83,18 @@ static dispatch_once_t onceToken;
     })];
     [universalSection addObject:({
         VESettingModel *model = [VESettingModel new];
-        model.displayText = @"Device ID";
+        model.displayText = NSLocalizedString(@"title_setting_common_option_deviceId", nil);
         model.settingKey = VESettingKeyUniversalDeviceID;
         model.detailText = [VEVideoPlayerController deviceID];
         model.settingType = VESettingTypeDisplayDetail;
         model;
     })];
-    [self.settings setValue:universalSection forKey:universalSectionKey];
+    [self.settings setValue:universalSection forKey:NSLocalizedString(universalSectionKey.copy, nil)];
     
     NSMutableArray *universalActionSection = [NSMutableArray array];
     [universalActionSection addObject:({
         VESettingModel *model = [VESettingModel new];
-        model.displayText = @"清理缓存";
+        model.displayText = NSLocalizedString(@"title_setting_clean_cache", nil);
         model.settingKey = VESettingKeyUniversalActionCleanCache;
         model.settingType = VESettingTypeDisplay;
         model.allAreaAction = ^{
@@ -106,12 +106,14 @@ static dispatch_once_t onceToken;
         };
         model;
     })];
-    [self.settings setValue:universalActionSection forKey:universalActionSectionKey];
+    [self.settings setValue:universalActionSection forKey:NSLocalizedString(universalActionSectionKey.copy, nil)];
 }
 
 - (NSArray *)settingSections {
     @autoreleasepool {
-        return @[shortVideoSectionKey, universalSectionKey, universalActionSectionKey];
+        return @[NSLocalizedString(shortVideoSectionKey.copy, nil),
+                 NSLocalizedString(universalSectionKey.copy, nil),
+                 NSLocalizedString(universalActionSectionKey.copy, nil)];
     }
 }
 
@@ -119,15 +121,15 @@ static dispatch_once_t onceToken;
     NSArray *settings = [NSArray array];
     switch (key / 1000) {
         case 0:{
-            settings = [self.settings objectForKey:universalSectionKey];
+            settings = [self.settings objectForKey:NSLocalizedString(universalSectionKey.copy, nil)];
         }
             break;
         case 1:{
-            settings = [self.settings objectForKey:universalActionSectionKey];
+            settings = [self.settings objectForKey:NSLocalizedString(universalActionSectionKey.copy, nil)];
         }
             break;
         case 10:{
-            settings = [self.settings objectForKey:shortVideoSectionKey];
+            settings = [self.settings objectForKey:NSLocalizedString(shortVideoSectionKey.copy, nil)];
         }
             break;
     }

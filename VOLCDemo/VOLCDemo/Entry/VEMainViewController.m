@@ -14,15 +14,33 @@
 
 @interface VEMainViewController ()
 
+@property (weak, nonatomic) IBOutlet UILabel *vodTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *vodSubTitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *versionLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *shortSceneLable;
+@property (weak, nonatomic) IBOutlet UILabel *middleSceneLabel;
+@property (weak, nonatomic) IBOutlet UILabel *longSceneLabel;
+@property (weak, nonatomic) IBOutlet UILabel *settingsLabel;
 
 @end
 
 @implementation VEMainViewController
 
 - (void)viewDidLoad {
-    self.versionLabel.text = [NSString stringWithFormat:@"TTSDK - %@", [TTSDKManager SDKVersionString]];
+    [self configuratoinCustomView];
+}
+
+- (void)configuratoinCustomView {
+    self.vodTitleLabel.text = NSLocalizedString(@"title_volc_vod", nil);
+    self.vodSubTitleLabel.text = NSLocalizedString(@"title_volc_vod_desc", nil);
     
+    self.shortSceneLable.text = NSLocalizedString(@"title_short_video", nil);
+    self.middleSceneLabel.text = NSLocalizedString(@"title_middle_video", nil);
+    self.longSceneLabel.text = NSLocalizedString(@"title_long_video", nil);
+    self.settingsLabel.text = NSLocalizedString(@"title_video_setting", nil);
+    
+    self.versionLabel.text = [NSString stringWithFormat:@"TTSDK - %@", [TTSDKManager SDKVersionString]];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

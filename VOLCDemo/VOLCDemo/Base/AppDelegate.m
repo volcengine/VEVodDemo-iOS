@@ -16,11 +16,6 @@
 #endif
 
 
-FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseDidAdd;
-FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseInfoDidUpdate;;
-FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
-
-
 @interface AppDelegate ()
 
 @property (nonatomic, assign) UIInterfaceOrientation screenDirection;
@@ -73,8 +68,6 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
 #ifdef DEBUG
     /// 建议Debug期间打开Log开关
     [TTVideoEngine setLogFlag:TTVideoEngineLogFlagAll];
-    /// 建议Debug期间打开，监听 license 是否加载成功，
-    [self addLicenseObserver];
 #endif
     NSString *appId = @"229234";
     /// initialize ttsdk, configure Liscene ，this step cannot be skipped !!!!!
@@ -85,31 +78,5 @@ FOUNDATION_EXTERN NSString * const TTLicenseNotificationLicenseResultKey;
     configuration.vodConfiguration = vodConfig;
     [TTSDKManager startWithConfiguration:configuration];
 }
-
-- (void)addLicenseObserver {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(licenseDidAdd:) name:TTLicenseNotificationLicenseDidAdd object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(licenseInfoDidUpdate:) name:TTLicenseNotificationLicenseInfoDidUpdate object:nil];
-}
-
-- (void)licenseDidAdd:(NSNotification *)noti {
-    NSNumber *success = [noti userInfo][TTLicenseNotificationLicenseResultKey];
-    BOOL isSuccess = [success boolValue];
-    if (isSuccess) {
-        NSLog(@"add license successfully");
-    } else {
-        NSLog(@"failed to add license");
-    }
-}
-
-- (void)licenseInfoDidUpdate:(NSNotification *)noti {
-    NSNumber *success = [noti userInfo][TTLicenseNotificationLicenseResultKey];
-    BOOL isSuccess = [success boolValue];
-    if (isSuccess) {
-        NSLog(@"update license successfully");
-    } else {
-        NSLog(@"failed to update license");
-    }
-}
-
 
 @end

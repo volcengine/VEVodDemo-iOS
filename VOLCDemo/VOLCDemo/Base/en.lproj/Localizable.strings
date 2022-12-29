@@ -6,12 +6,27 @@
   
 */
 
+"title_volc_vod" = "VOLC VOD";
+"title_volc_vod_desc" = "volc engine video solution";
+
 "title_short_video" = "short video";
-"title_feed_video" = "feed video";
-"title_long_video" = "normal video";
+"title_middle_video" = "middle video";
+"title_long_video" = "long video";
 "title_clean_cache" = "clean cache";
 "title_video_setting" = "video setting";
 
+"title_setting_short_strategy" = "Short Scene Settings";
+"title_setting_short_strategy_preload" = "preload strategy";
+"title_setting_short_strategy_preRender" = "prerender strategy";
+
+"title_setting_common_option" = "Common Settings";
+"title_setting_common_option_h265" = "H.265";
+"title_setting_common_option_hardware" = "Hardware Decode";
+"title_setting_common_option_deviceId" = "Device ID";
+"title_setting_clean_cache" = "clean cache";
+
+"title_common_copy" = "copy";
 
 "tip_clean_success" = "clean success";
+"tip_copy_success" = "copy success";
 
