@@ -11,7 +11,9 @@
 #import "VEVideoModel.h"
 #import "VEDataManager.h"
 #import "VEVideoPlayerController.h"
+#import "VEVideoPlayerController+Strategy.h"
 #import "VEFeedVideoDetailViewController.h"
+#import "VESettingManager.h"
 #import <Masonry/Masonry.h>
 
 static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
@@ -31,6 +33,7 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initialUI];
+    [self startVideoStategy];
     [self loadData];
 }
 
@@ -42,6 +45,13 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
 - (void)dealloc {
     [self.playerController stop];
     self.playerController = nil;
+}
+
+- (void)startVideoStategy {
+    VESettingModel *preload = [[VESettingManager universalManager] settingForKey:VESettingKeyShortVideoPreloadStrategy];
+    if (preload.open) {
+        [VEVideoPlayerController enableEngineStrategy:TTVideoEngineStrategyTypePreload scene:TTVEngineStrategySceneShortVideo];
+    }
 }
 
 #pragma mark ----- Base
@@ -142,6 +152,13 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
     [self.videoModels removeAllObjects];
     [VEDataManager dataForScene:VESceneTypeFeedVideo range:NSMakeRange(0, 0) result:^(NSArray<VEVideoModel *> *videoModels) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            // trans video model to strategy source
+            NSMutableArray *sources = [NSMutableArray array];
+            [videoModels enumerateObjectsUsingBlock:^(VEVideoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [sources addObject:[VEVideoModel videoEngineVidSource:obj]];
+            }];
+            [VEVideoPlayerController setStrategyVideoSources:sources];
+            
             [self.videoModels addObjectsFromArray:videoModels];
             [self.tableView reloadData];
         });
