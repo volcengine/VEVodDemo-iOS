@@ -28,13 +28,25 @@
 
 - (void)openVideoEngineDefaultOptions {
     // system idle
+    
+    [self.videoEngine setOptionForKey:VEKKeyProxyServerEnable_BOOL value:@(YES)];
+    
     [self.videoEngine setOptionForKey:VEKKeyPlayerIdleTimerAuto_NSInteger value:@(1)];
+    self.videoEngine.medialoaderEnable = YES;
     // hardware Decode
-    [self.videoEngine setOptionForKey:VEKKeyPlayerHardwareDecode_BOOL value:@(self.hardwareDecodeOpen)];
+//    [self.videoEngine setOptionForKey:VEKKeyPlayerHardwareDecode_BOOL value:@(self.hardwareDecodeOpen)];
+    [self.videoEngine setOptionForKey:VEKKeyPlayerHardwareDecode_BOOL value:@(YES)];
+
     // h265
-    [self.videoEngine setOptionForKey:VEKKeyPlayerh265Enabled_BOOL value:@(self.h265Open)];
+//    [self.videoEngine setOptionForKey:VEKKeyPlayerh265Enabled_BOOL value:@(self.h265Open)];
+    [self.videoEngine setOptionForKey:VEKKeyPlayerh265Enabled_BOOL value:@(YES)];
+
     
     [self.videoEngine setOptionForKey:VEKKeyPlayerSeekEndEnabled_BOOL value:@(YES)];
+    [self.videoEngine setOptionForKey:VEKKeyPlayerPreferSpdlForHDR_BOOL value:@(YES)];
+    [self.videoEngine setOptionForKey:VEKKeyPlayerSetSpdlForHDRUrl_BOOL value:@(YES)];
+    //[self.videoEngine setOptionForKey:VEKKeyIsEnableFindAmbientForHDR value:@(YES)];
+    
 }
 
 @end

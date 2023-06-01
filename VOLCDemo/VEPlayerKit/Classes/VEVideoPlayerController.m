@@ -198,7 +198,9 @@ TTVideoEngineResolutionDelegate>
 - (void)setMediaSource:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource {
     _mediaSource = mediaSource;
     [self configVideoEngine];
-    [self.videoEngine setVideoEngineVideoSource:mediaSource];
+    NSString *localPath = [[NSBundle mainBundle] pathForResource:@"IMG_0912.MOV" ofType:nil];
+    [self.videoEngine setLocalURL:localPath];
+   //[self.videoEngine setVideoEngineVideoSource:mediaSource];
 }
 
 - (void)loadBackgourdImageWithMediaSource:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource {
@@ -217,8 +219,9 @@ TTVideoEngineResolutionDelegate>
     } else {
         [self setMediaSource:mediaSource];
     }
+    [self.videoEngine prepareToPlay];
+    //[self play];
     
-    [self play];
     [self reLayoutVideoPlayerView];
     [self __addPeriodicTimeObserver];
 }

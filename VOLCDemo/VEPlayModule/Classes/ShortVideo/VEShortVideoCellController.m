@@ -64,7 +64,10 @@
         return;
     }
     [self createPlayer];
-    [self.playerController loadBackgourdImageWithMediaSource:[VEVideoModel videoEngineVidSource:self.videoModel]];
+    [self createPlayerControl];
+    [self playerOptions];
+    [self.playerController playWithMediaSource:[VEVideoModel videoEngineVidSource:self.videoModel]];
+    //[self.playerController loadBackgourdImageWithMediaSource:[VEVideoModel videoEngineVidSource:self.videoModel]];
 }
 
 - (void)playerStart {
@@ -73,10 +76,9 @@
     }
     if (!self.playerController) {
         [self createPlayer];
+        [self playerOptions];
+        [self.playerController playWithMediaSource:[VEVideoModel videoEngineVidSource:self.videoModel]];
     }
-    [self createPlayerControl];
-    [self playerOptions];
-    [self.playerController playWithMediaSource:[VEVideoModel videoEngineVidSource:self.videoModel]];
     [self.playerController play];
 }
 
@@ -115,13 +117,13 @@
 - (void)playerOptions {
     VESettingModel *preRender = [[VESettingManager universalManager] settingForKey:VESettingKeyShortVideoPreRenderStrategy];
     self.playerController.preRenderOpen = preRender.open;
-    
+
     VESettingModel *preload = [[VESettingManager universalManager] settingForKey:VESettingKeyShortVideoPreloadStrategy];
     self.playerController.preloadOpen = preload.open;
-    
+
     VESettingModel *h265 = [[VESettingManager universalManager] settingForKey:VESettingKeyUniversalH265];
     self.playerController.h265Open = h265.open;
-    
+
     VESettingModel *hardwareDecode = [[VESettingManager universalManager] settingForKey:VESettingKeyUniversalHardwareDecode];
     self.playerController.hardwareDecodeOpen = hardwareDecode.open;
 }

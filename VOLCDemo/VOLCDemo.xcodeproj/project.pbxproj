@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		23EEF0B92A23503A00C26570 /* IMG_0912.MOV in Resources */ = {isa = PBXBuildFile; fileRef = 23EEF0B82A23503A00C26570 /* IMG_0912.MOV */; };
 		2B3B72AB2761A6DF00E3A479 /* MetalPerformanceShaders.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B3B72AA2761A6DF00E3A479 /* MetalPerformanceShaders.framework */; };
 		2B3B72AD2761A6E800E3A479 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B3B72AC2761A6E800E3A479 /* MetalKit.framework */; };
 		2B82C5532673407E006CE7CD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B82C5552673407E006CE7CD /* LaunchScreen.storyboard */; };
@@ -35,6 +36,7 @@
 
 /* Begin PBXFileReference section */
 		0C8816910B24DE9DA73B4723 /* libPods-VOLCDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-VOLCDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		23EEF0B82A23503A00C26570 /* IMG_0912.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = IMG_0912.MOV; sourceTree = "<group>"; };
 		2B3B72AA2761A6DF00E3A479 /* MetalPerformanceShaders.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalPerformanceShaders.framework; path = System/Library/Frameworks/MetalPerformanceShaders.framework; sourceTree = SDKROOT; };
 		2B3B72AC2761A6E800E3A479 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		2B82C5542673407E006CE7CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 		2BEC93E62657915100C64503 /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				23EEF0B82A23503A00C26570 /* IMG_0912.MOV */,
 				2BFAE9E3291E0120000B33FB /* VEVod.license */,
 				2BEC93EB2657915100C64503 /* Info.plist */,
 				2BEC93E92657915100C64503 /* main.m */,
@@ -149,12 +152,14 @@
 			buildConfigurationList = 2BEC93DB2657907400C64503 /* Build configuration list for PBXNativeTarget "VOLCDemo" */;
 			buildPhases = (
 				3C783863794F104C62A02C9E /* [CP] Check Pods Manifest.lock */,
+				4A0B23FD93A0F56B05CF1A01 /* [CP-User] Hummer-before-hooks */,
 				2BEC93BE2657907300C64503 /* Sources */,
 				2BEC93BF2657907300C64503 /* Frameworks */,
 				2BEC93C02657907300C64503 /* Resources */,
 				7ECE482F4A5502C5B185868F /* [CP] Copy Pods Resources */,
 				93072FCB55305E80C28B1036 /* [CP] Embed Pods Frameworks */,
 				2BEF203B28CAE58C00B55D34 /* Embed Frameworks */,
+				8194EA0894B6C833CFCE0FB1 /* [CP-User] Hummer-after-hooks */,
 			);
 			buildRules = (
 			);
@@ -205,6 +210,7 @@
 			files = (
 				2B98E96C26650EFE00CBF214 /* Localizable.strings in Resources */,
 				2BEC93DF265790E900C64503 /* Assets.xcassets in Resources */,
+				23EEF0B92A23503A00C26570 /* IMG_0912.MOV in Resources */,
 				2B82C5532673407E006CE7CD /* LaunchScreen.storyboard in Resources */,
 				2BFBC50728C09E83008B6A35 /* VEMainViewController.xib in Resources */,
 				2BFAE9E4291E0120000B33FB /* VEVod.license in Resources */,
@@ -236,6 +242,16 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		4A0B23FD93A0F56B05CF1A01 /* [CP-User] Hummer-before-hooks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] Hummer-before-hooks";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -f \"${PODS_ROOT}/hummer_before_hooks.sh\" ];then\n  bash \"${PODS_ROOT}/hummer_before_hooks.sh\"\nfi\n";
+		};
 		7ECE482F4A5502C5B185868F /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -252,6 +268,16 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-VOLCDemo/Pods-VOLCDemo-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		8194EA0894B6C833CFCE0FB1 /* [CP-User] Hummer-after-hooks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] Hummer-after-hooks";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -f \"${PODS_ROOT}/hummer_after_hooks.sh\" ];then\n  bash \"${PODS_ROOT}/hummer_after_hooks.sh\"\nfi\n";
 		};
 		93072FCB55305E80C28B1036 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -430,9 +456,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 20;
-				DEVELOPMENT_TEAM = 3XMD9D6A65;
+				DEVELOPMENT_TEAM = 7Z4DVSE5SQ;
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/VOLCDemo/Base/VOLCDemoPrefix.pch";
@@ -448,8 +475,9 @@
 					"$(PROJECT_DIR)/VOLCDemo/Utils/OneKit/BaseKit",
 				);
 				MARKETING_VERSION = 2.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.volc.voddemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.volc.sddd;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
