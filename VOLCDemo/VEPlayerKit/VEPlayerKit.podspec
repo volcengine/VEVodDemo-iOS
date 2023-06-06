@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/*'
   s.public_header_files = 'Classes/*.{h}'
 
-  s.dependency 'TTSDK/Player', '1.36.1.2-premium'
+  s.dependency 'TTSDK/Player', '1.37.3.8-premium'
   s.dependency 'Masonry'
   s.dependency 'SDWebImage'
   
