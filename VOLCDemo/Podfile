@@ -2,11 +2,11 @@
 source 'https://github.com/CocoaPods/Specs.git'
 source 'https://github.com/volcengine/volcengine-specs.git'
 
-platform :ios, '9.0'
+platform :ios, '11.0'
 
 target 'VOLCDemo' do
   # vod SDK
-  pod 'TTSDK', '1.37.3.8-premium', :subspecs => ['Player']
+  pod 'TTSDK', '1.39.1.14-premium', :subspecs => ['Player']
   # vod all scene exhibition
   pod 'VEPlayModule', :path=> './VEPlayModule/' 
   # vod player kit
