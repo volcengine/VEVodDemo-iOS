@@ -9,6 +9,8 @@
 
 @property (nonatomic, strong) UIWindow *window;
 
-@property (nonatomic, setter=setShouldRotation:) BOOL shouldRotation;//是否允许横屏，默认为NO
+@property (nonatomic, assign) BOOL shouldRotation;//是否允许横屏，默认为NO
+
+- (void)updateShouldRotation:(NSNumber *)shouldRotation;
 
 @end

@@ -24,7 +24,6 @@ target 'VOLCDemo' do
   pod 'MBProgressHUD', '~> 1.2.0'
   pod 'Reachability'
   pod 'JSONModel'
-  pod 'YYKit'
 
 end
 

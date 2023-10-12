@@ -46,9 +46,9 @@
     return UIInterfaceOrientationMaskPortrait;
 }
 
-- (void)setShouldRotation:(BOOL)shouldRotation {
-    _shouldRotation = shouldRotation;
-    if (!shouldRotation) {
+- (void)updateShouldRotation:(NSNumber *)shouldRotation {
+    _shouldRotation = [shouldRotation boolValue];
+    if (!_shouldRotation) {
         if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
             SEL selector = NSSelectorFromString(@"setOrientation:");
             NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[UIDevice instanceMethodSignatureForSelector:selector]];
