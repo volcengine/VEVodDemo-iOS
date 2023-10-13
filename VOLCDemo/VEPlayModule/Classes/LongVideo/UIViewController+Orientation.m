@@ -7,7 +7,6 @@
 //
 
 #import "UIViewController+Orientation.h"
-#import <YYKit/NSObject+YYAdd.h>
 #import <objc/runtime.h>
 @implementation UIViewController (Orientation)
 
