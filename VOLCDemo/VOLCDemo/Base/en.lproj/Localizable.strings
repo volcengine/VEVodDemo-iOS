@@ -19,6 +19,10 @@
 "title_setting_short_strategy_preload" = "preload strategy";
 "title_setting_short_strategy_preRender" = "prerender strategy";
 
+"title_setting_Source_Type" = "Source Type";
+"title_setting_Source_Type_Vid" = "Vid";
+"title_setting_Source_Type_Url" = "Url";
+
 "title_setting_common_option" = "Common Settings";
 "title_setting_common_option_h265" = "H.265";
 "title_setting_common_option_hardware" = "Hardware Decode";

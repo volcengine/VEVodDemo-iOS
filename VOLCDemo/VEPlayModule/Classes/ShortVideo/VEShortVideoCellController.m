@@ -64,7 +64,7 @@
         return;
     }
     [self createPlayer];
-    [self.playerController loadBackgourdImageWithMediaSource:[VEVideoModel videoEngineVidSource:self.videoModel]];
+    [self.playerController loadBackgourdImageWithMediaSource:[VEVideoModel ConvertVideoEngineSource:self.videoModel]];
 }
 
 - (void)playerStart {
@@ -76,7 +76,7 @@
     }
     [self createPlayerControl];
     [self playerOptions];
-    [self.playerController playWithMediaSource:[VEVideoModel videoEngineVidSource:self.videoModel]];
+    [self.playerController playWithMediaSource:[VEVideoModel ConvertVideoEngineSource:self.videoModel]];
     [self.playerController play];
 }
 

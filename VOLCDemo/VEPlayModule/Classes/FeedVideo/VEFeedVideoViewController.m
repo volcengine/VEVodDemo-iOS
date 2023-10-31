@@ -155,7 +155,7 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
             // trans video model to strategy source
             NSMutableArray *sources = [NSMutableArray array];
             [videoModels enumerateObjectsUsingBlock:^(VEVideoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                [sources addObject:[VEVideoModel videoEngineVidSource:obj]];
+                [sources addObject:[VEVideoModel ConvertVideoEngineSource:obj]];
             }];
             [VEVideoPlayerController setStrategyVideoSources:sources];
             

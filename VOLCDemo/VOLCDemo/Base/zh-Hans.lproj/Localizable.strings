@@ -19,6 +19,10 @@
 "title_setting_short_strategy_preload" = "预加载策略";
 "title_setting_short_strategy_preRender" = "预渲染策略";
 
+"title_setting_Source_Type" = "播放源配置";
+"title_setting_Source_Type_Vid" = "Vid 方式播放";
+"title_setting_Source_Type_Url" = "Url 方式播放";
+
 "title_setting_common_option" = "通用配置";
 "title_setting_common_option_h265" = "H.265";
 "title_setting_common_option_hardware" = "硬解";

@@ -10,28 +10,40 @@
 #import "TTVideoEngineSourceCategory.h"
 #import <JSONModel/JSONModel.h>
 
+@interface VEVideoEngineURLInfo : JSONModel
+
+@property (nonatomic, nullable, copy) NSString *playUrl;
+
+@end
+
+@interface VEVideoEngineInfoModel : JSONModel
+
+@property (nonatomic, nullable, copy) NSString *videoID;
+
+@property (nonatomic, nullable, strong) NSArray<VEVideoEngineURLInfo *> *urlList;
+
+@end
+
 @interface VEVideoModel : JSONModel
 
-@property (nonatomic, copy) NSString *playUrl;
+@property (nonatomic, nullable, copy) NSString *playUrl;
 
-@property (nonatomic, copy) NSString *h265PlayUrl;
+@property (nonatomic, nullable, copy) NSString *h265PlayUrl;
 
-@property (nonatomic, copy) NSString *videoId;
+@property (nonatomic, nullable, copy) NSString *videoId;
 
-@property (nonatomic, copy) NSString *playAuthToken;
+@property (nonatomic, nullable, copy) NSString *playAuthToken;
 
-@property (nonatomic, copy) NSString *title;
+@property (nonatomic, nullable, copy) NSString *title;
 
-@property (nonatomic, copy) NSString *detail;
+@property (nonatomic, nullable, copy) NSString *detail;
 
-@property (nonatomic, copy) NSString *coverUrl;
+@property (nonatomic, nullable, copy) NSString *coverUrl;
 
-@property (nonatomic, copy) NSString *duration;
+@property (nonatomic, nullable, copy) NSString *duration;
 
-+ (TTVideoEngineVidSource *)videoEngineVidSource:(VEVideoModel *)videoModel;
+@property (nonatomic, nullable, strong) VEVideoEngineInfoModel *videoEngineInfoModel;
 
-+ (TTVideoEngineUrlSource *)videoEngineUrlSource:(VEVideoModel *)videoModel;
-
-
++ (id<TTVideoEngineMediaSource>_Nullable)ConvertVideoEngineSource:(VEVideoModel *_Nullable)videoModel;
 
 @end

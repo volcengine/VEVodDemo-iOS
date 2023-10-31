@@ -84,7 +84,7 @@
     if ([mayPlayer isKindOfClass:[VEVideoPlayerController class]]) {
         self.playerController = mayPlayer;
     } else {
-        TTVideoEngineVidSource *vidSource = [VEVideoModel videoEngineVidSource:videoModel];
+        TTVideoEngineVidSource *vidSource = [VEVideoModel ConvertVideoEngineSource:videoModel];
         [self playerOptions];
         [self.playerController playWithMediaSource:vidSource];
         [self.playerController play];

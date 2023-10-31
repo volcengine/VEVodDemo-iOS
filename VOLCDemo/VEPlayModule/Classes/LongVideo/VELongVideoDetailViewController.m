@@ -80,7 +80,7 @@
 - (void)setVideoModel:(VEVideoModel *)videoModel {
     _videoModel = videoModel;
     self.playerController.playerTitle = videoModel.title;
-    TTVideoEngineVidSource *vidSource = [VEVideoModel videoEngineVidSource:videoModel];
+    TTVideoEngineVidSource *vidSource = [VEVideoModel ConvertVideoEngineSource:videoModel];
     [self playerOptions];
     [self.playerController playWithMediaSource:vidSource];
     [self.playerController play];

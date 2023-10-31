@@ -25,12 +25,13 @@ typedef enum : NSUInteger {
     VESettingKeyUniversalH265 = 0000,
     VESettingKeyUniversalHardwareDecode,
     VESettingKeyUniversalDeviceID,
-    
     VESettingKeyUniversalActionCleanCache = 1000,
-    
     
     VESettingKeyShortVideoPreloadStrategy = 10000,
     VESettingKeyShortVideoPreRenderStrategy,
+    
+    VESettingKeyPlaySourceTypeVid = 100000,
+    VESettingKeyPlaySourceTypeUrl,
     
 } VESettingKey;
 

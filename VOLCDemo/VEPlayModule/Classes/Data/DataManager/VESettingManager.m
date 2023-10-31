@@ -14,6 +14,8 @@
 
 const NSString *shortVideoSectionKey = @"title_setting_short_strategy";
 
+const NSString *playSourceSectionKey = @"title_setting_Source_Type";
+
 const NSString *universalSectionKey = @"title_setting_common_option";
 
 const NSString *universalActionSectionKey = @"universal_action"; // clear, log out?
@@ -64,6 +66,25 @@ static dispatch_once_t onceToken;
     })];
     [self.settings setValue:shortVideoSection forKey:NSLocalizedString(shortVideoSectionKey.copy, nil)];
     
+    NSMutableArray *playSourceSection = [NSMutableArray array];
+    [playSourceSection addObject:({
+        VESettingModel *model = [VESettingModel new];
+        model.displayText = NSLocalizedString(@"title_setting_Source_Type_Vid", nil);
+        model.settingKey = VESettingKeyPlaySourceTypeVid;
+        model.open = YES;
+        model.settingType = VESettingTypeSwitcher;
+        model;
+    })];
+    [playSourceSection addObject:({
+        VESettingModel *model = [VESettingModel new];
+        model.displayText = NSLocalizedString(@"title_setting_Source_Type_Url", nil);
+        model.settingKey = VESettingKeyPlaySourceTypeUrl;
+        model.open = NO;
+        model.settingType = VESettingTypeSwitcher;
+        model;
+    })];
+    [self.settings setValue:playSourceSection forKey:NSLocalizedString(playSourceSectionKey.copy, nil)];
+    
     NSMutableArray *universalSection = [NSMutableArray array];
     [universalSection addObject:({
         VESettingModel *model = [VESettingModel new];
@@ -112,6 +133,7 @@ static dispatch_once_t onceToken;
 - (NSArray *)settingSections {
     @autoreleasepool {
         return @[NSLocalizedString(shortVideoSectionKey.copy, nil),
+                 NSLocalizedString(playSourceSectionKey.copy, nil),
                  NSLocalizedString(universalSectionKey.copy, nil),
                  NSLocalizedString(universalActionSectionKey.copy, nil)];
     }
@@ -130,6 +152,9 @@ static dispatch_once_t onceToken;
             break;
         case 10:{
             settings = [self.settings objectForKey:NSLocalizedString(shortVideoSectionKey.copy, nil)];
+        }
+        case 100:{
+            settings = [self.settings objectForKey:NSLocalizedString(playSourceSectionKey.copy, nil)];
         }
             break;
     }
