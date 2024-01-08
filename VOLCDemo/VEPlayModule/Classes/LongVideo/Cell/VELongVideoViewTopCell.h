@@ -1,0 +1,17 @@
+//
+//  VELongVideoViewTopCell.h
+//  VOLCDemo
+//
+//  Created by real on 2022/8/18.
+//  Copyright © 2022 ByteDance. All rights reserved.
+//
+
+@import UIKit;
+@class VEVideoModel;
+
+@interface VELongVideoViewTopCell : UICollectionViewCell
+
+@property (nonatomic, strong) VEVideoModel *videoModel;
+
+@end
+
