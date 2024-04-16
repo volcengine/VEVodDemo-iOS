@@ -62,7 +62,6 @@ static NSString *VEShortVideoCellReuseID = @"VEShortVideoCellReuseID";
     [VEVideoPlayerController clearAllEngineStrategy];
 }
 
-
 #pragma mark ---- ATPageViewControllerDataSource & Delegate
 - (NSInteger)numberOfItemInPageViewController:(VEPageViewController *)pageViewController {
     return self.videoModels.count;

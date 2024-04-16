@@ -67,6 +67,7 @@ TTVideoEngineResolutionDelegate>
 @synthesize currentPlaybackTime;
 @synthesize playableDuration;
 @synthesize superResolutionEnable = _superResolutionEnable;
+@synthesize videoViewMode = _videoViewMode;
 
 @dynamic playbackRate;
 @dynamic playbackVolume;
@@ -91,10 +92,6 @@ TTVideoEngineResolutionDelegate>
 }
 
 - (void)configVideoEngine {
-    if (_videoEngine == nil) {
-        TTVideoEngine* engine = [[TTVideoEngine alloc] initWithOwnPlayer:YES];
-        self.videoEngine = engine;
-    }
     self.videoEngine.delegate = self;
     self.videoEngine.resolutionDelegate = self;
     self.videoEngine.reportLogEnable = YES;
@@ -126,11 +123,11 @@ TTVideoEngineResolutionDelegate>
         make.edges.equalTo(self.view);
     }];
     
-    [self.view addSubview:self.debugInfoView];
-    [self.debugInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).with.offset(40);
-        make.size.mas_equalTo(CGSizeMake(300, 30));
-    }];
+//    [self.view addSubview:self.debugInfoView];
+//    [self.debugInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(self.view).with.offset(40);
+//        make.size.mas_equalTo(CGSizeMake(300, 30));
+//    }];
 }
 
 - (void)reLayoutVideoPlayerView {
@@ -194,13 +191,13 @@ TTVideoEngineResolutionDelegate>
             [weak_self.receiver playerCore:weak_self playTimeDidChanged:weak_self.currentPlaybackTime info:@{}];
         }
         
-        CGFloat oriWidth = [[weak_self.videoEngine getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoWidth_NSInteger)] floatValue];
-        CGFloat oriHeight = [[weak_self.videoEngine getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoHeight_NSInteger)] floatValue];
-        
-        CGFloat srWidth = [[weak_self.videoEngine getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoSRWidth_NSInteger)] floatValue];
-        CGFloat srHeight = [[weak_self.videoEngine getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoSRHeight_NSInteger)] floatValue];
-        
-        weak_self.debugInfoView.text = [NSString stringWithFormat:@"ori w:%@, ori h:%@, sr w:%@, sr h:%@", @(oriWidth), @(oriHeight), @(srWidth), @(srHeight)];
+//        CGFloat oriWidth = [[weak_self.videoEngine getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoWidth_NSInteger)] floatValue];
+//        CGFloat oriHeight = [[weak_self.videoEngine getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoHeight_NSInteger)] floatValue];
+//        
+//        CGFloat srWidth = [[weak_self.videoEngine getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoSRWidth_NSInteger)] floatValue];
+//        CGFloat srHeight = [[weak_self.videoEngine getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoSRHeight_NSInteger)] floatValue];
+//        
+//        weak_self.debugInfoView.text = [NSString stringWithFormat:@"ori w:%@, ori h:%@, sr w:%@, sr h:%@", @(oriWidth), @(oriHeight), @(srWidth), @(srHeight)];
     }];
 }
 
@@ -510,7 +507,40 @@ TTVideoEngineResolutionDelegate>
     return self.videoEngine.looping;
 }
 
+- (void)setVideoViewMode:(VEVideoViewMode)videoViewMode {
+    switch (videoViewMode) {
+        case VEVideoViewModeAspectFit: {
+            [self.videoEngine setOptionForKey:VEKKeyViewScaleMode_ENUM value:@(TTVideoEngineScalingModeAspectFit)];
+            self.posterImageView.contentMode = UIViewContentModeScaleAspectFit;
+        }
+            break;
+        case VEVideoViewModeAspectFill: {
+            [self.videoEngine setOptionForKey:VEKKeyViewScaleMode_ENUM value:@(TTVideoEngineScalingModeAspectFill)];
+            self.posterImageView.contentMode = UIViewContentModeScaleAspectFill;
+        }
+            break;
+        case VEVideoViewModeModeFill: {
+            [self.videoEngine setOptionForKey:VEKKeyViewScaleMode_ENUM value:@(TTVideoEngineScalingModeFill)];
+            self.posterImageView.contentMode = UIViewContentModeScaleToFill;
+        }
+            break;
+        default: {
+            [self.videoEngine setOptionForKey:VEKKeyViewScaleMode_ENUM value:@(TTVideoEngineScalingModeNone)];
+            self.posterImageView.contentMode = UIViewContentModeScaleAspectFit;
+        }
+            break;
+    }
+    _videoViewMode = videoViewMode;
+}
+
 #pragma mark - lazy load
+
+- (TTVideoEngine *)videoEngine {
+    if (_videoEngine == nil) {
+        _videoEngine = [[TTVideoEngine alloc] initWithOwnPlayer:YES];
+    }
+    return _videoEngine;
+}
 
 - (UIView *)playerView {
     self.videoEngine.playerView.backgroundColor = [UIColor blackColor];

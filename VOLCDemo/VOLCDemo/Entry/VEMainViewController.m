@@ -10,6 +10,7 @@
 #import <VEPlayModule/VEFeedVideoViewController.h>
 #import <VEPlayModule/VELongVideoViewController.h>
 #import <VEPlayModule/VESettingViewController.h>
+#import <VEPlayModule/VEShortDramaPagingViewController.h>
 #import <VEPlayModule/VEPlayUrlConfigViewController.h>
 #import <TTSDK/TTSDKManager.h>
 
@@ -22,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *shortSceneLable;
 @property (weak, nonatomic) IBOutlet UILabel *middleSceneLabel;
 @property (weak, nonatomic) IBOutlet UILabel *longSceneLabel;
+@property (weak, nonatomic) IBOutlet UILabel *shortDramaSceneLabel;
 @property (weak, nonatomic) IBOutlet UILabel *settingsLabel;
 
 @end
@@ -39,6 +41,7 @@
     self.shortSceneLable.text = NSLocalizedString(@"title_short_video", nil);
     self.middleSceneLabel.text = NSLocalizedString(@"title_middle_video", nil);
     self.longSceneLabel.text = NSLocalizedString(@"title_long_video", nil);
+    self.shortDramaSceneLabel.text = NSLocalizedString(@"title_short_drama_video", nil);
     self.settingsLabel.text = NSLocalizedString(@"title_video_setting", nil);
     
     self.versionLabel.text = [NSString stringWithFormat:@"TTSDK - %@", [TTSDKManager SDKVersionString]];
@@ -70,14 +73,14 @@
     [self.navigationController pushViewController:longVideoViewController animated:YES];
 }
 
-- (IBAction)customSourceUpInsideAction:(id)sender {
-    VEPlayUrlConfigViewController *playUrlViewController = [VEPlayUrlConfigViewController new];
-    [self.navigationController pushViewController:playUrlViewController animated:YES];
-}
-
 - (IBAction)settingTouchUpInsideAction:(id)sender {
     VESettingViewController *settingViewController = [VESettingViewController new];
     [self.navigationController pushViewController:settingViewController animated:YES];
+}
+
+- (IBAction)shortDramaTouchUpInsideAction:(id)sender {
+    VEShortDramaPagingViewController *shortDramaPagingViewController = [[VEShortDramaPagingViewController alloc] initWithDefaultType:VEShortDramaTypeDrama];
+    [self.navigationController pushViewController:shortDramaPagingViewController animated:YES];
 }
 
 

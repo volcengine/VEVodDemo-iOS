@@ -15,6 +15,7 @@
 "title_short_video" = "短视频（竖屏类抖音）";
 "title_middle_video" = "中视频（横屏）";
 "title_long_video" = "长视频";
+"title_short_drama_video" = "短剧";
 "title_clean_cache" = "清理缓存";
 "title_video_setting" = "播放设置";
 

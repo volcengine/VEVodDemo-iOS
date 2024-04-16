@@ -26,6 +26,13 @@ typedef NS_ENUM(NSInteger, VEVideoLoadState) {
     VEVideoLoadStateError
 };
 
+typedef NS_ENUM(NSInteger, VEVideoViewMode) {
+    VEVideoViewModeNone = 0,
+    VEVideoViewModeAspectFit,
+    VEVideoViewModeAspectFill,
+    VEVideoViewModeModeFill
+};
+
 @protocol VEVideoPlayback;
 
 @protocol VEVideoPlaybackDelegate <NSObject>
@@ -60,6 +67,8 @@ typedef NS_ENUM(NSInteger, VEVideoLoadState) {
 
 @property (nonatomic, assign, readonly) VEVideoPlaybackState playbackState;
 @property (nonatomic, assign, readonly) VEVideoLoadState loadState;
+
+@property (nonatomic, assign) VEVideoViewMode videoViewMode;
 
 @property (nonatomic, assign) CGFloat playbackRate;
 @property (nonatomic, assign) CGFloat playbackVolume;

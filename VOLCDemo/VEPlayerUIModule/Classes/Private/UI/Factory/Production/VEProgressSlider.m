@@ -159,7 +159,6 @@ NSString *const VEPlayProgressSliderGestureEnable = @"VEPlayProgressSliderGestur
     self.beginPoint = touchPoint;
     self.touching = NO;
     self.beginValue = 0.0;
-    
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
@@ -224,6 +223,10 @@ NSString *const VEPlayProgressSliderGestureEnable = @"VEPlayProgressSliderGestur
 - (void)setTouchDetective:(BOOL)touchDetective {
     _touchDetective = touchDetective;
     [[VEEventMessageBus universalBus] postEvent:VEPlayProgressSliderGestureEnable withObject:@(touchDetective) rightNow:YES];
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    return NO;
 }
 
 @end
