@@ -6,9 +6,9 @@
 #import "VEDramaDataManager.h"
 #import "VENetworkHelper.h"
 
-static NSString *requestDramaListUrl = @"http://vod-sdk-playground-test.byted.org/api/drama/v1/listDrama";
-static NSString *requestDramaRecommondListUrl = @"http://vod-sdk-playground-test.byted.org/api/drama/episode/v1/getEpisodeFeedStreamWithPlayAuthToken";
-static NSString *requestDramaEpisodeUrl = @"http://vod-sdk-playground-test.byted.org/api/drama/episode/v1/getDramaEpisodeWithPlayAuthToken";
+static NSString *requestDramaListUrl = @"https://vevod-demo-server.volcvod.com/api/drama/v1/listDrama";
+static NSString *requestDramaRecommondListUrl = @"https://vevod-demo-server.volcvod.com/api/drama/episode/v1/getEpisodeFeedStreamWithPlayAuthToken";
+static NSString *requestDramaEpisodeUrl = @"https://vevod-demo-server.volcvod.com/api/drama/episode/v1/getDramaEpisodeWithPlayAuthToken";
 
 @implementation VEDramaDataManager
 
@@ -17,8 +17,8 @@ static NSString *requestDramaEpisodeUrl = @"http://vod-sdk-playground-test.byted
         NSMutableArray *dramas = [NSMutableArray array];
 
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
-        [param setObject:@"frank_drama_test_5" forKey:@"authorId"];
-        [param setObject:@"frank_drama_test_5" forKey:@"userID"];
+        [param setObject:@"mini-drama-video" forKey:@"authorId"];
+        [param setObject:@"mini-drama-video" forKey:@"userID"];
         [param setObject:@(1) forKey:@"codec"];
         [param setObject:@(1) forKey:@"format"];
         [param setObject:@(offset) forKey:@"offset"];
@@ -48,8 +48,8 @@ static NSString *requestDramaEpisodeUrl = @"http://vod-sdk-playground-test.byted
         NSMutableArray *dramas = [NSMutableArray array];
 
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
-        [param setObject:@"frank_drama_test_5" forKey:@"authorId"];
-        [param setObject:@"frank_drama_test_5" forKey:@"userID"];
+        [param setObject:@"mini-drama-video" forKey:@"authorId"];
+        [param setObject:@"mini-drama-video" forKey:@"userID"];
 //        [param setObject:@(1) forKey:@"codec"];
 //        [param setObject:@(1) forKey:@"format"];
         [param setObject:@(offset) forKey:@"offset"];
@@ -84,8 +84,8 @@ static NSString *requestDramaEpisodeUrl = @"http://vod-sdk-playground-test.byted
         NSMutableArray *dramas = [NSMutableArray array];
 
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
-        [param setObject:@"frank_drama_test_5" forKey:@"authorId"];
-        [param setObject:@"frank_drama_test_5" forKey:@"userID"];
+        [param setObject:@"mini-drama-video" forKey:@"authorId"];
+        [param setObject:@"mini-drama-video" forKey:@"userID"];
 //        [param setObject:@(1) forKey:@"codec"];
 //        [param setObject:@(1) forKey:@"format"];
         [param setObject:@(offset) forKey:@"offset"];

@@ -70,6 +70,8 @@ typedef NS_ENUM(NSInteger, VEVideoViewMode) {
 
 @property (nonatomic, assign) VEVideoViewMode videoViewMode;
 
+@property (nonatomic, assign) NSTimeInterval startTime;
+
 @property (nonatomic, assign) CGFloat playbackRate;
 @property (nonatomic, assign) CGFloat playbackVolume;
 

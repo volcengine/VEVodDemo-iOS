@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = "VEPlayModule"
-  s.version = "1.1.0"
+  s.version = "1.2.0"
   s.summary = "火山引擎点播全场景展示"
   s.description = "火山引擎点播全场景展示"
   s.homepage = "https://www.volcengine.com"
@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.author = { "zhaoxiaoyu" => "zhaoxiaoyu.realxx@bytedance.com" }
   s.source = { :path => './Classes' }
 
-  s.platform = :ios, '9.0'
+  s.platform = :ios, '11.0'
   s.requires_arc = true
 
   s.source_files = 'Classes/**/*'

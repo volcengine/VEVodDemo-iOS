@@ -151,7 +151,12 @@ NSString *const VEShortDramaProgressSliderGestureEnable = @"VEShortDramaProgress
     }
     
     NSTimeInterval seekTime = self.progressValue * self.player.duration;
-    [self.player seekToTime:seekTime complete:nil renderComplete:nil];
+    if (self.player.playbackState == VEVideoPlaybackStateFinished) {
+        self.player.startTime = seekTime;
+        [self.player play];
+    } else {
+        [self.player seekToTime:seekTime complete:nil renderComplete:nil];
+    }
 }
 
 - (void)_progressScaleLayout:(BOOL)slidering {

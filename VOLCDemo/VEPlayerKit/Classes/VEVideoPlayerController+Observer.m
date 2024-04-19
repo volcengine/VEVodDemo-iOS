@@ -38,19 +38,19 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         switch ([Reachability reachabilityForInternetConnection].currentReachabilityStatus) {
             case NotReachable: {
-                [self.videoEngine pause];
+                [self pause];
                 [self showTips:NSLocalizedString(@"tip_net_not_reachable", nil)];
             }
                 break;
                 
             case ReachableViaWiFi: {
-                [self.videoEngine play];
+                [self play];
                 [self showTips:NSLocalizedString(@"tip_net_reachable_wifi", nil)];
             }
                 break;
                 
             case ReachableViaWWAN: {
-                [self.videoEngine play];
+                [self play];
                 [self showTips:NSLocalizedString(@"tip_net_reachable_4g", nil)];
             }
                 break;
@@ -65,19 +65,19 @@
     if ([self isPlaying]) {
         self.needResumePlay = YES;
     }
-    [self.videoEngine pause];
+    [self pause];
 }
 
 - (void)willResignActiveNotification {
     if ([self isPlaying]) {
         self.needResumePlay = YES;
     }
-    [self.videoEngine pause];
+    [self pause];
 }
 
 - (void)didBecomeActiveNotification {
     if (self.needResumePlay) {
-        [self.videoEngine play];
+        [self play];
     }
     self.needResumePlay = NO;
 }

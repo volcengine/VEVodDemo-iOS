@@ -160,6 +160,7 @@ static dispatch_once_t onceToken;
             break;
         case 10:{
             settings = [self.settings objectForKey:NSLocalizedString(shortVideoSectionKey.copy, nil)];
+            break;
         }
         case 100:{
             settings = [self.settings objectForKey:NSLocalizedString(debugSectionKey.copy, nil)];

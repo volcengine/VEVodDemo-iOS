@@ -13,6 +13,7 @@
 #import "VEVideoPlayerController+DebugTool.h"
 #import "VEVideoPlayerController+Tips.h"
 #import "VEVideoPlayerController+Strategy.h"
+#import "VEVideoPlayerController+DisRecordScreen.h"
 #import <Masonry/Masonry.h>
 #import <SDWebImage/SDWebImage.h>
 
@@ -68,6 +69,7 @@ TTVideoEngineResolutionDelegate>
 @synthesize playableDuration;
 @synthesize superResolutionEnable = _superResolutionEnable;
 @synthesize videoViewMode = _videoViewMode;
+@synthesize startTime = _startTime;
 
 @dynamic playbackRate;
 @dynamic playbackVolume;
@@ -77,18 +79,29 @@ TTVideoEngineResolutionDelegate>
 - (instancetype)init {
     self = [super init];
     if (self) {
+        
     }
     return self;
 }
 
 - (void)dealloc {
     [self removeObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     [self configuratoinCustomView];
+    [self registerScreenCapturedDidChangeNotification];
 }
 
 - (void)configVideoEngine {
@@ -190,14 +203,6 @@ TTVideoEngineResolutionDelegate>
         if ([weak_self.receiver respondsToSelector:@selector(playerCore:playTimeDidChanged:info:)]) {
             [weak_self.receiver playerCore:weak_self playTimeDidChanged:weak_self.currentPlaybackTime info:@{}];
         }
-        
-//        CGFloat oriWidth = [[weak_self.videoEngine getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoWidth_NSInteger)] floatValue];
-//        CGFloat oriHeight = [[weak_self.videoEngine getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoHeight_NSInteger)] floatValue];
-//        
-//        CGFloat srWidth = [[weak_self.videoEngine getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoSRWidth_NSInteger)] floatValue];
-//        CGFloat srHeight = [[weak_self.videoEngine getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoSRHeight_NSInteger)] floatValue];
-//        
-//        weak_self.debugInfoView.text = [NSString stringWithFormat:@"ori w:%@, ori h:%@, sr w:%@, sr h:%@", @(oriWidth), @(oriHeight), @(srWidth), @(srHeight)];
     }];
 }
 
@@ -243,6 +248,12 @@ TTVideoEngineResolutionDelegate>
 }
 
 - (void)play {
+    if (@available(iOS 11.0, *)) {
+        if ([[[[UIApplication sharedApplication] keyWindow] screen] isCaptured]) {
+            [self showRecordScreenView];
+            return;
+        }
+    }
     [self.videoEngine play];
     [self __addPeriodicTimeObserver];
 }
@@ -380,10 +391,6 @@ TTVideoEngineResolutionDelegate>
 
 - (void)videoEngineDidFinish:(TTVideoEngine *)videoEngine videoStatusException:(NSInteger)status {
     [self __handlePlaybackStateChanged:VEVideoPlaybackStateError];
-}
-
-- (void)videoEngineCloseAysncFinish:(TTVideoEngine *)videoEngine {
-    [self __handlePlaybackStateChanged:VEVideoPlaybackStateFinished];
 }
 
 - (void)videoBitrateDidChange:(TTVideoEngine *)videoEngine resolution:(TTVideoEngineResolutionType)resolution bitrate:(NSInteger)bitrate {
@@ -531,6 +538,11 @@ TTVideoEngineResolutionDelegate>
             break;
     }
     _videoViewMode = videoViewMode;
+}
+
+- (void)setStartTime:(NSTimeInterval)startTime {
+    _startTime = startTime;
+    [self.videoEngine setOptionForKey:VEKKeyPlayerStartTime_CGFloat value:@(startTime)];
 }
 
 #pragma mark - lazy load

@@ -14,13 +14,14 @@
 #import <Masonry/Masonry.h>
 #import "VEDramaDataManager.h"
 #import "VEDramaVideoInfoModel.h"
+#import "VEShortDramaDetailFeedViewController.h"
 
 static NSInteger VEShortDramaVideoFeedPageCount = 30;
 static NSInteger VEShortDramaVideoFeedLoadMoreDetection = 2;
 
 static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellReuseID";
 
-@interface VEShortDramaVideoFeedViewController () <VEPageDataSource, VEPageDelegate>
+@interface VEShortDramaVideoFeedViewController () <VEPageDataSource, VEPageDelegate, VEShortDramaVideoCellControllerDelegate>
 
 @property (nonatomic, strong) VEPageViewController *pageContainer;
 @property (nonatomic, strong) NSMutableArray<VEDramaVideoInfoModel *> *dramaVideoModels;
@@ -135,7 +136,25 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
     }
 }
 
-#pragma mark ---- ATPageViewControllerDataSource & Delegate
+#pragma mark - VEShortDramaVideoCellController Delegate
+
+- (void)dramaVideoPlayFinish:(VEDramaVideoInfoModel *)dramaVideoInfo {
+    if (self.pageContainer.currentIndex < (self.dramaVideoModels.count - 1)) {
+        if (dramaVideoInfo.dramaEpisodeInfo.episodeNumber == dramaVideoInfo.dramaEpisodeInfo.dramaInfo.totalEpisodeNumber) {
+            NSInteger nextPage = self.pageContainer.currentIndex++;
+            if (nextPage < self.dramaVideoModels.count) {
+                self.pageContainer.currentIndex = nextPage;
+            }
+        } else {
+            VEShortDramaDetailFeedViewController *detailFeedViewController = [[VEShortDramaDetailFeedViewController alloc] initWtihDramaVideoInfo:dramaVideoInfo];
+            detailFeedViewController.autoPlayNextDaram = YES;
+            [self.navigationController pushViewController:detailFeedViewController animated:YES];
+        }
+    }
+}
+
+#pragma mark ---- PageViewControllerDataSource & Delegate
+
 - (NSInteger)numberOfItemInPageViewController:(VEPageViewController *)pageViewController {
     return self.dramaVideoModels.count;
 }
@@ -144,9 +163,10 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
     VEShortDramaVideoCellController *cell = [pageViewController dequeueItemForReuseIdentifier:VEShortDramaVideoFeedCellReuseID];
     if (!cell) {
         cell = [VEShortDramaVideoCellController new];
+        cell.delegate = self;
         cell.reuseIdentifier = VEShortDramaVideoFeedCellReuseID;
     }
-    cell.videoModel = [self.dramaVideoModels objectAtIndex:index];
+    cell.dramaVideoInfo = [self.dramaVideoModels objectAtIndex:index];
     return cell;
 }
 
@@ -154,9 +174,7 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
     return YES;
 }
 
-- (void)pageViewController:(VEPageViewController *)pageViewController
-  didScrollChangeDirection:(VEPageItemMoveDirection)direction
-            offsetProgress:(CGFloat)progress {
+- (void)pageViewController:(VEPageViewController *)pageViewController didScrollChangeDirection:(VEPageItemMoveDirection)direction offsetProgress:(CGFloat)progress {
     if (((self.dramaVideoModels.count - 1) - self.pageContainer.currentIndex <= VEShortDramaVideoFeedLoadMoreDetection) && direction == VEPageItemMoveDirectionNext) {
         if (!self.pageContainer.scrollView.veLoading) {
             [self loadData:YES];

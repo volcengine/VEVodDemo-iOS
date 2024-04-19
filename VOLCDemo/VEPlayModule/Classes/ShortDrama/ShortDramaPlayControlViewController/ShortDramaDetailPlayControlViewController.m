@@ -16,6 +16,7 @@
 @interface ShortDramaDetailPlayControlViewController ()
 
 @property (nonatomic, weak) VEVideoPlayerController *playerController;
+@property (nonatomic, strong) UIImageView *topCoverImageView;
 @property (nonatomic, strong) UIImageView *coverImageView;
 @property (nonatomic, strong) ShortDramaCollectViewController *collectViewController;
 @property (nonatomic, strong) ShortDramaPraiseViewController *praiseViewController;
@@ -66,6 +67,7 @@
 #pragma mark - UI
 
 - (void)configuratoinCustomView {
+    [self.view addSubview:self.topCoverImageView];
     [self.view addSubview:self.coverImageView];
     [self addChildViewController:self.collectViewController];
     [self.view addSubview:self.collectViewController.view];
@@ -75,6 +77,11 @@
     [self.view addSubview:self.progressSlider];
     [self.view addSubview:self.videoPlayView];
     [self.view addSubview:self.videoProgressView];
+    
+    [self.topCoverImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.equalTo(self.view);
+        make.height.mas_equalTo(UIScreen.mainScreen.bounds.size.width * 280 /375);
+    }];
     
     [self.coverImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.left.right.equalTo(self.view);
@@ -124,16 +131,29 @@
 #pragma mark - GestureRecognizer
 
 - (void)onClickPlayControlViewHandle:(UIGestureRecognizer *)gesRecognizer {
-    if (self.playerController.isPause) {
-        [self.playerController play];
-        self.videoPlayView.hidden = YES;
-    } else {
+    if ([self.playerController isPlaying]) {
         [self.playerController pause];
         self.videoPlayView.hidden = NO;
+    } else {
+        self.videoPlayView.hidden = YES;
+        if (self.playerController.playbackState == VEVideoPlaybackStateFinished) {
+            self.playerController.startTime = 0;
+        }
+        [self.playerController play];
     }
 }
 
 #pragma mark - lazy load
+
+- (UIImageView *)topCoverImageView {
+    if (_topCoverImageView == nil) {
+        _topCoverImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_feed_cover"]];
+        _topCoverImageView.transform = CGAffineTransformMakeRotation(M_PI);
+        _coverImageView.contentMode = UIViewContentModeScaleAspectFill;
+        _coverImageView.clipsToBounds = YES;
+    }
+    return _topCoverImageView;
+}
 
 - (UIImageView *)coverImageView {
     if (_coverImageView == nil) {

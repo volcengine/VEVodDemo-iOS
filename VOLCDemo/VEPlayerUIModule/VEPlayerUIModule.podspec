@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.author = { "zhaoxiaoyu" => "zhaoxiaoyu.realxx@bytedance.com" }
   s.source = { :path => './Classes' }
 
-  s.platform = :ios, '9.0'
+  s.platform = :ios, '11.0'
   s.requires_arc = true
 
   s.source_files = 'Classes/**/*'

@@ -12,7 +12,7 @@
 
 static NSInteger VEShortDramaVideoCellBottomOffset = 83;
 
-@interface VEShortDramaVideoCellController ()
+@interface VEShortDramaVideoCellController () <VEVideoPlaybackDelegate>
 
 @property (nonatomic, strong) VEVideoPlayerController *playerController;
 @property (nonatomic, strong) ShortDramaPlayControlViewController *controlViewController;
@@ -57,7 +57,7 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
         return;
     }
     [self createPlayer];
-    [self.playerController loadBackgourdImageWithMediaSource:[VEDramaVideoInfoModel toVideoEngineSource:self.videoModel]];
+    [self.playerController loadBackgourdImageWithMediaSource:[VEDramaVideoInfoModel toVideoEngineSource:self.dramaVideoInfo]];
 }
 
 - (void)playerStart {
@@ -68,13 +68,17 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
         [self createPlayer];
     }
     [self playerOptions];
-    [self.playerController playWithMediaSource:[VEDramaVideoInfoModel toVideoEngineSource:self.videoModel]];
+    [self.playerController playWithMediaSource:[VEDramaVideoInfoModel toVideoEngineSource:self.dramaVideoInfo]];
+    if (self.dramaVideoInfo.startTime > 0) {
+        self.playerController.startTime = self.dramaVideoInfo.startTime;
+        self.dramaVideoInfo.startTime = 0;
+    }
     [self.playerController play];
-    self.playerController.looping = YES;
 }
 
 - (void)playerStop {
     @autoreleasepool {
+        self.dramaVideoInfo.startTime = self.playerController.currentPlaybackTime;
         [self.playerController stop];
         [self.controlViewController closePlayer];
         [self.controlViewController.view removeFromSuperview];
@@ -90,6 +94,7 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
 
 - (void)createPlayer {
     self.playerController = [[VEVideoPlayerController alloc] init];
+    self.playerController.delegate = self;
     self.playerController.videoViewMode = VEVideoViewModeAspectFill;
     [self.view addSubview:self.playerController.view];
     [self.view bringSubviewToFront:self.playerController.view];
@@ -105,7 +110,7 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
     [self.controlViewController.view mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.playerController.view);
     }];
-    [self.controlViewController reloadData:self.videoModel];
+    [self.controlViewController reloadData:self.dramaVideoInfo];
 }
 
 - (void)playerOptions {
@@ -123,6 +128,17 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
     
     VESettingModel *sr = [[VESettingManager universalManager] settingForKey:VESettingKeyUniversalSR];
     self.playerController.srOpen = sr.open;
+}
+
+#pragma mark - VEVideoPlaybackDelegate
+
+- (void)videoPlayer:(id<VEVideoPlayback> _Nullable)player playbackStateDidChange:(VEVideoPlaybackState)state {
+    if (state == VEVideoPlaybackStateFinished) {
+        self.dramaVideoInfo.startTime = player.startTime;
+        if (self.delegate && [self.delegate respondsToSelector:@selector(dramaVideoPlayFinish:)]) {
+            [self.delegate dramaVideoPlayFinish:self.dramaVideoInfo];
+        }
+    }
 }
 
 @end

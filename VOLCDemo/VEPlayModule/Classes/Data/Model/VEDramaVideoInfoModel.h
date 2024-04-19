@@ -20,6 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, copy) NSString *subtitleAuthToken;
 @property (nonatomic, strong) VEDramaEpisodeInfoModel *dramaEpisodeInfo;
 
+// client property
+@property (nonatomic, assign) CGFloat startTime;
+
 + (id<TTVideoEngineMediaSource>_Nullable)toVideoEngineSource:(VEDramaVideoInfoModel *_Nullable)dramaVideoModel;
 
 @end

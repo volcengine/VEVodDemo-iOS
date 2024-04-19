@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface VEShortDramaDetailFeedViewController : VEViewController
 
+@property (nonatomic, assign) BOOL autoPlayNextDaram;
+
 - (instancetype)initWtihDramaVideoInfo:(VEDramaVideoInfoModel *)dramaVideoInfo;
 
 - (instancetype)initWtihDramaInfo:(VEDramaInfoModel *)dramaInfo;

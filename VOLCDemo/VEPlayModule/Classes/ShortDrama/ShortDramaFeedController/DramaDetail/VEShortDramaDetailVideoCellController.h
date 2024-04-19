@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)onClickDramaSelectionCallback:(VEDramaVideoInfoModel *)dramaVideoInfo;
 
+- (void)dramaVideoPlayFinish:(VEDramaVideoInfoModel *)dramaVideoInfo;
+
 @end
 
 @interface VEShortDramaDetailVideoCellController : UIViewController <VEPageItem>

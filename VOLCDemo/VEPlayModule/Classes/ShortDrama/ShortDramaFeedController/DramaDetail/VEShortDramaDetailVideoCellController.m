@@ -13,7 +13,7 @@
 
 static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
 
-@interface VEShortDramaDetailVideoCellController () <ShortDramaSelectionViewDelegate>
+@interface VEShortDramaDetailVideoCellController () <ShortDramaSelectionViewDelegate, VEVideoPlaybackDelegate>
 
 @property (nonatomic, strong) VEVideoPlayerController *playerController;
 @property (nonatomic, strong) ShortDramaDetailPlayControlViewController *controlViewController;
@@ -100,13 +100,17 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
     }
     [self playerOptions];
     [self.playerController playWithMediaSource:[VEDramaVideoInfoModel toVideoEngineSource:self.dramaVideoInfo]];
+    if (self.dramaVideoInfo.startTime > 0) {
+        self.playerController.startTime = self.dramaVideoInfo.startTime;
+        self.dramaVideoInfo.startTime = 0;
+    }
     [self.playerController play];
-    self.playerController.looping = YES;
     self.playerController.videoViewMode = VEVideoViewModeAspectFill;
 }
 
 - (void)playerStop {
     @autoreleasepool {
+        self.dramaVideoInfo.startTime = self.playerController.currentPlaybackTime;
         [self.playerController stop];
         [self.controlViewController closePlayer];
         [self.controlViewController.view removeFromSuperview];
@@ -122,6 +126,7 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
 
 - (void)createPlayer {
     self.playerController = [[VEVideoPlayerController alloc] init];
+    self.playerController.delegate = self;
     [self.view addSubview:self.playerController.view];
     [self.view bringSubviewToFront:self.playerController.view];
     [self.playerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -154,6 +159,17 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
     
     VESettingModel *sr = [[VESettingManager universalManager] settingForKey:VESettingKeyUniversalSR];
     self.playerController.srOpen = sr.open;
+}
+
+#pragma mark - VEVideoPlaybackDelegate
+
+- (void)videoPlayer:(id<VEVideoPlayback> _Nullable)player playbackStateDidChange:(VEVideoPlaybackState)state {
+    if (state == VEVideoPlaybackStateFinished) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(dramaVideoPlayFinish:)]) {
+            self.dramaVideoInfo.startTime = player.currentPlaybackTime;
+            [self.delegate dramaVideoPlayFinish:self.dramaVideoInfo];
+        }
+    }
 }
 
 #pragma mark - lazy load

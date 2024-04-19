@@ -71,6 +71,9 @@ typedef enum : NSUInteger {
 - (__kindof UIViewController<VEPageItem> *)dequeueItemForReuseIdentifier:(NSString *)reuseIdentifier;
 
 - (void)reloadData;
+- (void)reloadNextData;
+- (void)reloadPreData;
+- (void)reloadDataWithPageIndex:(NSInteger)index animated:(BOOL)animated;
 
 - (void)invalidateLayout;
 

@@ -21,6 +21,7 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
 @interface VEShortDramaDetailFeedViewController () <VEPageDataSource, VEPageDelegate, VEShortDramaDetailVideoCellControllerDelegate, ShortDramaSelectionViewControllerDelegate>
 
 @property (nonatomic, strong) VEPageViewController *pageContainer;
+@property (nonatomic, strong) UILabel *dramaEpisodeLabel;
 @property (nonatomic, strong) NSMutableArray<VEDramaVideoInfoModel *> *dramaVideoModels;
 @property (nonatomic, strong) NSString *fromDramaId;
 @property (nonatomic, strong) VEDramaVideoInfoModel *fromDramaVideoInfo;
@@ -38,7 +39,7 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
         self.firstLoadData = YES;
         self.fromDramaId = dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId;
         self.fromDramaVideoInfo = dramaVideoInfo;
-        self.dramaVideoModels = [NSMutableArray arrayWithObject:dramaVideoInfo];
+//        self.dramaVideoModels = [NSMutableArray arrayWithObject:dramaVideoInfo];
     }
     return self;
 }
@@ -85,6 +86,7 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
     }];
     
     [self.view addSubview:self.backButton];
+    [self.view addSubview:self.dramaEpisodeLabel];
     [self.backButton mas_makeConstraints:^(MASConstraintMaker *make) {
         if (@available(iOS 11.0, *)) {
             make.top.equalTo(self.view.mas_safeAreaLayoutGuideTop);
@@ -93,6 +95,11 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
         }
         make.left.equalTo(self.view).with.offset(5);
         make.size.mas_equalTo(CGSizeMake(44, 44));
+    }];
+    
+    [self.dramaEpisodeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.backButton);
+        make.left.equalTo(self.backButton.mas_right);
     }];
 }
 
@@ -118,17 +125,8 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
             [self setVideoStrategySource:!isLoadMore];
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (self.firstLoadData) {
-                    self.firstLoadData = NO;
-                    for (NSInteger i = 0; i < self.dramaVideoModels.count; i++) {
-                        VEDramaVideoInfoModel *tempDramaVideoInfo = [self.dramaVideoModels objectAtIndex:i];
-                        if (self.fromDramaVideoInfo.dramaEpisodeInfo.episodeNumber == tempDramaVideoInfo.dramaEpisodeInfo.episodeNumber) {
-                            [self.pageContainer setCurrentIndex:i];
-                            break;
-                        }
-                    }
-                }
-
+                [self onHandleFromDramaVideoInfo];
+                
                 if (isLoadMore) {
                     [self.pageContainer reloadContentSize];
                     self.pageContainer.scrollView.veLoading = NO;
@@ -136,12 +134,49 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
                     [self.pageContainer reloadData];
                     [self.pageContainer.scrollView endRefresh];
                 }
+
+                [self updateDramaTitle];
             });
         } else {
             
         }
     }];
 }
+
+- (void)onHandleFromDramaVideoInfo {
+    if (self.firstLoadData) {
+        self.firstLoadData = NO;
+        for (NSInteger i = 0; i < self.dramaVideoModels.count; i++) {
+            VEDramaVideoInfoModel *tempDramaVideoInfo = [self.dramaVideoModels objectAtIndex:i];
+            if (self.fromDramaVideoInfo.dramaEpisodeInfo.episodeNumber == tempDramaVideoInfo.dramaEpisodeInfo.episodeNumber) {
+                if (self.autoPlayNextDaram) {
+                    if ((i + 1) < self.dramaVideoModels.count) {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.2f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [self.pageContainer reloadDataWithPageIndex:i+1 animated:YES];
+                        });
+                    }
+                } else {
+                    if (self.fromDramaVideoInfo.startTime > 0) {
+                        tempDramaVideoInfo.startTime = self.fromDramaVideoInfo.startTime;
+                    }
+                    [self.pageContainer setCurrentIndex:i];
+                }
+                break;
+            }
+        }
+    }
+}
+
+#pragma mark - private
+
+- (void)updateDramaTitle {
+    if (self.pageContainer.currentIndex < self.dramaVideoModels.count) {
+        VEDramaVideoInfoModel *dramaVideoInfo = [self.dramaVideoModels objectAtIndex:self.pageContainer.currentIndex];
+        self.dramaEpisodeLabel.text = [NSString stringWithFormat:@"第%@集", @(dramaVideoInfo.dramaEpisodeInfo.episodeNumber)];
+    }
+}
+
+#pragma mark - engine startegy
 
 - (void)setVideoStrategySource:(BOOL)reset {
     NSMutableArray *sources = [NSMutableArray array];
@@ -173,6 +208,7 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
         VEDramaVideoInfoModel *tempDramaVideoInfo = [self.dramaVideoModels objectAtIndex:i];
         if (dramaVideoInfo.dramaEpisodeInfo.episodeNumber == tempDramaVideoInfo.dramaEpisodeInfo.episodeNumber) {
             [self.pageContainer setCurrentIndex:i];
+            [self updateDramaTitle];
             break;
         }
     }
@@ -184,6 +220,12 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
     ShortDramaSelectionViewController *selectionViewController = [[ShortDramaSelectionViewController alloc] initWtihDramaVideoInfo:dramaVideoInfo];
     selectionViewController.delegate = self;
     [self presentViewController:selectionViewController animated:YES completion:nil];
+}
+
+- (void)dramaVideoPlayFinish:(VEDramaVideoInfoModel *)dramaVideoInfo {
+    if (dramaVideoInfo.dramaEpisodeInfo.episodeNumber < self.dramaVideoModels.count) {
+        [self.pageContainer reloadNextData];
+    }
 }
 
 #pragma mark - Event Response
@@ -198,7 +240,8 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
     }
 }
 
-#pragma mark ---- ATPageViewControllerDataSource & Delegate
+#pragma mark ---- PageViewControllerDataSource & Delegate
+
 - (NSInteger)numberOfItemInPageViewController:(VEPageViewController *)pageViewController {
     return self.dramaVideoModels.count;
 }
@@ -218,14 +261,20 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
     return YES;
 }
 
-- (void)pageViewController:(VEPageViewController *)pageViewController
-  didScrollChangeDirection:(VEPageItemMoveDirection)direction
-            offsetProgress:(CGFloat)progress {
+- (void)pageViewController:(VEPageViewController *)pageViewController didScrollChangeDirection:(VEPageItemMoveDirection)direction offsetProgress:(CGFloat)progress {
     if (((self.dramaVideoModels.count - 1) - self.pageContainer.currentIndex <= VEShortDramaDetailVideoFeedLoadMoreDetection) && direction == VEPageItemMoveDirectionNext) {
         if (!self.pageContainer.scrollView.veLoading) {
             [self loadData:YES];
         }
     }
+}
+
+- (void)pageViewController:(VEPageViewController *)pageViewController willDisplayItem:(id<VEPageItem>)viewController {
+    
+}
+
+- (void)pageViewController:(VEPageViewController *)pageViewController didDisplayItem:(id<VEPageItem>)viewController {
+    [self updateDramaTitle];
 }
 
 #pragma mark ----- Lazy load
@@ -255,6 +304,15 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
         [_backButton addTarget:self action:@selector(onBackButtonHandle:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _backButton;
+}
+
+- (UILabel *)dramaEpisodeLabel {
+    if (_dramaEpisodeLabel == nil) {
+        _dramaEpisodeLabel = [[UILabel alloc] init];
+        _dramaEpisodeLabel.textColor = [UIColor whiteColor];
+        _dramaEpisodeLabel.font = [UIFont boldSystemFontOfSize:17];
+    }
+    return _dramaEpisodeLabel;
 }
 
 #pragma mark ----- VEShortDramaDetailVideoCellControllerDelegate
