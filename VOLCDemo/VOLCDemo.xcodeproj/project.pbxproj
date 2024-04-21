@@ -10,12 +10,8 @@
 		2B3B72AB2761A6DF00E3A479 /* MetalPerformanceShaders.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B3B72AA2761A6DF00E3A479 /* MetalPerformanceShaders.framework */; };
 		2B3B72AD2761A6E800E3A479 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B3B72AC2761A6E800E3A479 /* MetalKit.framework */; };
 		2B82C5532673407E006CE7CD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B82C5552673407E006CE7CD /* LaunchScreen.storyboard */; };
-		2B98E96C26650EFE00CBF214 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2B98E96E26650EFE00CBF214 /* Localizable.strings */; };
-		2BEC93DF265790E900C64503 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2BEC93DE265790E900C64503 /* Assets.xcassets */; };
 		2BEC93ED2657915100C64503 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BEC93E92657915100C64503 /* main.m */; };
 		2BEC93EE2657915100C64503 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BEC93EA2657915100C64503 /* AppDelegate.m */; };
-		2BFBC50628C09E83008B6A35 /* VEMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BFBC50328C09E83008B6A35 /* VEMainViewController.m */; };
-		2BFBC50728C09E83008B6A35 /* VEMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2BFBC50428C09E83008B6A35 /* VEMainViewController.xib */; };
 		BCFC76EE035A2971ADE4D5A3 /* libPods-VOLCDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8816910B24DE9DA73B4723 /* libPods-VOLCDemo.a */; };
 /* End PBXBuildFile section */
 
@@ -37,18 +33,12 @@
 		2B3B72AA2761A6DF00E3A479 /* MetalPerformanceShaders.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalPerformanceShaders.framework; path = System/Library/Frameworks/MetalPerformanceShaders.framework; sourceTree = SDKROOT; };
 		2B3B72AC2761A6E800E3A479 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		2B82C5542673407E006CE7CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		2B98E96D26650EFE00CBF214 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		2B98E9792665100400CBF214 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2BEC93C22657907300C64503 /* VOLCDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VOLCDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2BEC93DE265790E900C64503 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2BEC93E82657915100C64503 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		2BEC93E92657915100C64503 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2BEC93EA2657915100C64503 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		2BEC93EB2657915100C64503 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2BEC93F02657917D00C64503 /* VOLCDemoPrefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VOLCDemoPrefix.pch; sourceTree = "<group>"; };
-		2BFBC50328C09E83008B6A35 /* VEMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VEMainViewController.m; sourceTree = "<group>"; };
-		2BFBC50428C09E83008B6A35 /* VEMainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VEMainViewController.xib; sourceTree = "<group>"; };
-		2BFBC50528C09E83008B6A35 /* VEMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VEMainViewController.h; sourceTree = "<group>"; };
 		7521C104E6C0DCC76F01AB33 /* Pods-VOLCDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VOLCDemo.release.xcconfig"; path = "Target Support Files/Pods-VOLCDemo/Pods-VOLCDemo.release.xcconfig"; sourceTree = "<group>"; };
 		B7AC4A35A8320428AB49F805 /* Pods-VOLCDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VOLCDemo.debug.xcconfig"; path = "Target Support Files/Pods-VOLCDemo/Pods-VOLCDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -107,9 +97,7 @@
 		2BEC93C42657907300C64503 /* VOLCDemo */ = {
 			isa = PBXGroup;
 			children = (
-				2BFBC50228C09E83008B6A35 /* Entry */,
 				2BEC93E62657915100C64503 /* Base */,
-				2BEC93DE265790E900C64503 /* Assets.xcassets */,
 			);
 			path = VOLCDemo;
 			sourceTree = "<group>";
@@ -123,19 +111,8 @@
 				2BEC93EA2657915100C64503 /* AppDelegate.m */,
 				2B82C5552673407E006CE7CD /* LaunchScreen.storyboard */,
 				2BEC93F02657917D00C64503 /* VOLCDemoPrefix.pch */,
-				2B98E96E26650EFE00CBF214 /* Localizable.strings */,
 			);
 			path = Base;
-			sourceTree = "<group>";
-		};
-		2BFBC50228C09E83008B6A35 /* Entry */ = {
-			isa = PBXGroup;
-			children = (
-				2BFBC50528C09E83008B6A35 /* VEMainViewController.h */,
-				2BFBC50328C09E83008B6A35 /* VEMainViewController.m */,
-				2BFBC50428C09E83008B6A35 /* VEMainViewController.xib */,
-			);
-			path = Entry;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -202,10 +179,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B98E96C26650EFE00CBF214 /* Localizable.strings in Resources */,
-				2BEC93DF265790E900C64503 /* Assets.xcassets in Resources */,
 				2B82C5532673407E006CE7CD /* LaunchScreen.storyboard in Resources */,
-				2BFBC50728C09E83008B6A35 /* VEMainViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,7 +271,6 @@
 			files = (
 				2BEC93EE2657915100C64503 /* AppDelegate.m in Sources */,
 				2BEC93ED2657915100C64503 /* main.m in Sources */,
-				2BFBC50628C09E83008B6A35 /* VEMainViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,15 +283,6 @@
 				2B82C5542673407E006CE7CD /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		2B98E96E26650EFE00CBF214 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2B98E96D26650EFE00CBF214 /* en */,
-				2B98E9792665100400CBF214 /* zh-Hans */,
-			);
-			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

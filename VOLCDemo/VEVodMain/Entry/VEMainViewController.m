@@ -13,6 +13,7 @@
 #import <VEPlayModule/VEShortDramaPagingViewController.h>
 #import <VEPlayModule/VEPlayUrlConfigViewController.h>
 #import <TTSDK/TTSDKManager.h>
+#import <AVFoundation/AVFoundation.h>
 
 @interface VEMainViewController ()
 
