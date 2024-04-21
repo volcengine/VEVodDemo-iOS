@@ -54,7 +54,7 @@ typedef enum : NSUInteger {
            willDisplayItem:(id<VEPageItem>)viewController;
 
 - (void)pageViewController:(VEPageViewController *)pageViewController
-         didDisplayItem:(id<VEPageItem>)viewController;
+            didDisplayItem:(id<VEPageItem>)viewController;
 
 @end
 
@@ -66,7 +66,7 @@ typedef enum : NSUInteger {
 
 @property (nonatomic, weak) id<VEPageDataSource>dataSource;
 
-- (UIScrollView *)scrollView;
+@property (nonatomic, strong, readonly) UIScrollView *scrollView;
 
 - (__kindof UIViewController<VEPageItem> *)dequeueItemForReuseIdentifier:(NSString *)reuseIdentifier;
 

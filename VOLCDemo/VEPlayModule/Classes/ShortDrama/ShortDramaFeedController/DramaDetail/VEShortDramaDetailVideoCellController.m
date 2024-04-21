@@ -100,17 +100,12 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
     }
     [self playerOptions];
     [self.playerController playWithMediaSource:[VEDramaVideoInfoModel toVideoEngineSource:self.dramaVideoInfo]];
-    if (self.dramaVideoInfo.startTime > 0) {
-        self.playerController.startTime = self.dramaVideoInfo.startTime;
-        self.dramaVideoInfo.startTime = 0;
-    }
     [self.playerController play];
     self.playerController.videoViewMode = VEVideoViewModeAspectFill;
 }
 
 - (void)playerStop {
     @autoreleasepool {
-        self.dramaVideoInfo.startTime = self.playerController.currentPlaybackTime;
         [self.playerController stop];
         [self.controlViewController closePlayer];
         [self.controlViewController.view removeFromSuperview];

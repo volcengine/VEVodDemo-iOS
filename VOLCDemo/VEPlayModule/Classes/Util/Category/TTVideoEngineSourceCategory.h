@@ -16,6 +16,7 @@
 
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *cover;
+@property (nonatomic, assign) NSInteger startTime;
 
 @end
 
@@ -23,6 +24,7 @@
 
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *cover;
+@property (nonatomic, assign) NSInteger startTime;
 
 @end
 
@@ -30,6 +32,7 @@
 
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *cover;
+@property (nonatomic, assign) NSInteger startTime;
 
 @end
 

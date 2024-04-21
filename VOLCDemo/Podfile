@@ -6,7 +6,7 @@ platform :ios, '11.0'
 
 target 'VOLCDemo' do
   # vod SDK 
-  pod 'TTSDK', '1.40.2.10-premium', :subspecs => ['Player-SR']
+  pod 'TTSDK', '1.41.3.5-premium', :subspecs => ['Player-SR']
   # vod all scene exhibition
   pod 'VEPlayModule', :path=> './VEPlayModule/' 
   # vod player kit
@@ -21,7 +21,7 @@ target 'VOLCDemo' do
   pod 'SDWebImage'
   pod 'MBProgressHUD', '~> 1.2.0'
   pod 'Reachability'
-  pod 'JSONModel'
+  pod 'MJRefresh'
 
 end
 

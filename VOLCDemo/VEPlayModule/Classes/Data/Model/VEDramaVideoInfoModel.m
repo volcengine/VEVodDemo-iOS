@@ -36,6 +36,7 @@
         TTVideoEngineVidSource *vidSource = [[TTVideoEngineVidSource alloc] initWithVid:dramaVideoModel.videoId playAuthToken:dramaVideoModel.playAuthToken resolution:[VEVideoPlayerController getPlayerCurrentResolution]];
         vidSource.title = dramaVideoModel.title;
         vidSource.cover = dramaVideoModel.coverUrl;
+        vidSource.startTime = dramaVideoModel.startTime;
         return vidSource;
     }
     return nil;

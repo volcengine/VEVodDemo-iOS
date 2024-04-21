@@ -100,6 +100,7 @@ Pod::Spec.new do |s|
   s.dependency 'VEPlayerKit'
   s.dependency 'VEPlayerUIModule'
   s.dependency 'VESceneKit' 
+  s.dependency 'MJRefresh'
   
 end
 

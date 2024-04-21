@@ -78,7 +78,6 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
 
 - (void)playerStop {
     @autoreleasepool {
-        self.dramaVideoInfo.startTime = self.playerController.currentPlaybackTime;
         [self.playerController stop];
         [self.controlViewController closePlayer];
         [self.controlViewController.view removeFromSuperview];
@@ -134,7 +133,6 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
 
 - (void)videoPlayer:(id<VEVideoPlayback> _Nullable)player playbackStateDidChange:(VEVideoPlaybackState)state {
     if (state == VEVideoPlaybackStateFinished) {
-        self.dramaVideoInfo.startTime = player.startTime;
         if (self.delegate && [self.delegate respondsToSelector:@selector(dramaVideoPlayFinish:)]) {
             [self.delegate dramaVideoPlayFinish:self.dramaVideoInfo];
         }

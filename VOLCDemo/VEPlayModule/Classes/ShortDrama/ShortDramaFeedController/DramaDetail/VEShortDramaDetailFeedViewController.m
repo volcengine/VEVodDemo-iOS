@@ -13,6 +13,7 @@
 #import <VESceneKit/VEPageViewController.h>
 #import <VEPlayerKit/VEPlayerKit.h>
 #import <Masonry/Masonry.h>
+#import <MJRefresh/MJRefresh.h>
 
 static NSInteger VEShortDramaDetailVideoFeedPageCount = 20;
 static NSInteger VEShortDramaDetailVideoFeedLoadMoreDetection = 2;
@@ -28,6 +29,7 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
 @property (nonatomic, strong) UIButton *backButton;
 @property (nonatomic, assign) NSInteger pageOffset;
 @property (nonatomic, assign) BOOL firstLoadData;
+@property (nonatomic, assign) BOOL isLoadingData;
 
 @end
 
@@ -39,7 +41,6 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
         self.firstLoadData = YES;
         self.fromDramaId = dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId;
         self.fromDramaVideoInfo = dramaVideoInfo;
-//        self.dramaVideoModels = [NSMutableArray arrayWithObject:dramaVideoInfo];
     }
     return self;
 }
@@ -80,11 +81,6 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
         make.edges.equalTo(self.view);
     }];
     
-    __weak typeof(self) weakSelf = self;
-    [self.pageContainer.scrollView systemRefresh:^{
-        [weakSelf loadData:NO];
-    }];
-    
     [self.view addSubview:self.backButton];
     [self.view addSubview:self.dramaEpisodeLabel];
     [self.backButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -101,44 +97,63 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
         make.centerY.equalTo(self.backButton);
         make.left.equalTo(self.backButton.mas_right);
     }];
+    
+    __weak typeof(self) weakSelf = self;
+    self.pageContainer.scrollView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf loadData:NO];
+    }];
+    
+    self.pageContainer.scrollView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf loadData:YES];
+    }];
 }
 
 #pragma mark ----- Data
 
 - (void)loadData:(BOOL)isLoadMore {
-    if (isLoadMore) {
-        self.pageContainer.scrollView.veLoading = YES;
-    } else {
-        [self.pageContainer.scrollView beginRefresh];
-        [self.dramaVideoModels removeAllObjects];
+    if (self.isLoadingData) {
+        return;
+    }
+    self.isLoadingData = YES;
+    
+    if (!isLoadMore) {
+        self.pageOffset = 0;
+        self.pageContainer.scrollView.mj_footer.hidden = NO;
     }
     
-    @weakify(self);
+    __weak typeof(self) weakSelf = self;
     [VEDramaDataManager requestDramaEpisodeList:self.fromDramaId offset:self.pageOffset pageSize:VEShortDramaDetailVideoFeedPageCount result:^(id  _Nullable responseData, NSString * _Nullable errorMsg) {
-        @strongify(self);
+        __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!errorMsg) {
-            NSArray *resArray = (NSArray *)responseData;
-            [self.dramaVideoModels addObjectsFromArray:resArray];
-            self.pageOffset = self.dramaVideoModels.count;
-            
-            // set video strategy source
-            [self setVideoStrategySource:!isLoadMore];
-            
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self onHandleFromDramaVideoInfo];
-                
-                if (isLoadMore) {
-                    [self.pageContainer reloadContentSize];
-                    self.pageContainer.scrollView.veLoading = NO;
-                } else {
-                    [self.pageContainer reloadData];
-                    [self.pageContainer.scrollView endRefresh];
-                }
+                // response drama data
+                NSArray *resArray = (NSArray *)responseData;
+                if (resArray && resArray.count) {
+                    // set video strategy source
+                    [strongSelf setVideoStrategySource:!isLoadMore];
 
-                [self updateDramaTitle];
+                    if (isLoadMore) {
+                        [strongSelf.dramaVideoModels addObjectsFromArray:resArray];
+                        [self onHandleFromDramaVideoInfo];
+                        [strongSelf.pageContainer reloadContentSize];
+                        [strongSelf.pageContainer.scrollView.mj_footer endRefreshing];
+                    } else {
+                        strongSelf.dramaVideoModels = [resArray mutableCopy];
+                        [self onHandleFromDramaVideoInfo];
+                        [strongSelf.pageContainer.scrollView.mj_header endRefreshing];
+                        [strongSelf.pageContainer reloadData];
+                    }
+                    strongSelf.isLoadingData = NO;
+                    strongSelf.pageOffset = strongSelf.dramaVideoModels.count;
+                } else {
+                    strongSelf.pageContainer.scrollView.mj_footer.hidden = YES;
+                }
+                [strongSelf updateDramaTitle];
             });
         } else {
-            
+            strongSelf.isLoadingData = NO;
         }
     }];
 }

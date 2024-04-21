@@ -9,13 +9,17 @@
 #import "VEDramaDataManager.h"
 #import "VEDramaInfoModel.h"
 #import <Masonry/Masonry.h>
+#import <MJRefresh/MJRefresh.h>
 
+static NSInteger VEShortDramaVideoListPageCount = 10;
 static NSString *VEShortDramaVideoNormalCellReuseID = @"VEShortDramaVideoNormalCellReuseID";
 
 @interface VEShortDramaListViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
 
-@property (nonatomic, strong) NSArray<VEDramaInfoModel *> *dramasArray;
+@property (nonatomic, strong) NSMutableArray<VEDramaInfoModel *> *dramasArray;
 @property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, assign) NSInteger pageOffset;
+@property (nonatomic, assign) BOOL isLoadingData;
 
 @end
 
@@ -28,7 +32,7 @@ static NSString *VEShortDramaVideoNormalCellReuseID = @"VEShortDramaVideoNormalC
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self configuratoinCustomView];
-    [self loadData];
+    [self loadData:YES];
 }
 
 - (void)configuratoinCustomView {
@@ -45,13 +49,49 @@ static NSString *VEShortDramaVideoNormalCellReuseID = @"VEShortDramaVideoNormalC
         make.left.right.equalTo(self.view);
         make.bottom.equalTo(self.view);
     }];
+    __weak typeof(self) weakSelf = self;
+    self.collectionView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf loadData:NO];
+    }];
+    
+    self.collectionView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf loadData:YES];
+    }];
 }
 
-- (void)loadData {
-    [VEDramaDataManager requestDramaList:0 pageSize:30 result:^(id _Nullable responseData, NSString * _Nullable errorMsg) {
+- (void)loadData:(BOOL)isLoadMore {
+    if (self.isLoadingData) {
+        return;
+    }
+    self.isLoadingData = YES;
+    
+    if (!isLoadMore) {
+        self.pageOffset = 0;
+        self.collectionView.mj_footer.hidden = NO;
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [VEDramaDataManager requestDramaList:self.pageOffset pageSize:VEShortDramaVideoListPageCount result:^(id _Nullable responseData, NSString * _Nullable errorMsg) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.dramasArray = responseData;
-            [self.collectionView reloadData];
+            NSArray *resArray = (NSArray *)responseData;
+            if (resArray && resArray.count > 0) {
+                if (isLoadMore) {
+                    [strongSelf.dramasArray addObjectsFromArray:resArray];
+                    [strongSelf.collectionView reloadData];
+                    [strongSelf.collectionView.mj_footer endRefreshing];
+                } else {
+                    strongSelf.dramasArray = [resArray mutableCopy];
+                    [strongSelf.collectionView.mj_header endRefreshing];
+                    [strongSelf.collectionView reloadData];
+                }
+            } else {
+                strongSelf.collectionView.mj_footer.hidden = YES;
+            }
+            strongSelf.isLoadingData = NO;
+            strongSelf.pageOffset = strongSelf.dramasArray.count;
         });
     }];
 }
@@ -104,6 +144,13 @@ static NSString *VEShortDramaVideoNormalCellReuseID = @"VEShortDramaVideoNormalC
         _collectionView.showsHorizontalScrollIndicator = NO;
     }
     return _collectionView;
+}
+
+- (NSMutableArray<VEDramaInfoModel *> *)dramasArray {
+    if (!_dramasArray) {
+        _dramasArray = [NSMutableArray array];
+    }
+    return _dramasArray;
 }
 
 @end

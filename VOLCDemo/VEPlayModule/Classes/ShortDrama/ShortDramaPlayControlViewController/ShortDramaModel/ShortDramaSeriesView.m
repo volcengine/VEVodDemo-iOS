@@ -108,10 +108,4 @@
     return _dramaButton;
 }
 
-#pragma mark - UIGestureRecognizer
-
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
-    return NO;
-}
-
 @end

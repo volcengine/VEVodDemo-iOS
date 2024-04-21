@@ -15,9 +15,10 @@
 #import "VEDramaDataManager.h"
 #import "VEDramaVideoInfoModel.h"
 #import "VEShortDramaDetailFeedViewController.h"
+#import <MJRefresh/MJRefresh.h>
 
-static NSInteger VEShortDramaVideoFeedPageCount = 30;
-static NSInteger VEShortDramaVideoFeedLoadMoreDetection = 2;
+static NSInteger VEShortDramaVideoFeedPageCount = 10;
+static NSInteger VEShortDramaVideoFeedLoadMoreDetection = 3;
 
 static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellReuseID";
 
@@ -27,6 +28,7 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
 @property (nonatomic, strong) NSMutableArray<VEDramaVideoInfoModel *> *dramaVideoModels;
 @property (nonatomic, assign) NSInteger pageOffset;
 @property (nonatomic, assign) BOOL viewDidAppear;
+@property (nonatomic, assign) BOOL isLoadingData;
 
 @end
 
@@ -71,44 +73,57 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
     }];
     
     __weak typeof(self) weakSelf = self;
-    [self.pageContainer.scrollView systemRefresh:^{
-        [weakSelf loadData:NO];
+    self.pageContainer.scrollView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf loadData:NO];
+    }];
+    
+    self.pageContainer.scrollView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf loadData:YES];
     }];
 }
 
 #pragma mark ----- Data
 
 - (void)loadData:(BOOL)isLoadMore {
-    if (isLoadMore) {
-        self.pageContainer.scrollView.veLoading = YES;
-    } else {
-        [self.pageContainer.scrollView beginRefresh];
-        [self.dramaVideoModels removeAllObjects];
+    if (self.isLoadingData) {
+        return;
+    }
+    self.isLoadingData = YES;
+    
+    if (!isLoadMore) {
+        self.pageOffset = 0;
+        self.pageContainer.scrollView.mj_footer.hidden = NO;
     }
     
-    @weakify(self);
+    __weak typeof(self) weakSelf = self;
     [VEDramaDataManager requestDramaRecommondList:self.pageOffset pageSize:VEShortDramaVideoFeedPageCount result:^(id  _Nullable responseData, NSString * _Nullable errorMsg) {
-        @strongify(self);
+        __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!errorMsg) {
-            NSArray *resArray = (NSArray *)responseData;
-            self.dramaVideoModels = [resArray mutableCopy];
-            [self.dramaVideoModels addObjectsFromArray:resArray];
-            self.pageOffset = self.dramaVideoModels.count;
-            
-            // set video strategy source
-            [self setVideoStrategySource:!isLoadMore];
-            
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (isLoadMore) {
-                    [self.pageContainer reloadContentSize];
-                    self.pageContainer.scrollView.veLoading = NO;
+                NSArray *resArray = (NSArray *)responseData;
+                if (resArray && resArray.count) {
+                    // set video strategy source
+                    [strongSelf setVideoStrategySource:!isLoadMore];
+                    
+                    if (isLoadMore) {
+                        [strongSelf.dramaVideoModels addObjectsFromArray:resArray];
+                        [strongSelf.pageContainer reloadContentSize];
+                        [strongSelf.pageContainer.scrollView.mj_footer endRefreshing];
+                    } else {
+                        strongSelf.dramaVideoModels = [resArray mutableCopy];
+                        [strongSelf.pageContainer.scrollView.mj_header endRefreshing];
+                        [strongSelf.pageContainer reloadData];
+                    }
+                    strongSelf.isLoadingData = NO;
+                    strongSelf.pageOffset = strongSelf.dramaVideoModels.count;
                 } else {
-                    [self.pageContainer reloadData];
-                    [self.pageContainer.scrollView endRefresh];
+                    strongSelf.pageContainer.scrollView.mj_footer.hidden = YES;
                 }
             });
         } else {
-            
+            strongSelf.isLoadingData = NO;
         }
     }];
 }
@@ -174,11 +189,9 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
     return YES;
 }
 
-- (void)pageViewController:(VEPageViewController *)pageViewController didScrollChangeDirection:(VEPageItemMoveDirection)direction offsetProgress:(CGFloat)progress {
-    if (((self.dramaVideoModels.count - 1) - self.pageContainer.currentIndex <= VEShortDramaVideoFeedLoadMoreDetection) && direction == VEPageItemMoveDirectionNext) {
-        if (!self.pageContainer.scrollView.veLoading) {
-            [self loadData:YES];
-        }
+- (void)pageViewController:(VEPageViewController *)pageViewController didDisplayItem:(id<VEPageItem>)viewController {
+    if (((self.dramaVideoModels.count - 1) - self.pageContainer.currentIndex) <= VEShortDramaVideoFeedLoadMoreDetection) {
+        [self loadData:YES];
     }
 }
 
