@@ -104,9 +104,6 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSArray *resArray = (NSArray *)responseData;
                 if (resArray && resArray.count) {
-                    // set video strategy source
-                    [strongSelf setVideoStrategySource:!isLoadMore];
-                    
                     if (isLoadMore) {
                         [strongSelf.dramaVideoModels addObjectsFromArray:resArray];
                         [strongSelf.pageContainer reloadContentSize];
@@ -116,6 +113,10 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
                         [strongSelf.pageContainer.scrollView.mj_header endRefreshing];
                         [strongSelf.pageContainer reloadData];
                     }
+                    
+                    // set video strategy source
+                    [strongSelf setVideoStrategySource:!isLoadMore];
+                    
                     strongSelf.isLoadingData = NO;
                     strongSelf.pageOffset = strongSelf.dramaVideoModels.count;
                 } else {

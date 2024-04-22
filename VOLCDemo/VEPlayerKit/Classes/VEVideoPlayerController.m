@@ -14,6 +14,7 @@
 #import "VEVideoPlayerController+Tips.h"
 #import "VEVideoPlayerController+Strategy.h"
 #import "VEVideoPlayerController+DisRecordScreen.h"
+#import "TTVideoEngineSourceCategory.h"
 #import <Masonry/Masonry.h>
 #import <SDWebImage/SDWebImage.h>
 
@@ -33,6 +34,11 @@
 #pragma mark - TTVideoEnginePreRenderDelegate
 
 - (void)videoEngineWillPrepare:(TTVideoEngine *)videoEngine {
+    
+}
+
+- (void)videoEngine:(TTVideoEngine *)videoEngine willPreRenderSource:(id<TTVideoEngineMediaSource>)source {
+    
 }
 
 @end
@@ -206,18 +212,33 @@ TTVideoEngineResolutionDelegate>
     }];
 }
 
+- (void)configStartTime:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource {
+    NSInteger retStartTime = 0;
+    if (mediaSource.sourceType == TTVideoEngineSourceTypeVideoId) {
+        retStartTime = [(TTVideoEngineVidSource *)mediaSource startTime];
+    } else if (mediaSource.sourceType == TTVideoEngineSourceTypeDirectUrl) {
+        retStartTime = [(TTVideoEngineUrlSource *)mediaSource startTime];
+    }
+    if (retStartTime > 0) {
+        self.startTime = retStartTime;
+    }
+}
+
 #pragma mark - Player control
 
 - (void)resetVideoEngine:(TTVideoEngine * _Nonnull)videoEngine mediaSource:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource {
     self.videoEngine = nil;
-    self.mediaSource = mediaSource;
     self.videoEngine = videoEngine;
+    self.mediaSource = mediaSource;
+    self.videoViewMode = _videoViewMode;
+    self.videoEngine.looping = self.looping;
 }
 
 - (void)setMediaSource:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource {
     _mediaSource = mediaSource;
     [self configVideoEngine];
     [self.videoEngine setVideoEngineVideoSource:mediaSource];
+    [self configStartTime:mediaSource];
 }
 
 - (void)loadBackgourdImageWithMediaSource:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource {

@@ -50,6 +50,18 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
     [self playerStop];
 }
 
+- (void)recordStartTime {
+    if (self.playerController) {
+        NSInteger curTime = self.playerController.currentPlaybackTime;
+        NSInteger duration = self.playerController.duration;
+        if (curTime && duration && (duration - curTime > 5)) {
+            self.dramaVideoInfo.startTime = curTime;
+        } else {
+            self.dramaVideoInfo.startTime = 0;
+        }
+    }
+}
+
 #pragma mark ----- Play
 
 - (void)playerCover {
@@ -78,6 +90,7 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
 
 - (void)playerStop {
     @autoreleasepool {
+        [self recordStartTime];
         [self.playerController stop];
         [self.controlViewController closePlayer];
         [self.controlViewController.view removeFromSuperview];
@@ -134,6 +147,7 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
 - (void)videoPlayer:(id<VEVideoPlayback> _Nullable)player playbackStateDidChange:(VEVideoPlaybackState)state {
     if (state == VEVideoPlaybackStateFinished) {
         if (self.delegate && [self.delegate respondsToSelector:@selector(dramaVideoPlayFinish:)]) {
+            [self recordStartTime];
             [self.delegate dramaVideoPlayFinish:self.dramaVideoInfo];
         }
     }
