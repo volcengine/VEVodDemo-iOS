@@ -9,7 +9,7 @@
 #import "VEDramaVideoInfoModel.h"
 #import "VESettingManager.h"
 #import <Masonry/Masonry.h>
-#import <VEPlayerKit/VEPlayerKit.h>
+#import "VEPlayerKit.h"
 
 static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
 

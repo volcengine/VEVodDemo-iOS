@@ -7,11 +7,11 @@
 //
 
 #import "VEInterfaceFeedBlockSceneConf.h"
-#import <VEPlayerUIModule/VEPlayerUIModule.h>
-#import <VEPlayerUIModule/VEActionButton.h>
-#import <VEPlayerUIModule/VEProgressView.h>
-#import <VEPlayerUIModule/VEDisplayLabel.h>
-#import <VEPlayerUIModule/VEInterfaceSlideMenuCell.h>
+#import "VEPlayerUIModule.h"
+#import "VEActionButton.h"
+#import "VEProgressView.h"
+#import "VEDisplayLabel.h"
+#import "VEInterfaceSlideMenuCell.h"
 #import "VEInterfaceElementDescriptionImp.h"
 #import "Masonry.h"
 

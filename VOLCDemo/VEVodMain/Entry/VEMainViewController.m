@@ -6,12 +6,12 @@
 //
 
 #import "VEMainViewController.h"
-#import <VEPlayModule/VEShortVideoViewController.h>
-#import <VEPlayModule/VEFeedVideoViewController.h>
-#import <VEPlayModule/VELongVideoViewController.h>
-#import <VEPlayModule/VESettingViewController.h>
-#import <VEPlayModule/VEShortDramaPagingViewController.h>
-#import <VEPlayModule/VEPlayUrlConfigViewController.h>
+#import "VEShortVideoViewController.h"
+#import "VEFeedVideoViewController.h"
+#import "VELongVideoViewController.h"
+#import "VESettingViewController.h"
+#import "VEShortDramaPagingViewController.h"
+#import "VEPlayUrlConfigViewController.h"
 #import <TTSDK/TTSDKManager.h>
 #import <AVFoundation/AVFoundation.h>
 
@@ -36,14 +36,14 @@
 }
 
 - (void)configuratoinCustomView {
-    self.vodTitleLabel.text = NSLocalizedString(@"title_volc_vod", nil);
-    self.vodSubTitleLabel.text = NSLocalizedString(@"title_volc_vod_desc", nil);
+    self.vodTitleLabel.text = NSLocalizedStringFromTable(@"title_volc_vod", @"VodLocalizable", nil);
+    self.vodSubTitleLabel.text = NSLocalizedStringFromTable(@"title_volc_vod_desc", @"VodLocalizable", nil);
     
-    self.shortSceneLable.text = NSLocalizedString(@"title_short_video", nil);
-    self.middleSceneLabel.text = NSLocalizedString(@"title_middle_video", nil);
-    self.longSceneLabel.text = NSLocalizedString(@"title_long_video", nil);
-    self.shortDramaSceneLabel.text = NSLocalizedString(@"title_short_drama_video", nil);
-    self.settingsLabel.text = NSLocalizedString(@"title_video_setting", nil);
+    self.shortSceneLable.text = NSLocalizedStringFromTable(@"title_short_video", @"VodLocalizable", nil);
+    self.middleSceneLabel.text = NSLocalizedStringFromTable(@"title_middle_video", @"VodLocalizable", nil);
+    self.longSceneLabel.text = NSLocalizedStringFromTable(@"title_long_video", @"VodLocalizable", nil);
+    self.shortDramaSceneLabel.text = NSLocalizedStringFromTable(@"title_short_drama_video", @"VodLocalizable", nil);
+    self.settingsLabel.text = NSLocalizedStringFromTable(@"title_video_setting", @"VodLocalizable", nil);
     
     self.versionLabel.text = [NSString stringWithFormat:@"TTSDK - %@", [TTSDKManager SDKVersionString]];
 }

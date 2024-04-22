@@ -28,7 +28,7 @@ const NSString *VESettingDisplayDetailCellReuseID = @"VESettingDisplayDetailCell
 
 - (void)setSettingModel:(VESettingModel *)settingModel {
     _settingModel = settingModel;
-    [self.operationButton setTitle:NSLocalizedString(@"title_common_copy", nil) forState:UIControlStateNormal];
+    [self.operationButton setTitle:NSLocalizedStringFromTable(@"title_common_copy", @"VodLocalizable", nil) forState:UIControlStateNormal];
     self.titleLabel.text = [NSString stringWithFormat:@"%@", settingModel.displayText];
     self.detailLabel.text = [NSString stringWithFormat:@"%@", settingModel.detailText];
 }
@@ -37,7 +37,7 @@ const NSString *VESettingDisplayDetailCellReuseID = @"VESettingDisplayDetailCell
     [UIPasteboard generalPasteboard].string = [NSString stringWithFormat:@"%@", self.settingModel.detailText];
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:UIApplication.sharedApplication.keyWindow animated:YES];
     hud.mode = MBProgressHUDModeText;
-    hud.label.text = NSLocalizedString(@"tip_copy_success", nil);
+    hud.label.text = NSLocalizedStringFromTable(@"tip_copy_success", @"VodLocalizable", nil);
     [hud hideAnimated:YES afterDelay:1.0];
 }
 

@@ -427,7 +427,7 @@ TTVideoEngineResolutionDelegate>
         }
             break;
         case VEVideoPlaybackStateError: {
-            [self showTips:NSLocalizedString(@"tip_play_error_normal", nil)];
+            [self showTips:NSLocalizedStringFromTable(@"tip_play_error_normal", @"VodLocalizable", nil)];
         }
             break;
         case VEVideoPlaybackStateFinished: {

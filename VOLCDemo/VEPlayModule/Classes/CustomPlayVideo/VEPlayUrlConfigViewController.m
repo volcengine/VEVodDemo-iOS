@@ -60,7 +60,7 @@
     self.tipsLable.font = [UIFont systemFontOfSize:13];
     self.tipsLable.textColor = [UIColor redColor];
     self.tipsLable.numberOfLines = 0;
-    self.tipsLable.text = NSLocalizedString(@"title_custom_source_valid_tip", nil);
+    self.tipsLable.text = NSLocalizedStringFromTable(@"title_custom_source_valid_tip", @"VodLocalizable", nil);
     [self.view addSubview:self.tipsLable];
     [self.tipsLable mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view).offset(10);
@@ -69,9 +69,9 @@
         make.height.equalTo(@(36));
     }];
     
-    NSArray *titles = @[ NSLocalizedString(@"title_custom_source_enter_short_video", nil),
-                         NSLocalizedString(@"title_custom_source_enter_feed_video", nil),
-                         NSLocalizedString(@"title_custom_source_clean_cache", nil)];
+    NSArray *titles = @[ NSLocalizedStringFromTable(@"title_custom_source_enter_short_video", @"VodLocalizable", nil),
+                         NSLocalizedStringFromTable(@"title_custom_source_enter_feed_video", @"VodLocalizable", nil),
+                         NSLocalizedStringFromTable(@"title_custom_source_clean_cache", @"VodLocalizable", nil) ];
     
     CGFloat buttonHeight = 44;
     CGRect rect = CGRectMake(10, self.view.frame.size.height - buttonHeight*3 - 20 - 40, self.view.frame.size.width-20, buttonHeight);
@@ -89,7 +89,7 @@
         rect.origin.y += buttonHeight + 10;
     }
     
-    self.title = NSLocalizedString(@"title_custom_source", nil);
+    self.title = NSLocalizedStringFromTable(@"title_custom_source", @"VodLocalizable", nil);
     self.navigationItem.leftBarButtonItem = ({
         UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back"] style:UIBarButtonItemStylePlain target:self action:@selector(close)];
         leftItem.tintColor = [UIColor blackColor];

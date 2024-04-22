@@ -66,7 +66,7 @@ static NSString *VELongSectionRecommendForUHeaderKey = @"为你推荐";
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
-    self.title = NSLocalizedString(@"title_long_video", nil);
+    self.title = NSLocalizedStringFromTable(@"title_long_video", @"VodLocalizable", nil);
     self.navigationItem.leftBarButtonItem = ({
         UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back"] style:UIBarButtonItemStylePlain target:self action:@selector(close)];
         leftItem.tintColor = [UIColor blackColor];

@@ -435,7 +435,7 @@ static inline CGSize squareSize () {
         loopPlayButtonDes.elementID = loopPlayButtonIdentifier;
         loopPlayButtonDes.type = VEInterfaceElementTypeMenuNormalCell;
         loopPlayButtonDes.elementDisplay = ^(VEInterfaceSlideMenuCell *cell) {
-            cell.titleLabel.text = NSLocalizedString(@"title_play_panel_looper", nil);
+            cell.titleLabel.text = NSLocalizedStringFromTable(@"title_play_panel_looper", @"VodLocalizable", nil);
             cell.iconImgView.image = [[VEEventPoster currentPoster] loopPlayOpen] ? [UIImage imageNamed:@"long_video_loopplay_sel"] : [UIImage imageNamed:@"long_video_loopplay"];
         };
         loopPlayButtonDes.elementAction = ^NSString* (VEInterfaceSlideMenuCell *cell) {
@@ -454,7 +454,7 @@ static inline CGSize squareSize () {
         srButtonDes.elementID = srButtonIdentifier;
         srButtonDes.type = VEInterfaceElementTypeMenuNormalCell;
         srButtonDes.elementDisplay = ^(VEInterfaceSlideMenuCell *cell) {
-            cell.titleLabel.text = NSLocalizedString(@"title_play_panel_sr", nil);
+            cell.titleLabel.text = NSLocalizedStringFromTable(@"title_play_panel_sr", @"VodLocalizable", nil);
             cell.iconImgView.image = [[VEEventPoster currentPoster] srOpen] ? [UIImage imageNamed:@"long_video_sr_sel"] : [UIImage imageNamed:@"long_video_sr"];
         };
         srButtonDes.elementAction = ^NSString* (VEInterfaceSlideMenuCell *cell) {

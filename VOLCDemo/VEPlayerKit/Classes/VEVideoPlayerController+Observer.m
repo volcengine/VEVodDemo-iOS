@@ -39,19 +39,19 @@
         switch ([Reachability reachabilityForInternetConnection].currentReachabilityStatus) {
             case NotReachable: {
                 [self pause];
-                [self showTips:NSLocalizedString(@"tip_net_not_reachable", nil)];
+                [self showTips:NSLocalizedStringFromTable(@"tip_net_not_reachable", @"VodLocalizable", nil)];
             }
                 break;
                 
             case ReachableViaWiFi: {
                 [self play];
-                [self showTips:NSLocalizedString(@"tip_net_reachable_wifi", nil)];
+                [self showTips:NSLocalizedStringFromTable(@"tip_net_reachable_wifi", @"VodLocalizable", nil)];
             }
                 break;
                 
             case ReachableViaWWAN: {
                 [self play];
-                [self showTips:NSLocalizedString(@"tip_net_reachable_4g", nil)];
+                [self showTips:NSLocalizedStringFromTable(@"tip_net_reachable_4g", @"VodLocalizable", nil)];
             }
                 break;
                 

@@ -9,8 +9,8 @@
 #import "VEVideoModel.h"
 #import "VESettingManager.h"
 #import "UIScrollView+Refresh.h"
-#import <VESceneKit/VEPageViewController.h>
-#import <VEPlayerKit/VEPlayerKit.h>
+#import "VEPageViewController.h"
+#import "VEPlayerKit.h"
 #import <Masonry/Masonry.h>
 #import "VEDramaDataManager.h"
 #import "VEDramaVideoInfoModel.h"

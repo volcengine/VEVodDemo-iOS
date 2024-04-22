@@ -13,8 +13,8 @@
 #import "VESettingManager.h"
 #import "UIScrollView+Refresh.h"
 
-#import <VESceneKit/VEPageViewController.h>
-#import <VEPlayerKit/VEPlayerKit.h>
+#import "VEPageViewController.h"
+#import "VEPlayerKit.h"
 #import <Masonry/Masonry.h>
 
 static NSInteger VEShortVideoPageCount = 10;

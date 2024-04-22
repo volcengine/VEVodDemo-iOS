@@ -46,7 +46,7 @@ extern NSString *universalActionSectionKey;
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
-    self.title = NSLocalizedString(@"title_video_setting", nil);
+    self.title = NSLocalizedStringFromTable(@"title_video_setting", @"VodLocalizable", nil);
     self.navigationItem.leftBarButtonItem = ({
         UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back"] style:UIBarButtonItemStylePlain target:self action:@selector(close)];
         leftItem.tintColor = [UIColor blackColor];
@@ -127,15 +127,15 @@ extern NSString *universalActionSectionKey;
 
 
 - (void)alertUrlViewWithCurrentSettingsModel:(VESettingModel *)settingsModel {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"title_setting_Source_Type_Select", nil) message:@"support vid and url play source" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTable(@"title_setting_Source_Type_Select", @"VodLocalizable", nil) message:@"support vid and url play source" preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *vidSource = [UIAlertAction actionWithTitle:@"Vid Play Source" style:[settingsModel.currentValue integerValue] == VEPlaySourceType_Vid ? UIAlertActionStyleDestructive : UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         settingsModel.currentValue = @(VEPlaySourceType_Vid);
-        settingsModel.detailText = NSLocalizedString(@"title_setting_Source_Type_Vid", nil);
+        settingsModel.detailText = NSLocalizedStringFromTable(@"title_setting_Source_Type_Vid", @"VodLocalizable", nil);
         [self.tableView reloadData];
     }];
     UIAlertAction *urlSource = [UIAlertAction actionWithTitle:@"Url Play Source" style:[settingsModel.currentValue integerValue] == VEPlaySourceType_Url ? UIAlertActionStyleDestructive : UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         settingsModel.currentValue = @(VEPlaySourceType_Url);
-        settingsModel.detailText = NSLocalizedString(@"title_setting_Source_Type_Url", nil);
+        settingsModel.detailText = NSLocalizedStringFromTable(@"title_setting_Source_Type_Url", @"VodLocalizable", nil);
         [self.tableView reloadData];
     }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
