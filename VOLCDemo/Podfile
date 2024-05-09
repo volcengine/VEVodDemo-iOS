@@ -4,6 +4,8 @@ source 'https://github.com/volcengine/volcengine-specs.git'
 
 platform :ios, '11.0'
 
+install! 'cocoapods', :disable_input_output_paths => true
+
 target 'VOLCDemo' do
   # TTSDK-Player
   pod 'TTSDK', '1.41.3.5-premium', :subspecs => ['Player-SR']

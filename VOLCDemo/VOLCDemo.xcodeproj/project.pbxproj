@@ -3,13 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		2B3B72AB2761A6DF00E3A479 /* MetalPerformanceShaders.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B3B72AA2761A6DF00E3A479 /* MetalPerformanceShaders.framework */; };
 		2B3B72AD2761A6E800E3A479 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B3B72AC2761A6E800E3A479 /* MetalKit.framework */; };
 		2B82C5532673407E006CE7CD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B82C5552673407E006CE7CD /* LaunchScreen.storyboard */; };
+		2BD8EB972BECD22E008D7429 /* Resources.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2BD8EB962BECD22E008D7429 /* Resources.xcassets */; };
 		2BEC93ED2657915100C64503 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BEC93E92657915100C64503 /* main.m */; };
 		2BEC93EE2657915100C64503 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BEC93EA2657915100C64503 /* AppDelegate.m */; };
 		BCFC76EE035A2971ADE4D5A3 /* libPods-VOLCDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8816910B24DE9DA73B4723 /* libPods-VOLCDemo.a */; };
@@ -33,6 +34,7 @@
 		2B3B72AA2761A6DF00E3A479 /* MetalPerformanceShaders.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalPerformanceShaders.framework; path = System/Library/Frameworks/MetalPerformanceShaders.framework; sourceTree = SDKROOT; };
 		2B3B72AC2761A6E800E3A479 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		2B82C5542673407E006CE7CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		2BD8EB962BECD22E008D7429 /* Resources.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Resources.xcassets; sourceTree = "<group>"; };
 		2BEC93C22657907300C64503 /* VOLCDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VOLCDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BEC93E82657915100C64503 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		2BEC93E92657915100C64503 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				2BEC93EA2657915100C64503 /* AppDelegate.m */,
 				2B82C5552673407E006CE7CD /* LaunchScreen.storyboard */,
 				2BEC93F02657917D00C64503 /* VOLCDemoPrefix.pch */,
+				2BD8EB962BECD22E008D7429 /* Resources.xcassets */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -180,6 +183,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B82C5532673407E006CE7CD /* LaunchScreen.storyboard in Resources */,
+				2BD8EB972BECD22E008D7429 /* Resources.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
