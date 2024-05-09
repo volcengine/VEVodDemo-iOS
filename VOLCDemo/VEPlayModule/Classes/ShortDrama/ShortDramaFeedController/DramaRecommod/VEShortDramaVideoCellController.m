@@ -12,7 +12,7 @@
 
 static NSInteger VEShortDramaVideoCellBottomOffset = 83;
 
-@interface VEShortDramaVideoCellController () <VEVideoPlaybackDelegate>
+@interface VEShortDramaVideoCellController () <VEVideoPlaybackDelegate, ShortDramaPlayControlViewControllerDelegate>
 
 @property (nonatomic, strong) VEVideoPlayerController *playerController;
 @property (nonatomic, strong) ShortDramaPlayControlViewController *controlViewController;
@@ -79,7 +79,6 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
     if (!self.playerController) {
         [self createPlayer];
     }
-    [self playerOptions];
     [self.playerController playWithMediaSource:[VEDramaVideoInfoModel toVideoEngineSource:self.dramaVideoInfo]];
     if (self.dramaVideoInfo.startTime > 0) {
         self.playerController.startTime = self.dramaVideoInfo.startTime;
@@ -114,8 +113,10 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
         make.top.left.right.equalTo(self.view);
         make.bottom.equalTo(self.view).with.offset(-VEShortDramaVideoCellBottomOffset);
     }];
+    [self playerOptions];
     
     self.controlViewController = [[ShortDramaPlayControlViewController alloc] initWithVideoPlayerController:self.playerController];
+    self.controlViewController.delegate = self;
     [self.playerController addChildViewController:self.controlViewController];
     [self.playerController.view addSubview:self.controlViewController.view];
     [self.controlViewController didMoveToParentViewController:self];
@@ -140,6 +141,14 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
     
     VESettingModel *sr = [[VESettingManager universalManager] settingForKey:VESettingKeyUniversalSR];
     self.playerController.srOpen = sr.open;
+}
+
+#pragma mark - ShortDramaPlayControlViewController Delegate
+
+- (void)shortDramaPlayControlViewClickWatchDetail {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(dramaVideoWatchDetail:)]) {
+        [self.delegate dramaVideoWatchDetail:self.dramaVideoInfo];
+    }
 }
 
 #pragma mark - VEVideoPlaybackDelegate

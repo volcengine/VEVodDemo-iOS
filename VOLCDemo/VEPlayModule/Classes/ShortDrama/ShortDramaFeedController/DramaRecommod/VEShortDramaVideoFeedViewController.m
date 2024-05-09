@@ -17,12 +17,12 @@
 #import "VEShortDramaDetailFeedViewController.h"
 #import <MJRefresh/MJRefresh.h>
 
-static NSInteger VEShortDramaVideoFeedPageCount = 10;
+static NSInteger VEShortDramaVideoFeedPageCount = 20;
 static NSInteger VEShortDramaVideoFeedLoadMoreDetection = 3;
 
 static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellReuseID";
 
-@interface VEShortDramaVideoFeedViewController () <VEPageDataSource, VEPageDelegate, VEShortDramaVideoCellControllerDelegate>
+@interface VEShortDramaVideoFeedViewController () <VEPageDataSource, VEPageDelegate, VEShortDramaVideoCellControllerDelegate, VEShortDramaDetailFeedViewControllerDelegate>
 
 @property (nonatomic, strong) VEPageViewController *pageContainer;
 @property (nonatomic, strong) NSMutableArray<VEDramaVideoInfoModel *> *dramaVideoModels;
@@ -44,14 +44,15 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    if (self.dramaVideoModels) {
+        [self startVideoStategy];
+        [self setVideoStrategySource:YES];
+    }
     self.viewDidAppear = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    if (self.viewDidAppear) {
-        [VEVideoPlayerController clearAllEngineStrategy];
-    }
 }
 
 - (void)viewDidLoad {
@@ -152,6 +153,19 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
     }
 }
 
+#pragma mark - VEShortDramaDetailFeedViewController Delegate
+
+- (void)shortDramaDetailFeedViewWillback:(VEDramaVideoInfoModel *)dramaVideoInfo {
+    for (NSInteger i = 0; i < self.dramaVideoModels.count; i++) {
+        VEDramaVideoInfoModel *tempDramaVideoInfo = [self.dramaVideoModels objectAtIndex:i];
+        if ([dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId isEqualToString:tempDramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId]) {
+            [self.dramaVideoModels replaceObjectAtIndex:i withObject:dramaVideoInfo];
+            break;
+        }
+    }
+    [(VEShortDramaVideoCellController *)self.pageContainer.currentViewController setDramaVideoInfo:dramaVideoInfo];
+}
+
 #pragma mark - VEShortDramaVideoCellController Delegate
 
 - (void)dramaVideoPlayFinish:(VEDramaVideoInfoModel *)dramaVideoInfo {
@@ -163,10 +177,17 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
             }
         } else {
             VEShortDramaDetailFeedViewController *detailFeedViewController = [[VEShortDramaDetailFeedViewController alloc] initWtihDramaVideoInfo:dramaVideoInfo];
+            detailFeedViewController.delegate = self;
             detailFeedViewController.autoPlayNextDaram = YES;
             [self.navigationController pushViewController:detailFeedViewController animated:YES];
         }
     }
+}
+
+- (void)dramaVideoWatchDetail:(VEDramaVideoInfoModel *)dramaVideoInfo {
+    VEShortDramaDetailFeedViewController *detailFeedViewController = [[VEShortDramaDetailFeedViewController alloc] initWtihDramaVideoInfo:dramaVideoInfo];
+    detailFeedViewController.delegate = self;
+    [self.navigationController pushViewController:detailFeedViewController animated:YES];
 }
 
 #pragma mark ---- PageViewControllerDataSource & Delegate

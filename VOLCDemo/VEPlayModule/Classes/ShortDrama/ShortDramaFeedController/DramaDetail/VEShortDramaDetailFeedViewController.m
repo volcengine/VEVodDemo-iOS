@@ -55,7 +55,6 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [VEVideoPlayerController clearAllEngineStrategy];
 }
 
 - (void)viewDidLoad {
@@ -246,6 +245,11 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
 #pragma mark - Event Response
 
 - (void)onBackButtonHandle:(UIButton *)button {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(shortDramaDetailFeedViewWillback:)]) {
+        VEDramaVideoInfoModel *curDramaVideoInfo = [self.dramaVideoModels objectAtIndex:self.pageContainer.currentIndex];
+        [self.delegate shortDramaDetailFeedViewWillback:curDramaVideoInfo];
+    }
+    
     UIViewController *presentingViewController = self.presentingViewController;
     if (presentingViewController) {
         [presentingViewController dismissViewControllerAnimated:NO completion:nil];

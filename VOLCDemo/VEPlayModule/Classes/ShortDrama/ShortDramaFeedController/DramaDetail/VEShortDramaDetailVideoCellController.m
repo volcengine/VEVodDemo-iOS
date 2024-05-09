@@ -110,7 +110,6 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
     if (!self.playerController) {
         [self createPlayer];
     }
-    [self playerOptions];
     [self.playerController playWithMediaSource:[VEDramaVideoInfoModel toVideoEngineSource:self.dramaVideoInfo]];
     [self.playerController play];
     self.playerController.videoViewMode = VEVideoViewModeAspectFill;
@@ -141,6 +140,7 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
         make.top.left.right.equalTo(self.view);
         make.bottom.equalTo(self.view).with.offset(-VEShortDramaDetailVideoCellBottomOffset);
     }];
+    [self playerOptions];
     
     self.controlViewController = [[ShortDramaDetailPlayControlViewController alloc] initWithVideoPlayerController:self.playerController];
     [self.playerController addChildViewController:self.controlViewController];

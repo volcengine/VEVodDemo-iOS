@@ -195,6 +195,7 @@
         _progressSlider.thumbOffset = 12;
         _progressSlider.delegate = self.videoProgressView;
         _progressSlider.player = self.playerController;
+        _progressSlider.extendTouchSize = CGSizeMake(0, 20);
     }
     return _progressSlider;
 }

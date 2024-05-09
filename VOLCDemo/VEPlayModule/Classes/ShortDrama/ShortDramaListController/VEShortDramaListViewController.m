@@ -11,7 +11,7 @@
 #import <Masonry/Masonry.h>
 #import <MJRefresh/MJRefresh.h>
 
-static NSInteger VEShortDramaVideoListPageCount = 10;
+static NSInteger VEShortDramaVideoListPageCount = 20;
 static NSString *VEShortDramaVideoNormalCellReuseID = @"VEShortDramaVideoNormalCellReuseID";
 
 @interface VEShortDramaListViewController () <UICollectionViewDelegate, UICollectionViewDataSource>

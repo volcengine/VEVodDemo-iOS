@@ -13,6 +13,8 @@
 
 - (void)dramaVideoPlayFinish:(VEDramaVideoInfoModel *)dramaVideoInfo;
 
+- (void)dramaVideoWatchDetail:(VEDramaVideoInfoModel *)dramaVideoInfo;
+
 @end
 
 @interface VEShortDramaVideoCellController : UIViewController <VEPageItem>

@@ -45,6 +45,7 @@
 
 "tip_clean_success" = "缓存清理成功";
 "tip_copy_success" = "复制成功";
+"tip_play_error_normal" = "播放失败，请稍后重试";
 
 "tip_license_required" = "请联系火山引擎商务获取体验 Demo AppId 与 License.";
 
@@ -52,3 +53,6 @@
 // play control panel
 "title_play_panel_looper" = "循环播放";
 "title_play_panel_sr" = "超分";
+
+"title_short_drama_list" = "剧场";
+"title_short_drama_hot" = "推荐";

@@ -67,6 +67,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, weak) id<VEPageDataSource>dataSource;
 
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
+@property (nonatomic, strong, readonly) UIViewController<VEPageItem> *currentViewController;
 
 - (__kindof UIViewController<VEPageItem> *)dequeueItemForReuseIdentifier:(NSString *)reuseIdentifier;
 

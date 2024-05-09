@@ -35,4 +35,6 @@ typedef NS_ENUM(NSInteger, VEProgressSliderContentMode) {
 @property (nonatomic, strong) UIImage *thumbImage;
 @property (nonatomic, strong) UIImage *thumbTouchImage;
 
+@property (nonatomic, assign) CGSize extendTouchSize;
+
 @end

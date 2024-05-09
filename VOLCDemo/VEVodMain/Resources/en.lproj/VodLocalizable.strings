@@ -44,9 +44,13 @@
 
 "tip_clean_success" = "clean success";
 "tip_copy_success" = "copy success";
+"tip_play_error_normal" = "play error";
 
 "tip_license_required" = "Please contact Volcano Engine Business to get the demo AppId and License.";
 
 // play control panel
 "title_play_panel_looper" = "Loop";
 "title_play_panel_sr" = "SR";
+
+"title_short_drama_list" = "All";
+"title_short_drama_hot" = "Hot";

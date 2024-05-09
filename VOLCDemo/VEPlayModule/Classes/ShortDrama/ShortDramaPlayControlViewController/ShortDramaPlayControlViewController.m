@@ -149,9 +149,10 @@
 - (void)onClickDramaCallback {
     [self.playerController pause];
     self.dramaVideoInfoModel.startTime = self.playerController.currentPlaybackTime;
-    VEShortDramaDetailFeedViewController *detailFeedViewController = [[VEShortDramaDetailFeedViewController alloc] initWtihDramaVideoInfo:self.dramaVideoInfoModel];
-    UINavigationController *navigationController = (UINavigationController *)[[[UIApplication sharedApplication] keyWindow] rootViewController];
-    [navigationController pushViewController:detailFeedViewController animated:YES];
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(shortDramaPlayControlViewClickWatchDetail)]) {
+        [self.delegate shortDramaPlayControlViewClickWatchDetail];
+    }
 }
 
 #pragma mark - GestureRecognizer
@@ -229,6 +230,7 @@
         _progressSlider.thumbOffset = 12;
         _progressSlider.delegate = self.videoProgressView;
         _progressSlider.player = self.playerController;
+        _progressSlider.extendTouchSize = CGSizeMake(0, 20);
     }
     return _progressSlider;
 }

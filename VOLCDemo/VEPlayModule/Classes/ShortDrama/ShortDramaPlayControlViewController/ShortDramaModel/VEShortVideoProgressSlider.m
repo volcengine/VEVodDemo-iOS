@@ -320,9 +320,7 @@ NSString *const VEShortDramaProgressSliderGestureEnable = @"VEShortDramaProgress
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
     CGRect bounds = self.bounds;
-    CGFloat increase = 30.0;
-    bounds.size.height += increase;
-    bounds.origin.y -= (increase / 2.0);
+    bounds = CGRectInset(bounds, -0.5 * self.extendTouchSize.width, -0.5 * self.extendTouchSize.height);
     return CGRectContainsPoint(bounds, point);
 }
 

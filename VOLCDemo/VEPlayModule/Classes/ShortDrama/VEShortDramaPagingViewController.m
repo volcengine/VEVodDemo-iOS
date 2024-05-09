@@ -9,6 +9,7 @@
 #import "VEShortVideoViewController.h"
 #import "VEShortDramaVideoFeedViewController.h"
 #import "VELongVideoViewController.h"
+#import "VEVideoPlayerController+Strategy.h"
 #import <Masonry/Masonry.h>
 #import "UIColor+RGB.h"
 
@@ -129,9 +130,10 @@
     self.selectionBar.backgroundColor = [UIColor clearColor];
     self.recommendSelectionBar.backgroundColor = [UIColor clearColor];
     self.recommendSelectionBar.hidden = YES;
-    
-    [self.selectionBar updateWithTitles:@[ @"剧场", @"推荐" ]];
-    [self.recommendSelectionBar updateWithTitles:@[ @"剧场", @"推荐" ]];
+    NSString *allDramaTitle = NSLocalizedStringFromTable(@"title_short_drama_list", @"VodLocalizable", nil);
+    NSString *hotDramaTitle = NSLocalizedStringFromTable(@"title_short_drama_hot", @"VodLocalizable", nil);
+    [self.selectionBar updateWithTitles:@[ allDramaTitle, hotDramaTitle ]];
+    [self.recommendSelectionBar updateWithTitles:@[ allDramaTitle, hotDramaTitle ]];
     
     UIGestureRecognizer *interactivePopGestureRecognizer = self.navigationController.interactivePopGestureRecognizer;
     [self.scrollView.panGestureRecognizer requireGestureRecognizerToFail:interactivePopGestureRecognizer];
@@ -143,10 +145,10 @@
     UIViewController *presentingViewController = self.presentingViewController;
     if (presentingViewController) {
         [presentingViewController dismissViewControllerAnimated:NO completion:nil];
-    }
-    else if (self.navigationController) {
+    } else if (self.navigationController) {
         [self.navigationController popViewControllerAnimated:YES];
     }
+    [VEVideoPlayerController clearAllEngineStrategy];
 }
 
 #pragma mark - Getters & Setters.
