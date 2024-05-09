@@ -8,8 +8,8 @@
 
 #import "AppDelegate.h"
 #import "VEMainViewController.h"
-#import <TTSDK/TTSDKManager.h>
-#import <TTSDK/TTVideoEngineHeader.h>
+#import <TTSDKFramework/TTSDKManager.h>
+#import <TTSDKFramework/TTVideoEngineHeader.h>
 
 #if __has_include(<RangersAppLog/RangersAppLogCore.h>)
 #import <RangersAppLog/RangersAppLogCore.h>
@@ -75,7 +75,7 @@
     NSString *appId = @"";
     NSString *licenseName = @"";
     if (appId.length == 0 || licenseName.length == 0) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"tip_license_required", nil) preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedStringFromTable(@"tip_license_required", @"VodLocalizable", nil) preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *vidSource = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             exit(0);
         }];

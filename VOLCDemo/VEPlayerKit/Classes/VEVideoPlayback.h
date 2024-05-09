@@ -7,7 +7,7 @@
 //
 
 @import Foundation;
-#import <TTSDK/TTVideoEngineHeader.h>
+#import <TTSDKFramework/TTSDKFramework.h>
 
 typedef NS_ENUM(NSInteger, VEVideoPlaybackState) {
     VEVideoPlaybackStateUnkown = 0,

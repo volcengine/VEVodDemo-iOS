@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
                  'Entry/*.{xib}'
   ]
 
-  s.dependency 'TTSDK/Player-SR'
+  s.dependency 'TTSDKFramework/Player-SR'
   s.dependency 'VEPlayModule'
 
 end
