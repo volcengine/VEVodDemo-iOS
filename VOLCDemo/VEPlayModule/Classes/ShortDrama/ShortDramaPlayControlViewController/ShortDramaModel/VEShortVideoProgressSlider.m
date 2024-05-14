@@ -4,7 +4,7 @@
 //
 
 #import "VEShortVideoProgressSlider.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 
 NSString *const VEShortDramaProgressSliderGestureEnable = @"VEShortDramaProgressSliderGestureEnable";
 

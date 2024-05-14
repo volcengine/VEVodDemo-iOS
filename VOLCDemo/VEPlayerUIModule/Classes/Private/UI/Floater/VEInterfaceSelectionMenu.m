@@ -7,7 +7,7 @@
 
 #import "VEInterfaceSelectionMenu.h"
 #import "VEEventConst.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 
 static NSString *VESelectionMenuCellIdentifier = @"VESelectionMenuCellIdentifier";
 

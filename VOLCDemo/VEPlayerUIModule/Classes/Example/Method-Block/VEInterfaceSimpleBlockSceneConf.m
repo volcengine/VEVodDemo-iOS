@@ -7,7 +7,7 @@
 
 #import "VEInterfaceSimpleBlockSceneConf.h"
 #import "VEPlayerUIModule.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 #import "VEActionButton.h"
 #import "VEProgressView.h"
 #import "VEDisplayLabel.h"

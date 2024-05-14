@@ -8,7 +8,7 @@
 #import "VEInterfaceSlideMenuArea.h"
 #import "VEInterfaceSlideMenuCell.h"
 #import "VEInterfaceElementDescription.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 #import "VEEventConst.h"
 
 static NSString *VEInterfaceSlideMenuCellIdentifier = @"VEInterfaceSlideMenuCellIdentifier";

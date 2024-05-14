@@ -13,7 +13,7 @@
 #import "VEDisplayLabel.h"
 #import "VEInterfaceSlideMenuCell.h"
 #import "VEInterfaceElementDescriptionImp.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 
 @implementation VEInterfaceFeedBlockSceneConf
 

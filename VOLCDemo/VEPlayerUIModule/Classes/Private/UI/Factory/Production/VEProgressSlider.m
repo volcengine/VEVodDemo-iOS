@@ -7,7 +7,7 @@
 
 #import "VEProgressSlider.h"
 #import "VEEventMessageBus.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 
 const CGFloat thumbWidth = 24.0;
 

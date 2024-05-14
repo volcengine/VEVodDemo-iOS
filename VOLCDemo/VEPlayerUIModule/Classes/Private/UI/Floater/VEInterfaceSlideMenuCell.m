@@ -8,7 +8,7 @@
 #import "VEInterfaceSlideMenuCell.h"
 #import "VEInterfaceElementDescription.h"
 #import "UIView+VEElementDescripition.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 
 @implementation VEInterfaceSlideMenuCell
 

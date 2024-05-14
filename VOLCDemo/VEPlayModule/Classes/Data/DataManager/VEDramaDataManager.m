@@ -5,6 +5,7 @@
 
 #import "VEDramaDataManager.h"
 #import "VENetworkHelper.h"
+#import "VESettingModel.h"
 
 static NSString *requestDramaListUrl = @"https://vevod-demo-server.volcvod.com/api/drama/v1/listDrama";
 static NSString *requestDramaRecommondListUrl = @"https://vevod-demo-server.volcvod.com/api/drama/episode/v1/getEpisodeFeedStreamWithPlayAuthToken";
@@ -19,8 +20,6 @@ static NSString *requestDramaEpisodeUrl = @"https://vevod-demo-server.volcvod.co
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
         [param setObject:@"mini-drama-video" forKey:@"authorId"];
         [param setObject:@"mini-drama-video" forKey:@"userID"];
-        [param setObject:@"H264" forKey:@"Codec"];
-        [param setObject:@"mp4" forKey:@"Format"];
         [param setObject:@(offset) forKey:@"offset"];
         [param setObject:@(pageSize) forKey:@"pageSize"];
 
@@ -50,8 +49,8 @@ static NSString *requestDramaEpisodeUrl = @"https://vevod-demo-server.volcvod.co
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
         [param setObject:@"mini-drama-video" forKey:@"authorId"];
         [param setObject:@"mini-drama-video" forKey:@"userID"];
-        [param setObject:@"H264" forKey:@"Codec"];
-        [param setObject:@"mp4" forKey:@"Format"];
+        [param setObject:@(VEVideoCodecType_H264) forKey:@"codec"];
+        [param setObject:@(VEVideoFormatType_MP4) forKey:@"format"];
         [param setObject:@(offset) forKey:@"offset"];
         [param setObject:@(pageSize) forKey:@"pageSize"];
         [VENetworkHelper requestDataWithUrl:requestDramaRecommondListUrl httpMethod:@"POST" parameters:param success:^(id _Nonnull responseObject) {
@@ -86,8 +85,8 @@ static NSString *requestDramaEpisodeUrl = @"https://vevod-demo-server.volcvod.co
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
         [param setObject:@"mini-drama-video" forKey:@"authorId"];
         [param setObject:@"mini-drama-video" forKey:@"userID"];
-        [param setObject:@"H264" forKey:@"Codec"];
-        [param setObject:@"mp4" forKey:@"Format"];
+        [param setObject:@(VEVideoCodecType_H264) forKey:@"codec"];
+        [param setObject:@(VEVideoFormatType_MP4) forKey:@"format"];
         [param setObject:@(offset) forKey:@"offset"];
         [param setObject:@(pageSize) forKey:@"pageSize"];
         [param setObject:dramaId ?: @"" forKey:@"dramaId"];
