@@ -108,7 +108,7 @@ typedef NS_ENUM(NSInteger, VEVideoViewMode) {
 /// Seek to a given time.
 /// @param time the time to seek to, in seconds.
 /// @param finised the completion handler
-/// @param renderComplete called when seek complate and target time video or audio rendered
+/// @param renderComplete called when seek complete and target time video or audio rendered
 - (void)seekToTime:(NSTimeInterval)time
           complete:(void(^ _Nullable)(BOOL success))finised
     renderComplete:(void(^ _Nullable)(void)) renderComplete;

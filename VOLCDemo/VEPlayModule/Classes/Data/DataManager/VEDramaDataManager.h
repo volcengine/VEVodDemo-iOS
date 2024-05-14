@@ -9,15 +9,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^RequestDataComplate)(id _Nullable responseData, NSString * _Nullable errorMsg);
+typedef void(^RequestDataComplete)(id _Nullable responseData, NSString * _Nullable errorMsg);
 
 @interface VEDramaDataManager : NSObject
 
-+ (void)requestDramaList:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplate)complate;
++ (void)requestDramaList:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplete)complete;
 
-+ (void)requestDramaRecommondList:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplate)complate;
++ (void)requestDramaRecommondList:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplete)complete;
 
-+ (void)requestDramaEpisodeList:(NSString *)dramaId offset:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplate)complate;
++ (void)requestDramaEpisodeList:(NSString *)dramaId offset:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplete)complete;
 
 @end
 

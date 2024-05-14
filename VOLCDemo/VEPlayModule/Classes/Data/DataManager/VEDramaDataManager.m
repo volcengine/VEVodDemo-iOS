@@ -12,15 +12,15 @@ static NSString *requestDramaEpisodeUrl = @"https://vevod-demo-server.volcvod.co
 
 @implementation VEDramaDataManager
 
-+ (void)requestDramaList:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplate)complate  {
++ (void)requestDramaList:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplete)complete  {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSMutableArray *dramas = [NSMutableArray array];
 
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
         [param setObject:@"mini-drama-video" forKey:@"authorId"];
         [param setObject:@"mini-drama-video" forKey:@"userID"];
-        [param setObject:@(1) forKey:@"codec"];
-        [param setObject:@(1) forKey:@"format"];
+        [param setObject:@"H264" forKey:@"Codec"];
+        [param setObject:@"mp4" forKey:@"Format"];
         [param setObject:@(offset) forKey:@"offset"];
         [param setObject:@(pageSize) forKey:@"pageSize"];
 
@@ -32,26 +32,26 @@ static NSString *requestDramaEpisodeUrl = @"https://vevod-demo-server.volcvod.co
                     [dramas addObject:dramaModel];
                 }
             }
-            if (complate) {
-                complate(dramas, nil);
+            if (complete) {
+                complete(dramas, nil);
             }
         } failure:^(NSString * _Nonnull errorMessage) {
-            if (complate) {
-                complate(nil, errorMessage);
+            if (complete) {
+                complete(nil, errorMessage);
             }
         }];
     });
 }
 
-+ (void)requestDramaRecommondList:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplate)complate {
++ (void)requestDramaRecommondList:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplete)complete {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSMutableArray *dramas = [NSMutableArray array];
 
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
         [param setObject:@"mini-drama-video" forKey:@"authorId"];
         [param setObject:@"mini-drama-video" forKey:@"userID"];
-//        [param setObject:@(1) forKey:@"codec"];
-//        [param setObject:@(1) forKey:@"format"];
+        [param setObject:@"H264" forKey:@"Codec"];
+        [param setObject:@"mp4" forKey:@"Format"];
         [param setObject:@(offset) forKey:@"offset"];
         [param setObject:@(pageSize) forKey:@"pageSize"];
         [VENetworkHelper requestDataWithUrl:requestDramaRecommondListUrl httpMethod:@"POST" parameters:param success:^(id _Nonnull responseObject) {
@@ -62,21 +62,21 @@ static NSString *requestDramaEpisodeUrl = @"https://vevod-demo-server.volcvod.co
                     [dramas addObject:dramaVideoInfoModel];
                 }
             }
-            if (complate) {
-                complate(dramas, nil);
+            if (complete) {
+                complete(dramas, nil);
             }
         } failure:^(NSString * _Nonnull errorMessage) {
-            if (complate) {
-                complate(nil, errorMessage);
+            if (complete) {
+                complete(nil, errorMessage);
             }
         }];
     });
 }
 
-+ (void)requestDramaEpisodeList:(NSString *)dramaId offset:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplate)complate {
++ (void)requestDramaEpisodeList:(NSString *)dramaId offset:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplete)complete {
     if (!dramaId) {
-        if (complate) {
-            complate(nil, @"dramaId is nil !!!");
+        if (complete) {
+            complete(nil, @"dramaId is nil !!!");
         }
         return;
     }
@@ -86,8 +86,8 @@ static NSString *requestDramaEpisodeUrl = @"https://vevod-demo-server.volcvod.co
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
         [param setObject:@"mini-drama-video" forKey:@"authorId"];
         [param setObject:@"mini-drama-video" forKey:@"userID"];
-//        [param setObject:@(1) forKey:@"codec"];
-//        [param setObject:@(1) forKey:@"format"];
+        [param setObject:@"H264" forKey:@"Codec"];
+        [param setObject:@"mp4" forKey:@"Format"];
         [param setObject:@(offset) forKey:@"offset"];
         [param setObject:@(pageSize) forKey:@"pageSize"];
         [param setObject:dramaId ?: @"" forKey:@"dramaId"];
@@ -99,12 +99,12 @@ static NSString *requestDramaEpisodeUrl = @"https://vevod-demo-server.volcvod.co
                     [dramas addObject:dramaVideoInfoModel];
                 }
             }
-            if (complate) {
-                complate(dramas, nil);
+            if (complete) {
+                complete(dramas, nil);
             }
         } failure:^(NSString * _Nonnull errorMessage) {
-            if (complate) {
-                complate(nil, errorMessage);
+            if (complete) {
+                complete(nil, errorMessage);
             }
         }];
     });
