@@ -41,11 +41,12 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
         self.firstLoadData = YES;
         self.fromDramaId = dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId;
         self.fromDramaVideoInfo = dramaVideoInfo;
+        [self.dramaVideoModels addObject:dramaVideoInfo];
     }
     return self;
 }
 
-- (instancetype)initWtihDramaInfo:(VEDramaInfoModel *)dramaInfo {
+- (instancetype)initWithDramaInfo:(VEDramaInfoModel *)dramaInfo {
     self = [super init];
     if (self) {
         self.fromDramaId = dramaInfo.dramaId;
@@ -132,14 +133,14 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
                 if (resArray && resArray.count) {
                     if (isLoadMore) {
                         [strongSelf.dramaVideoModels addObjectsFromArray:resArray];
-                        [self onHandleFromDramaVideoInfo];
+                        [strongSelf onHandleFromDramaVideoInfo];
                         [strongSelf.pageContainer reloadContentSize];
                         [strongSelf.pageContainer.scrollView.mj_footer endRefreshing];
                     } else {
                         strongSelf.dramaVideoModels = [resArray mutableCopy];
-                        [self onHandleFromDramaVideoInfo];
                         [strongSelf.pageContainer.scrollView.mj_header endRefreshing];
                         [strongSelf.pageContainer reloadData];
+                        [strongSelf onHandleFromDramaVideoInfo];
                     }
                     // set video strategy source
                     [strongSelf setVideoStrategySource:!isLoadMore];

@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWtihDramaVideoInfo:(VEDramaVideoInfoModel *)dramaVideoInfo;
 
-- (instancetype)initWtihDramaInfo:(VEDramaInfoModel *)dramaInfo;
+- (instancetype)initWithDramaInfo:(VEDramaInfoModel *)dramaInfo;
 
 @end
 

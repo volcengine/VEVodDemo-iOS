@@ -116,7 +116,7 @@ static NSString *VEShortDramaVideoNormalCellReuseID = @"VEShortDramaVideoNormalC
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     VEDramaInfoModel *dramaInfoModel = [self.dramasArray objectAtIndex:indexPath.row];
-    VEShortDramaDetailFeedViewController *dramaDetailFeedViewController = [[VEShortDramaDetailFeedViewController alloc] initWtihDramaInfo:dramaInfoModel];
+    VEShortDramaDetailFeedViewController *dramaDetailFeedViewController = [[VEShortDramaDetailFeedViewController alloc] initWithDramaInfo:dramaInfoModel];
     [self.navigationController pushViewController:dramaDetailFeedViewController animated:YES];
 }
 

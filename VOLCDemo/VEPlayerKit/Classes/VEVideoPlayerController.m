@@ -584,7 +584,7 @@ TTVideoEngineResolutionDelegate>
     if (!_posterImageView) {
         _posterImageView = [[UIImageView alloc] init];
         _posterImageView.backgroundColor = [UIColor clearColor];
-        _posterImageView.contentMode = UIViewContentModeScaleAspectFit;
+        _posterImageView.contentMode = UIViewContentModeScaleAspectFill;
         _posterImageView.clipsToBounds = YES;
     }
     return _posterImageView;
