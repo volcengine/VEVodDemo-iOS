@@ -7,7 +7,7 @@
 //
 
 @import Foundation;
-#import <TTSDK/TTVideoEngineHeader.h>
+#import <TTSDKFramework/TTSDKFramework.h>
 
 typedef NS_ENUM(NSInteger, VEVideoPlaybackState) {
     VEVideoPlaybackStateUnkown = 0,
@@ -24,6 +24,13 @@ typedef NS_ENUM(NSInteger, VEVideoLoadState) {
     VEVideoLoadStateStalled,
     VEVideoLoadStatePlayable,
     VEVideoLoadStateError
+};
+
+typedef NS_ENUM(NSInteger, VEVideoViewMode) {
+    VEVideoViewModeNone = 0,
+    VEVideoViewModeAspectFit,
+    VEVideoViewModeAspectFill,
+    VEVideoViewModeModeFill
 };
 
 @protocol VEVideoPlayback;
@@ -61,6 +68,10 @@ typedef NS_ENUM(NSInteger, VEVideoLoadState) {
 @property (nonatomic, assign, readonly) VEVideoPlaybackState playbackState;
 @property (nonatomic, assign, readonly) VEVideoLoadState loadState;
 
+@property (nonatomic, assign) VEVideoViewMode videoViewMode;
+
+@property (nonatomic, assign) NSTimeInterval startTime;
+
 @property (nonatomic, assign) CGFloat playbackRate;
 @property (nonatomic, assign) CGFloat playbackVolume;
 
@@ -97,7 +108,7 @@ typedef NS_ENUM(NSInteger, VEVideoLoadState) {
 /// Seek to a given time.
 /// @param time the time to seek to, in seconds.
 /// @param finised the completion handler
-/// @param renderComplete called when seek complate and target time video or audio rendered
+/// @param renderComplete called when seek complete and target time video or audio rendered
 - (void)seekToTime:(NSTimeInterval)time
           complete:(void(^ _Nullable)(BOOL success))finised
     renderComplete:(void(^ _Nullable)(void)) renderComplete;

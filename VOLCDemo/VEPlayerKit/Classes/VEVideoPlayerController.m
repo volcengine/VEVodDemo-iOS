@@ -13,6 +13,8 @@
 #import "VEVideoPlayerController+DebugTool.h"
 #import "VEVideoPlayerController+Tips.h"
 #import "VEVideoPlayerController+Strategy.h"
+#import "VEVideoPlayerController+DisRecordScreen.h"
+#import "TTVideoEngineSourceCategory.h"
 #import <Masonry/Masonry.h>
 #import <SDWebImage/SDWebImage.h>
 
@@ -32,6 +34,11 @@
 #pragma mark - TTVideoEnginePreRenderDelegate
 
 - (void)videoEngineWillPrepare:(TTVideoEngine *)videoEngine {
+    
+}
+
+- (void)videoEngine:(TTVideoEngine *)videoEngine willPreRenderSource:(id<TTVideoEngineMediaSource>)source {
+    
 }
 
 @end
@@ -67,6 +74,8 @@ TTVideoEngineResolutionDelegate>
 @synthesize currentPlaybackTime;
 @synthesize playableDuration;
 @synthesize superResolutionEnable = _superResolutionEnable;
+@synthesize videoViewMode = _videoViewMode;
+@synthesize startTime = _startTime;
 
 @dynamic playbackRate;
 @dynamic playbackVolume;
@@ -76,25 +85,32 @@ TTVideoEngineResolutionDelegate>
 - (instancetype)init {
     self = [super init];
     if (self) {
+        
     }
     return self;
 }
 
 - (void)dealloc {
     [self removeObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     [self configuratoinCustomView];
+    [self registerScreenCapturedDidChangeNotification];
 }
 
 - (void)configVideoEngine {
-    if (_videoEngine == nil) {
-        TTVideoEngine* engine = [[TTVideoEngine alloc] initWithOwnPlayer:YES];
-        self.videoEngine = engine;
-    }
     self.videoEngine.delegate = self;
     self.videoEngine.resolutionDelegate = self;
     self.videoEngine.reportLogEnable = YES;
@@ -126,11 +142,11 @@ TTVideoEngineResolutionDelegate>
         make.edges.equalTo(self.view);
     }];
     
-    [self.view addSubview:self.debugInfoView];
-    [self.debugInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).with.offset(40);
-        make.size.mas_equalTo(CGSizeMake(300, 30));
-    }];
+//    [self.view addSubview:self.debugInfoView];
+//    [self.debugInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(self.view).with.offset(40);
+//        make.size.mas_equalTo(CGSizeMake(300, 30));
+//    }];
 }
 
 - (void)reLayoutVideoPlayerView {
@@ -193,29 +209,36 @@ TTVideoEngineResolutionDelegate>
         if ([weak_self.receiver respondsToSelector:@selector(playerCore:playTimeDidChanged:info:)]) {
             [weak_self.receiver playerCore:weak_self playTimeDidChanged:weak_self.currentPlaybackTime info:@{}];
         }
-        
-        CGFloat oriWidth = [[weak_self.videoEngine getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoWidth_NSInteger)] floatValue];
-        CGFloat oriHeight = [[weak_self.videoEngine getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoHeight_NSInteger)] floatValue];
-        
-        CGFloat srWidth = [[weak_self.videoEngine getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoSRWidth_NSInteger)] floatValue];
-        CGFloat srHeight = [[weak_self.videoEngine getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoSRHeight_NSInteger)] floatValue];
-        
-        weak_self.debugInfoView.text = [NSString stringWithFormat:@"ori w:%@, ori h:%@, sr w:%@, sr h:%@", @(oriWidth), @(oriHeight), @(srWidth), @(srHeight)];
     }];
+}
+
+- (void)configStartTime:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource {
+    NSInteger retStartTime = 0;
+    if (mediaSource.sourceType == TTVideoEngineSourceTypeVideoId) {
+        retStartTime = [(TTVideoEngineVidSource *)mediaSource startTime];
+    } else if (mediaSource.sourceType == TTVideoEngineSourceTypeDirectUrl) {
+        retStartTime = [(TTVideoEngineUrlSource *)mediaSource startTime];
+    }
+    if (retStartTime > 0) {
+        self.startTime = retStartTime;
+    }
 }
 
 #pragma mark - Player control
 
 - (void)resetVideoEngine:(TTVideoEngine * _Nonnull)videoEngine mediaSource:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource {
     self.videoEngine = nil;
-    self.mediaSource = mediaSource;
     self.videoEngine = videoEngine;
+    self.mediaSource = mediaSource;
+    self.videoViewMode = _videoViewMode;
+    self.videoEngine.looping = self.looping;
 }
 
 - (void)setMediaSource:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource {
     _mediaSource = mediaSource;
     [self configVideoEngine];
     [self.videoEngine setVideoEngineVideoSource:mediaSource];
+    [self configStartTime:mediaSource];
 }
 
 - (void)loadBackgourdImageWithMediaSource:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource {
@@ -246,6 +269,12 @@ TTVideoEngineResolutionDelegate>
 }
 
 - (void)play {
+    if (@available(iOS 11.0, *)) {
+        if ([[[[UIApplication sharedApplication] keyWindow] screen] isCaptured]) {
+            [self showRecordScreenView];
+            return;
+        }
+    }
     [self.videoEngine play];
     [self __addPeriodicTimeObserver];
 }
@@ -385,10 +414,6 @@ TTVideoEngineResolutionDelegate>
     [self __handlePlaybackStateChanged:VEVideoPlaybackStateError];
 }
 
-- (void)videoEngineCloseAysncFinish:(TTVideoEngine *)videoEngine {
-    [self __handlePlaybackStateChanged:VEVideoPlaybackStateFinished];
-}
-
 - (void)videoBitrateDidChange:(TTVideoEngine *)videoEngine resolution:(TTVideoEngineResolutionType)resolution bitrate:(NSInteger)bitrate {
     if (self.delegate && [self.delegate respondsToSelector:@selector(videoPlayerBitrateDidChange:resolution:bitrate:)]) {
         [self.delegate videoPlayerBitrateDidChange:self resolution:resolution bitrate:bitrate];
@@ -423,7 +448,7 @@ TTVideoEngineResolutionDelegate>
         }
             break;
         case VEVideoPlaybackStateError: {
-            [self showTips:NSLocalizedString(@"tip_play_error_normal", nil)];
+            [self showTips:NSLocalizedStringFromTable(@"tip_play_error_normal", @"VodLocalizable", nil)];
         }
             break;
         case VEVideoPlaybackStateFinished: {
@@ -510,7 +535,45 @@ TTVideoEngineResolutionDelegate>
     return self.videoEngine.looping;
 }
 
+- (void)setVideoViewMode:(VEVideoViewMode)videoViewMode {
+    switch (videoViewMode) {
+        case VEVideoViewModeAspectFit: {
+            [self.videoEngine setOptionForKey:VEKKeyViewScaleMode_ENUM value:@(TTVideoEngineScalingModeAspectFit)];
+            self.posterImageView.contentMode = UIViewContentModeScaleAspectFit;
+        }
+            break;
+        case VEVideoViewModeAspectFill: {
+            [self.videoEngine setOptionForKey:VEKKeyViewScaleMode_ENUM value:@(TTVideoEngineScalingModeAspectFill)];
+            self.posterImageView.contentMode = UIViewContentModeScaleAspectFill;
+        }
+            break;
+        case VEVideoViewModeModeFill: {
+            [self.videoEngine setOptionForKey:VEKKeyViewScaleMode_ENUM value:@(TTVideoEngineScalingModeFill)];
+            self.posterImageView.contentMode = UIViewContentModeScaleToFill;
+        }
+            break;
+        default: {
+            [self.videoEngine setOptionForKey:VEKKeyViewScaleMode_ENUM value:@(TTVideoEngineScalingModeNone)];
+            self.posterImageView.contentMode = UIViewContentModeScaleAspectFit;
+        }
+            break;
+    }
+    _videoViewMode = videoViewMode;
+}
+
+- (void)setStartTime:(NSTimeInterval)startTime {
+    _startTime = startTime;
+    [self.videoEngine setOptionForKey:VEKKeyPlayerStartTime_CGFloat value:@(startTime)];
+}
+
 #pragma mark - lazy load
+
+- (TTVideoEngine *)videoEngine {
+    if (_videoEngine == nil) {
+        _videoEngine = [[TTVideoEngine alloc] initWithOwnPlayer:YES];
+    }
+    return _videoEngine;
+}
 
 - (UIView *)playerView {
     self.videoEngine.playerView.backgroundColor = [UIColor blackColor];
@@ -521,7 +584,7 @@ TTVideoEngineResolutionDelegate>
     if (!_posterImageView) {
         _posterImageView = [[UIImageView alloc] init];
         _posterImageView.backgroundColor = [UIColor clearColor];
-        _posterImageView.contentMode = UIViewContentModeScaleAspectFit;
+        _posterImageView.contentMode = UIViewContentModeScaleAspectFill;
         _posterImageView.clipsToBounds = YES;
     }
     return _posterImageView;

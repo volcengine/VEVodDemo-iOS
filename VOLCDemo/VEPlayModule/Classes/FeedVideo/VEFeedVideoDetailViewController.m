@@ -9,9 +9,9 @@
 #import "VEVideoModel.h"
 #import "VESettingManager.h"
 
-#import <VEPlayerUIModule/VEPlayerUIModule.h>
-#import <VEPlayerUIModule/VEInterfaceSimpleBlockSceneConf.h>
-#import <VEPlayerKit/VEPlayerKit.h>
+#import "VEPlayerUIModule.h"
+#import "VEInterfaceSimpleBlockSceneConf.h"
+#import "VEPlayerKit.h"
 #import <Masonry/Masonry.h>
 #import "UIViewController+Orientation.h"
 
@@ -84,7 +84,7 @@
     if ([mayPlayer isKindOfClass:[VEVideoPlayerController class]]) {
         self.playerController = mayPlayer;
     } else {
-        TTVideoEngineVidSource *vidSource = [VEVideoModel ConvertVideoEngineSource:videoModel];
+        id<TTVideoEngineMediaSource> vidSource = [VEVideoModel ConvertVideoEngineSource:videoModel];
         [self playerOptions];
         [self.playerController playWithMediaSource:vidSource];
         [self.playerController play];

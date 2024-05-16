@@ -19,6 +19,16 @@ typedef NS_ENUM(NSUInteger, VEPlaySourceType){
     VEPlaySourceType_Url,
 };
 
+typedef NS_ENUM(NSUInteger, VEVideoCodecType){
+    VEVideoCodecType_H264 = 0,
+    VEVideoCodecType_H265 = 1,
+};
+
+typedef NS_ENUM(NSUInteger, VEVideoFormatType){
+    VEVideoFormatType_MP4 = 1,
+    VEVideoFormatType_HLS = 9,
+};
+
 typedef enum : NSUInteger {
     VESettingTypeDisplay,
     VESettingTypeDisplayDetail,

@@ -4,11 +4,16 @@ source 'https://github.com/volcengine/volcengine-specs.git'
 
 platform :ios, '11.0'
 
+install! 'cocoapods', :disable_input_output_paths => true
+
 target 'VOLCDemo' do
-  # vod SDK 
-  pod 'TTSDK', '1.40.2.10-premium', :subspecs => ['Player-SR']
+  # TTSDK-Player
+  pod 'TTSDKFramework', '1.41.3.5-premium', :subspecs => ['Player-SR']
+  
+  # vod main
+  pod 'VEVodMain', :path=> './VEVodMain/'
   # vod all scene exhibition
-  pod 'VEPlayModule', :path=> './VEPlayModule/' 
+  pod 'VEPlayModule', :path=> './VEPlayModule/'
   # vod player kit
   pod 'VEPlayerKit', :path=> './VEPlayerKit/'
   # vod player control UI kit
@@ -21,6 +26,7 @@ target 'VOLCDemo' do
   pod 'SDWebImage'
   pod 'MBProgressHUD', '~> 1.2.0'
   pod 'Reachability'
+  pod 'MJRefresh'
   pod 'JSONModel'
 
 end

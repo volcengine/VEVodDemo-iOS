@@ -9,9 +9,9 @@
 #import "VEVideoModel.h"
 #import "VESettingManager.h"
 
-#import <VEPlayerUIModule/VEPlayerUIModule.h>
-#import <VEPlayerUIModule/VEInterfaceSimpleBlockSceneConf.h>
-#import <VEPlayerKit/VEPlayerKit.h>
+#import "VEPlayerUIModule.h"
+#import "VEInterfaceSimpleBlockSceneConf.h"
+#import "VEPlayerKit.h"
 #import <Masonry/Masonry.h>
 #import "UIViewController+Orientation.h"
 

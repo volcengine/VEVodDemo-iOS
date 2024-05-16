@@ -6,7 +6,7 @@
 //
 
 #import "VEProgressView.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 #import "UIView+VEElementDescripition.h"
 #import "VEInterfaceElementDescription.h"
 #import "VEProgressSlider.h"

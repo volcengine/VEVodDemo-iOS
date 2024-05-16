@@ -12,7 +12,7 @@
 #import "VEInterfaceFactory.h"
 
 #import "VEEventConst.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 
 const CGFloat topAreaHeightRate = 0.3;
 const CGFloat leftAreaWidthRate = 0.3;

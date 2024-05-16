@@ -8,13 +8,13 @@ Pod::Spec.new do |s|
   s.author = { "zhaoxiaoyu" => "zhaoxiaoyu.realxx@bytedance.com" }
   s.source = { :path => './Classes' }
 
-  s.platform = :ios, '9.0'
+  s.platform = :ios, '11.0'
   s.requires_arc = true
 
   s.source_files = 'Classes/*'
   s.public_header_files = 'Classes/*.{h}'
 
-  s.dependency 'TTSDK/Player-SR', '1.40.2.10-premium'
+  s.dependency 'TTSDKFramework/Player-SR'
   s.dependency 'Masonry'
   s.dependency 'SDWebImage'
   

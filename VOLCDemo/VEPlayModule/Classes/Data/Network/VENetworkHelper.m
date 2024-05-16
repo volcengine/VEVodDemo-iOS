@@ -63,12 +63,12 @@
         NSString *valueString = nil;
         if ([key isKindOfClass:[NSString class]]) {
             keyString = key;
-        } else{
+        } else {
             keyString = [NSString stringWithFormat:@"%@",key];
         }
-        if ([obj isKindOfClass:[NSString class]]) {
+        if ([obj isKindOfClass:[NSString class]] || [obj isKindOfClass:[NSNumber class]] ) {
             valueString = obj;
-        } else{
+        } else {
             valueString = [NSString stringWithFormat:@"%@",obj];
         }
         [dict setObject:valueString forKey:keyString];

@@ -11,7 +11,7 @@
 #import "VEInterfaceSensor.h"
 #import "VEInterfaceFloater.h"
 #import "VEEventConst.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 
 @interface VEInterfaceContainer ()
 

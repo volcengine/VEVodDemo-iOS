@@ -13,8 +13,8 @@
 #import "VESettingManager.h"
 #import "UIScrollView+Refresh.h"
 
-#import <VESceneKit/VEPageViewController.h>
-#import <VEPlayerKit/VEPlayerKit.h>
+#import "VEPageViewController.h"
+#import "VEPlayerKit.h"
 #import <Masonry/Masonry.h>
 
 static NSInteger VEShortVideoPageCount = 10;
@@ -61,7 +61,6 @@ static NSString *VEShortVideoCellReuseID = @"VEShortVideoCellReuseID";
     [super viewDidDisappear:animated];
     [VEVideoPlayerController clearAllEngineStrategy];
 }
-
 
 #pragma mark ---- ATPageViewControllerDataSource & Delegate
 - (NSInteger)numberOfItemInPageViewController:(VEPageViewController *)pageViewController {

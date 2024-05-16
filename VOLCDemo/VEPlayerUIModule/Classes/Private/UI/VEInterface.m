@@ -6,7 +6,7 @@
 //
 
 #import "VEInterface.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 #import "VEEventConst.h"
 #import "VEInterfaceBridge.h"
 #import "VEInterfaceFactory.h"

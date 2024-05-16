@@ -11,9 +11,9 @@
 #import "VEVideoModel.h"
 #import "UIColor+RGB.h"
 
-#import <VEPlayerUIModule/VEPlayerUIModule.h>
-#import <VEPlayerUIModule/VEInterfaceFeedBlockSceneConf.h>
-#import <VEPlayerKit/VEPlayerKit.h>
+#import "VEPlayerUIModule.h"
+#import "VEInterfaceFeedBlockSceneConf.h"
+#import "VEPlayerKit.h"
 #import <SDWebImage/SDWebImage.h>
 #import <Masonry/Masonry.h>
 

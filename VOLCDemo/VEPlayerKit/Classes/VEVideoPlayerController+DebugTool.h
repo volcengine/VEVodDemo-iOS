@@ -6,7 +6,7 @@
 //
 
 #import "VEVideoPlayerController.h"
-#import <TTSDK/TTVideoEngineDebugTools.h>
+#import <TTSDKFramework/TTVideoEngineDebugTools.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

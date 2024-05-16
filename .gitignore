@@ -1,0 +1,17 @@
+# gem 
+.gem/
+/Gemfile
+
+# Cocoapods
+Pods/
+
+# project
+/ExportPlists
+/Provisions
+/License
+/.bitnest
+/.bits
+
+# MacOS
+.DS_Store
+

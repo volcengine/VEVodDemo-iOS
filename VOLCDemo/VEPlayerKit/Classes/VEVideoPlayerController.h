@@ -9,8 +9,8 @@
 @import UIKit;
 #import "VEVideoPlayback.h"
 #import "VEVideoPlaybackPanel.h"
-#import <TTSDK/TTVideoEngineHeader.h>
-#import <VEPlayerUIModule/VEPlayerUIModule.h>
+#import <TTSDKFramework/TTSDKFramework.h>
+#import "VEPlayerUIModule.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

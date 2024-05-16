@@ -7,15 +7,16 @@
 //
 
 @import Foundation;
-#import <TTSDK/TTVideoEngineVidSource.h>
-#import <TTSDK/TTVideoEngineUrlSource.h>
-#import <TTSDK/TTVideoEngineMultiEncodingUrlSource.h>
+#import <TTSDKFramework/TTVideoEngineVidSource.h>
+#import <TTSDKFramework/TTVideoEngineUrlSource.h>
+#import <TTSDKFramework/TTVideoEngineMultiEncodingUrlSource.h>
 
 
 @interface TTVideoEngineMultiEncodingUrlSource (VECodecUrlSource)
 
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *cover;
+@property (nonatomic, assign) NSInteger startTime;
 
 @end
 
@@ -23,6 +24,7 @@
 
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *cover;
+@property (nonatomic, assign) NSInteger startTime;
 
 @end
 
@@ -30,6 +32,7 @@
 
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *cover;
+@property (nonatomic, assign) NSInteger startTime;
 
 @end
 

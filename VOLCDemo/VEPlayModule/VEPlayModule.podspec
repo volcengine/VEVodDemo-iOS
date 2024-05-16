@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = "VEPlayModule"
-  s.version = "1.0.0"
+  s.version = "1.2.0"
   s.summary = "火山引擎点播全场景展示"
   s.description = "火山引擎点播全场景展示"
   s.homepage = "https://www.volcengine.com"
@@ -8,14 +8,14 @@ Pod::Spec.new do |s|
   s.author = { "zhaoxiaoyu" => "zhaoxiaoyu.realxx@bytedance.com" }
   s.source = { :path => './Classes' }
 
-  s.platform = :ios, '9.0'
+  s.platform = :ios, '11.0'
   s.requires_arc = true
 
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.{h}'
   s.resources = 'Classes/**/*.{xib}'
 
-  s.default_subspecs = 'Setting', 'LongVideo', 'FeedVideo', 'ShortVideo'
+  s.default_subspecs = 'Setting', 'LongVideo', 'FeedVideo', 'ShortVideo', 'ShortDrama'
 
   s.subspec 'Setting' do |subspec|
       subspec.public_header_files = [
@@ -56,6 +56,19 @@ Pod::Spec.new do |s|
       subspec.dependency 'VEPlayModule/Setting' 
   end
 
+  s.subspec 'ShortDrama' do |subspec|
+      subspec.public_header_files = [
+        'Classes/ShortDrama/**/*.{h}'
+      ]
+      subspec.source_files = [
+        'Classes/ShortDrama/**/*'
+      ]
+      subspec.resources = [
+        'Classes/ShortDrama/**/*.{xib}'
+      ]
+      subspec.dependency 'VEPlayModule/Setting' 
+  end
+
   s.subspec 'ShortVideo' do |subspec|
      subspec.public_header_files = [
         'Classes/ShortVideo/**/*.{h}'
@@ -87,6 +100,7 @@ Pod::Spec.new do |s|
   s.dependency 'VEPlayerKit'
   s.dependency 'VEPlayerUIModule'
   s.dependency 'VESceneKit' 
+  s.dependency 'MJRefresh'
   
 end
 

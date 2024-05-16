@@ -11,9 +11,9 @@
 #import "VESettingManager.h"
 
 #import <Masonry/Masonry.h>
-#import <VEPlayerUIModule/VEPlayerUIModule.h>
-#import <VEPlayerUIModule/VEInterfaceSimpleMethodSceneConf.h>
-#import <VEPlayerKit/VEPlayerKit.h>
+#import "VEPlayerUIModule.h"
+#import "VEInterfaceSimpleMethodSceneConf.h"
+#import "VEPlayerKit.h"
 
 
 @interface VEShortVideoCellController () <VEInterfaceDelegate>
