@@ -1,7 +1,9 @@
 ## VOLCDemo介绍
 
-VOLCDemo基于TTSDK点播SDK开发，目前完成了短、中、长等场景的视频基础能力展示。并提供了一些示例使用方式和工具层，后续会持续迭代。
-通过展示各种场景化解决方案来协助业务侧快速完成各类视频业务的快速搭建。
+1. VOLCDemo基于TTSDK点播SDK开发，目前完成了短、中、长等场景的视频基础能力展示。并提供了一些示例使用方式和工具层，后续会持续迭代。
+2. 通过展示各种场景化解决方案来协助业务侧快速完成各类视频业务的快速搭建。
+3. 新版本新增短剧场景示例。
+
 
 ## 目录结构说明
 
@@ -9,11 +11,11 @@ VOLCDemo基于TTSDK点播SDK开发，目前完成了短、中、长等场景的�
 ├─ VOLCDemo 
 └── VOLCDemo
     ├── Base    // AppDelegate等App基本文件
-    ├── Entry   // 入口ViewController
 └── Pods
     ├── TTSDK   // 火山引擎SDK（点播SDK载体）
         ...
-    ├── VEPlayModule        // 火山引擎场景模块（短、中、长视频模块示例）
+    ├── VEVodMain           // App入口（VEMainViewController）
+    ├── VEPlayModule        // 火山引擎场景模块（短、中、长视频模块示例, 新版本新增短剧场景）
     ├── VEPlayerKit         // 火山引擎点播播放器封装层
     ├── VEPlayerUIModule    // 火山引擎点播UI控件封装层
     ├── VESceneKit          // 火山引擎短视频业务场景框架    
@@ -51,40 +53,19 @@ VOLCDemo基于TTSDK点播SDK开发，目前完成了短、中、长等场景的�
 
 ## TTSDK点播SDK 集成方式
 
-### 方式一：CocoaPods集成静态库
+### CocoaPods集成
 1. 添加pod依赖
 ```
 source 'https://github.com/CocoaPods/Specs.git'
 source 'https://github.com/volcengine/volcengine-specs.git'
 
-platform :ios, '9.0'
+platform :ios, '11.0'
 
 target 'VOLCDemo' do
   
-  #这里需要明确指定使用 subspecs => Player
+  #这里需要明确指定使用 subspecs => Player-SR
   #可在 ChangeLog 获取版本号，推荐使用最新版本
-  pod 'TTSDK', 'x.x.x.x-premium', :subspecs => ['Player']
-
-end
-```
-
-2. 执行 pod install
-
-### 方式二：CocoaPods集成动态库
-1. 添加pod依赖
-```
-source 'https://github.com/CocoaPods/Specs.git'
-source 'https://github.com/volcengine/volcengine-specs.git'
-
-platform :ios, '9.0'
-
-target 'VOLCDemo' do
-  
-  #添加TTSDKFramework动态库，版本号同静态库版本号
-  pod 'TTSDKFramework', 'x.x.x.x-premium'
-  
-  #添加日志上报SDK，用于点播日志上传
-  pod 'RangersAppLog', '6.9.1', :subspecs =>['Core','Log','Host/CN']
+  pod 'TTSDKFramework', 'x.x.x.x-premium', :subspecs => ['Player-SR']
 
 end
 ```
