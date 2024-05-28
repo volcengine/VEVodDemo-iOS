@@ -75,7 +75,6 @@
         [self createPlayer];
     }
     [self createPlayerControl];
-    [self playerOptions];
     [self.playerController playWithMediaSource:[VEVideoModel ConvertVideoEngineSource:self.videoModel]];
     [self.playerController play];
     self.playerController.looping = YES;
@@ -102,6 +101,8 @@
     [self.playerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
+    [self playerOptions];
+    self.playerController.videoViewMode = VEVideoViewModeAspectFit;
 }
 
 - (void)createPlayerControl {

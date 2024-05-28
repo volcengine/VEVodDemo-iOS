@@ -37,7 +37,9 @@
 }
 
 + (NSString *)deviceID {
-    return [[BDAutoTrack trackWithAppID:@"229234"] rangersDeviceID] ?: @"null";
+    // 这里需要业务填写自己的 Appid
+    NSString *appId = @"";
+    return appId.length > 0 ? [[BDAutoTrack trackWithAppID:appId] rangersDeviceID] : @"请查看源码，替换 Appid";
 }
 
 @end
