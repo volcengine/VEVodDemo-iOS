@@ -227,11 +227,12 @@ TTVideoEngineResolutionDelegate>
 #pragma mark - Player control
 
 - (void)resetVideoEngine:(TTVideoEngine * _Nonnull)videoEngine mediaSource:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource {
+    _mediaSource = mediaSource;
     self.videoEngine = nil;
     self.videoEngine = videoEngine;
-    self.mediaSource = mediaSource;
     self.videoViewMode = _videoViewMode;
     self.videoEngine.looping = self.looping;
+    [self configVideoEngine];
 }
 
 - (void)setMediaSource:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource {
@@ -250,7 +251,6 @@ TTVideoEngineResolutionDelegate>
         TTVideoEngine *preRenderVideoEngine = [TTVideoEngine getPreRenderVideoEngineWithVideoSource:mediaSource];
         if (preRenderVideoEngine) {
             [self resetVideoEngine:preRenderVideoEngine mediaSource:mediaSource];
-            preRenderVideoEngine.delegate = self;
             NSLog(@"EngineStrategy: ===== use pre render video engine play");
         } else {
             [self setMediaSource:mediaSource];
