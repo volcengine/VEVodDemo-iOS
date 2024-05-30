@@ -7,7 +7,6 @@
 //
 
 #import "UIViewController+Orientation.h"
-#import <YYKit/NSObject+YYAdd.h>
 #import <objc/runtime.h>
 @implementation UIViewController (Orientation)
 
@@ -73,8 +72,9 @@ static char kAssociatedObjectKey_Orientation;
 
 - (void)setDeviceInterfaceOrientation:(UIDeviceOrientation)orientation {
     id<UIApplicationDelegate> delegate = [UIApplication sharedApplication].delegate;
-    if ([delegate respondsToSelector:NSSelectorFromString(@"setShouldRotation:")]) {
-        [((NSObject *)delegate) performSelectorWithArgs:NSSelectorFromString(@"setShouldRotation:"), UIDeviceOrientationIsLandscape(orientation)];
+    if ([delegate respondsToSelector:@selector(updateShouldRotation:)]) {
+        NSNumber *shouldRotation = @(UIDeviceOrientationIsLandscape(orientation));
+        [delegate performSelector:@selector(updateShouldRotation:) withObject:shouldRotation];
     }
     self.orientation = (UIInterfaceOrientation)orientation;
 #ifdef __IPHONE_16_0

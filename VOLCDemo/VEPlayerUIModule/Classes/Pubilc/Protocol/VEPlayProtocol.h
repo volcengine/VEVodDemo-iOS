@@ -43,6 +43,9 @@ typedef enum : NSUInteger {
 // Looping means a switcher, if looping = YES, it will start a new play action by interval zero after play end.
 @property (nonatomic, assign) BOOL looping;
 
+// super resolution
+@property (nonatomic, assign) BOOL superResolutionEnable;
+
 // Playback speed means the speed how many times faster do you want it to be.
 @property (nonatomic, assign) CGFloat playbackSpeed;
 

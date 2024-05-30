@@ -8,8 +8,8 @@
 
 #import "AppDelegate.h"
 #import "VEMainViewController.h"
-#import <TTSDK/TTSDKManager.h>
-#import <TTSDK/TTVideoEngineHeader.h>
+#import <TTSDKFramework/TTSDKManager.h>
+#import <TTSDKFramework/TTVideoEngineHeader.h>
 
 #if __has_include(<RangersAppLog/RangersAppLogCore.h>)
 #import <RangersAppLog/RangersAppLogCore.h>
@@ -46,9 +46,9 @@
     return UIInterfaceOrientationMaskPortrait;
 }
 
-- (void)setShouldRotation:(BOOL)shouldRotation {
-    _shouldRotation = shouldRotation;
-    if (!shouldRotation) {
+- (void)updateShouldRotation:(NSNumber *)shouldRotation {
+    _shouldRotation = [shouldRotation boolValue];
+    if (!_shouldRotation) {
         if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
             SEL selector = NSSelectorFromString(@"setOrientation:");
             NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[UIDevice instanceMethodSignatureForSelector:selector]];
@@ -69,9 +69,23 @@
     /// 建议Debug期间打开Log开关
     [TTVideoEngine setLogFlag:TTVideoEngineLogFlagAll];
 #endif
-    NSString *appId = @"229234";
+    
+    /// appid 和 license 不能为空, 请联系火山引擎商务获取体验 License 文件和 AppId.
+    /// 注意: 申请的 license 文件与 app bundle identifier 是一一对应的.
+    NSString *appId = @"";
+    NSString *licenseName = @"";
+    if (appId.length == 0 || licenseName.length == 0) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedStringFromTable(@"tip_license_required", @"VodLocalizable", nil) preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *vidSource = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            exit(0);
+        }];
+        [alert addAction:vidSource];
+        [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+        return;
+    }
+    
     /// initialize ttsdk, configure Liscene ，this step cannot be skipped !!!!!
-    TTSDKConfiguration *configuration = [TTSDKConfiguration defaultConfigurationWithAppID:appId licenseName:@"VEVod"];
+    TTSDKConfiguration *configuration = [TTSDKConfiguration defaultConfigurationWithAppID:appId licenseName:licenseName];
     /// 播放器CacheSize，默认100M，建议设置 300M
     TTSDKVodConfiguration *vodConfig = [[TTSDKVodConfiguration alloc] init];
     vodConfig.cacheMaxSize = 300 * 1024 * 1024; // 300M

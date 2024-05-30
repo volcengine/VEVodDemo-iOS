@@ -14,6 +14,21 @@ typedef NS_ENUM(NSUInteger, VESceneType){
     VESceneTypeLongVideo,
 };
 
+typedef NS_ENUM(NSUInteger, VEPlaySourceType){
+    VEPlaySourceType_Vid,
+    VEPlaySourceType_Url,
+};
+
+typedef NS_ENUM(NSUInteger, VEVideoCodecType){
+    VEVideoCodecType_H264 = 0,
+    VEVideoCodecType_H265 = 1,
+};
+
+typedef NS_ENUM(NSUInteger, VEVideoFormatType){
+    VEVideoFormatType_MP4 = 1,
+    VEVideoFormatType_HLS = 9,
+};
+
 typedef enum : NSUInteger {
     VESettingTypeDisplay,
     VESettingTypeDisplayDetail,
@@ -22,15 +37,17 @@ typedef enum : NSUInteger {
 } VESettingDisplayType;
 
 typedef enum : NSUInteger {
-    VESettingKeyUniversalH265 = 0000,
+    VESettingKeyUniversalPlaySourceType = 0000,
+    VESettingKeyUniversalH265,
     VESettingKeyUniversalHardwareDecode,
+    VESettingKeyUniversalSR,
     VESettingKeyUniversalDeviceID,
-    
     VESettingKeyUniversalActionCleanCache = 1000,
-    
     
     VESettingKeyShortVideoPreloadStrategy = 10000,
     VESettingKeyShortVideoPreRenderStrategy,
+    
+    VESettingKeyDebugCustomPlaySourceType = 100000,
     
 } VESettingKey;
 

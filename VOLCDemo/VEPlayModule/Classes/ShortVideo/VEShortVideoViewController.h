@@ -8,6 +8,10 @@
 
 #import "VEViewController.h"
 
+@class VEVideoModel;
+
 @interface VEShortVideoViewController : VEViewController
+
+- (instancetype)initWtihVideoSources:(NSArray<VEVideoModel *> *)videoModels;
 
 @end

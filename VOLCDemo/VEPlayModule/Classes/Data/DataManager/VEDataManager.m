@@ -9,12 +9,16 @@
 #import "VEDataManager.h"
 #import "VENetworkHelper.h"
 #import "VEVideoModel.h"
+#import "VESettingManager.h"
 
 static NSString *longVideoZone = @"long-video";
 
 static NSString *feedVideoZone = @"feedvideo";
 
 static NSString *shortVideoZone = @"short-video";
+
+static NSString *requestVidSourceUrl = @"https://vevod-demo-server.volcvod.com/api/general/v1/getFeedStreamWithPlayAuthToken";
+static NSString *requestUrlSouceUrl = @"https://vevod-demo-server.volcvod.com/api/general/v1/getFeedStreamWithVideoModel";
 
 @implementation VEDataManager
 
@@ -33,13 +37,27 @@ static NSString *shortVideoZone = @"short-video";
         } else {
             param = @{@"userID" : key};
         }
-        NSString *urlString = @"https://vevod-demo-server.volcvod.com/api/general/v1/getFeedStreamWithPlayAuthToken";
+        
+        NSString *urlString = requestVidSourceUrl;
+        if ([VEDataManager getRequestSourceType] == VERequestPlaySourceType_Vid) {
+            urlString = requestVidSourceUrl;
+        } else if ([VEDataManager getRequestSourceType] == VERequestPlaySourceType_Url) {
+            urlString = requestUrlSouceUrl;
+        }
         [VENetworkHelper requestDataWithUrl:urlString httpMethod:@"POST" parameters:param success:^(id _Nonnull responseObject) {
             if (responseObject && [responseObject isKindOfClass:[NSDictionary class]]) {
                 NSArray* results = [responseObject objectForKey:@"result"];
                 for (NSDictionary *dic in results) {
-                    VEVideoModel *videoModel = [[VEVideoModel alloc] initWithDictionary:dic error:nil];
-                    [medias addObject:videoModel];
+                    if ([VEDataManager getRequestSourceType] == VERequestPlaySourceType_Vid) {
+                        VEVideoModel *videoModel = [[VEVideoModel alloc] initWithDictionary:dic error:nil];
+                        [medias addObject:videoModel];
+                    } else if ([VEDataManager getRequestSourceType] == VERequestPlaySourceType_Url) {
+                        NSDictionary *tempDic = [self dictionaryFromJsonString:[dic objectForKey:@"videoModel"]];
+                        VEVideoEngineInfoModel *videoEngineInfoModel = [[VEVideoEngineInfoModel alloc] initWithDictionary:tempDic error:nil];
+                        VEVideoModel *videoModel = [[VEVideoModel alloc] initWithDictionary:dic error:nil];
+                        videoModel.videoEngineInfoModel = videoEngineInfoModel;
+                        [medias addObject:videoModel];
+                    }
                 }
             }
             if (result) result(medias);
@@ -47,6 +65,27 @@ static NSString *shortVideoZone = @"short-video";
             
         }];
     });
+}
+
++ (VERequestPlaySourceType)getRequestSourceType {
+    VESettingModel *model = [[VESettingManager universalManager] settingForKey:VESettingKeyUniversalPlaySourceType];
+    return (VERequestPlaySourceType)[model.currentValue integerValue];
+}
+
++ (NSDictionary *)dictionaryFromJsonString:(NSString *)jsonString {
+    if (jsonString == nil) {
+        return nil;
+    }
+
+    NSError *error;
+    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *dictionay = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                        options:NSJSONReadingMutableContainers
+                                                          error:&error];
+    if(error) {
+        return nil;
+    }
+    return dictionay;
 }
 
 @end

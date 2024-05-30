@@ -25,6 +25,8 @@ extern NSString *const VEPlayEventProgressValueIncrease;
 
 extern NSString *const VEPlayEventChangeLoopPlayMode;
 
+extern NSString *const VEPlayEventChangeSREnable;
+
 extern NSString *const VEPlayEventChangePlaySpeed;
 
 extern NSString *const VEPlayEventChangeResolution;

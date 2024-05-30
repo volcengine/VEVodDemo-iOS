@@ -13,6 +13,14 @@
 
 #pragma mark - Setter && getter
 
+- (void)setStartTime:(NSInteger)startTime {
+    objc_setAssociatedObject(self, @selector(startTime), @(startTime), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSInteger)startTime {
+    return [objc_getAssociatedObject(self, @selector(startTime)) integerValue];
+}
+
 - (void)setTitle:(NSString *)title {
     objc_setAssociatedObject(self, @selector(title), title, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -36,6 +44,14 @@
 
 #pragma mark - Setter && getter
 
+- (void)setStartTime:(NSInteger)startTime {
+    objc_setAssociatedObject(self, @selector(startTime), @(startTime), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSInteger)startTime {
+    return [objc_getAssociatedObject(self, @selector(startTime)) integerValue];
+}
+
 - (void)setTitle:(NSString *)title {
     objc_setAssociatedObject(self, @selector(title), title, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -58,6 +74,14 @@
 @implementation TTVideoEngineUrlSource (VEUrlSource)
 
 #pragma mark - Setter && getter
+
+- (void)setStartTime:(NSInteger)startTime {
+    objc_setAssociatedObject(self, @selector(startTime), @(startTime), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSInteger)startTime {
+    return [objc_getAssociatedObject(self, @selector(startTime)) integerValue];
+}
 
 - (void)setTitle:(NSString *)title {
     objc_setAssociatedObject(self, @selector(title), title, OBJC_ASSOCIATION_RETAIN_NONATOMIC);

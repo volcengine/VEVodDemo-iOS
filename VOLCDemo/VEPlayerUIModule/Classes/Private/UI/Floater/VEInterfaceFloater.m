@@ -11,7 +11,7 @@
 #import "VEEventConst.h"
 #import "VEInterfaceSelectionMenu.h"
 #import "VEInterfaceSlideMenuArea.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 
 NSString *const VEUIEventShowMoreMenu = @"VEUIEventShowMoreMenu";
 

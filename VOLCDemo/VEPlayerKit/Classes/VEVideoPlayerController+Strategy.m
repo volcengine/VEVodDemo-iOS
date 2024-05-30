@@ -7,7 +7,7 @@
 //
 
 #import "VEVideoPlayerController+Strategy.h"
-#import <TTSDK/TTVideoEngine+Strategy.h>
+#import <TTSDKFramework/TTVideoEngine+Strategy.h>
 #import <objc/message.h>
 
 @implementation VEVideoPlayerController (Strategy)

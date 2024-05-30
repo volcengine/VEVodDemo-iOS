@@ -7,7 +7,7 @@
 
 #import "VEInterfaceSimpleBlockSceneConf.h"
 #import "VEPlayerUIModule.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 #import "VEActionButton.h"
 #import "VEProgressView.h"
 #import "VEDisplayLabel.h"
@@ -34,6 +34,8 @@ static NSString *lockButtonIdentifier = @"lockButtonIdentifier";
 static NSString *titleLabelIdentifier = @"titleLabelIdentifier";
 
 static NSString *loopPlayButtonIdentifier = @"loopPlayButtonIdentifier";
+
+static NSString *srButtonIdentifier = @"srButtonIdentifier";
 
 static NSString *volumeGestureIdentifier = @"volumeGestureIdentifier";
 
@@ -433,8 +435,8 @@ static inline CGSize squareSize () {
         loopPlayButtonDes.elementID = loopPlayButtonIdentifier;
         loopPlayButtonDes.type = VEInterfaceElementTypeMenuNormalCell;
         loopPlayButtonDes.elementDisplay = ^(VEInterfaceSlideMenuCell *cell) {
-            cell.titleLabel.text = [[VEEventPoster currentPoster] loopPlayOpen] ? @"循环播放开启" :  @"循环播放关闭";
-            cell.iconImgView.image = [UIImage imageNamed:@"long_video_loopplay"];
+            cell.titleLabel.text = NSLocalizedStringFromTable(@"title_play_panel_looper", @"VodLocalizable", nil);
+            cell.iconImgView.image = [[VEEventPoster currentPoster] loopPlayOpen] ? [UIImage imageNamed:@"long_video_loopplay_sel"] : [UIImage imageNamed:@"long_video_loopplay"];
         };
         loopPlayButtonDes.elementAction = ^NSString* (VEInterfaceSlideMenuCell *cell) {
             return VEPlayEventChangeLoopPlayMode;
@@ -443,6 +445,25 @@ static inline CGSize squareSize () {
             
         };
         loopPlayButtonDes;
+    });
+}
+
+- (VEInterfaceElementDescriptionImp *)srButton {
+    return ({
+        VEInterfaceElementDescriptionImp *srButtonDes = [VEInterfaceElementDescriptionImp new];
+        srButtonDes.elementID = srButtonIdentifier;
+        srButtonDes.type = VEInterfaceElementTypeMenuNormalCell;
+        srButtonDes.elementDisplay = ^(VEInterfaceSlideMenuCell *cell) {
+            cell.titleLabel.text = NSLocalizedStringFromTable(@"title_play_panel_sr", @"VodLocalizable", nil);
+            cell.iconImgView.image = [[VEEventPoster currentPoster] srOpen] ? [UIImage imageNamed:@"long_video_sr_sel"] : [UIImage imageNamed:@"long_video_sr"];
+        };
+        srButtonDes.elementAction = ^NSString* (VEInterfaceSlideMenuCell *cell) {
+            return VEPlayEventChangeSREnable;
+        };
+        srButtonDes.elementWillLayout = ^(UIView *elementView, NSSet<UIView *> *elementGroup, UIView *groupContainer) {
+            
+        };
+        srButtonDes;
     });
 }
 
@@ -518,23 +539,27 @@ static inline CGSize squareSize () {
 #pragma mark ----- VEInterfaceElementProtocol
 
 - (NSArray<id<VEInterfaceElementDescription>> *)customizedElements {
-    return @[[self playButton],
-             [self progressView],
-             [self fullScreenButton],
-             [self backButton],
-             [self resolutionButton],
-             [self playSpeedButton],
-             [self moreButton],
-             [self lockButton],
-             [self titleLabel],
-             [self loopPlayButton],
-             [self volumeGesture],
-             [self brightnessGesture],
-             [self progressGesture],
-             [self playGesture],
-             [self clearScreenGesture]
-    ];
+    NSMutableArray *elements = [NSMutableArray array];
+    [elements addObject:[self playButton]];
+    [elements addObject:[self progressView]];
+    [elements addObject:[self fullScreenButton]];
+    [elements addObject:[self backButton]];
+    [elements addObject:[self resolutionButton]];
+    [elements addObject:[self playSpeedButton]];
+    [elements addObject:[self moreButton]];
+    [elements addObject:[self lockButton]];
+    [elements addObject:[self titleLabel]];
+    [elements addObject:[self loopPlayButton]];
+    [elements addObject:[self volumeGesture]];
+    [elements addObject:[self brightnessGesture]];
+    [elements addObject:[self progressGesture]];
+    [elements addObject:[self playGesture]];
+    [elements addObject:[self clearScreenGesture]];
+    [elements addObject:[self progressView]];
+    if ([[VEEventPoster currentPoster] srOpen]) {
+        [elements addObject:[self srButton]];
+    }
+    return [elements copy];
 }
-
 
 @end

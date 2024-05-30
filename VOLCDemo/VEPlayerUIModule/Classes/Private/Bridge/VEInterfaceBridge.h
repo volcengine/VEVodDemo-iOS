@@ -18,6 +18,8 @@
     
 - (BOOL)loopPlayOpen;
 
+- (BOOL)srOpen;
+
 - (CGFloat)currentPlaySpeed;
 
 - (NSString *)currentPlaySpeedForDisplay;

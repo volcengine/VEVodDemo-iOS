@@ -47,6 +47,7 @@ static id sharedInstance = nil;
     [[VEEventMessageBus universalBus] registEvent:VEPlayEventPause withAction:@selector(pauseAction:) ofTarget:self];
     [[VEEventMessageBus universalBus] registEvent:VEPlayEventSeek withAction:@selector(seekAction:) ofTarget:self];
     [[VEEventMessageBus universalBus] registEvent:VEPlayEventChangeLoopPlayMode withAction:@selector(changeLoopPlayModeAction:) ofTarget:self];
+    [[VEEventMessageBus universalBus] registEvent:VEPlayEventChangeSREnable withAction:@selector(changeSREnableAction:) ofTarget:self];
     [[VEEventMessageBus universalBus] registEvent:VEPlayEventChangePlaySpeed withAction:@selector(changePlaySpeedAction:) ofTarget:self];
     [[VEEventMessageBus universalBus] registEvent:VEPlayEventChangeResolution withAction:@selector(changeResolutionAction:) ofTarget:self];
     [[VEEventMessageBus universalBus] registEvent:VEUIEventBrightnessIncrease withAction:@selector(changeBrightnessAction:) ofTarget:self];
@@ -92,6 +93,12 @@ static id sharedInstance = nil;
 - (void)changeLoopPlayModeAction:(id)param {
     if ([self.core respondsToSelector:@selector(setLooping:)]) {
         [self.core setLooping:!self.core.looping];
+    }
+}
+
+- (void)changeSREnableAction:(BOOL)srEnable {
+    if ([self.core respondsToSelector:@selector(setSuperResolutionEnable:)]) {
+        [self.core setSuperResolutionEnable:!self.core.superResolutionEnable];
     }
 }
 
@@ -188,6 +195,13 @@ static id sharedInstance = nil;
 - (BOOL)loopPlayOpen {
     if ([self.core respondsToSelector:@selector(looping)]) {
         return [self.core looping];
+    }
+    return NO;
+}
+
+- (BOOL)srOpen {
+    if ([self.core respondsToSelector:@selector(superResolutionEnable)]) {
+        return [self.core superResolutionEnable];
     }
     return NO;
 }

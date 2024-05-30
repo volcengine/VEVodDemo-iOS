@@ -57,6 +57,10 @@ static id sharedInstance = nil;
     return [[VEInterfaceBridge bridge] loopPlayOpen];
 }
 
+- (BOOL)srOpen {
+    return [[VEInterfaceBridge bridge] srOpen];
+}
+
 - (NSArray *)playSpeedSet {
     return [[VEInterfaceBridge bridge] playSpeedSet];
 }

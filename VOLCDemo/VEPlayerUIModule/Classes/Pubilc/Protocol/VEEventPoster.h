@@ -15,7 +15,8 @@ extern NSString *const VEPlayEventPause;
 extern NSString *const VEPlayEventSeek;
 // Player should change loop mode, param -> VEEventPoster.loopPlayOpen.
 extern NSString *const VEPlayEventChangeLoopPlayMode;
-
+// Player super resolution enbale
+extern NSString *const VEPlayEventChangeSREnable;
 
 #pragma mark ----- Play Callback Event
 // Player progress did changed, param @{VEPlayEventProgressValueIncrease : (NSNumber *)}.
@@ -77,6 +78,8 @@ extern NSString *const VEUIEventScreenClearStateChanged;
 - (NSString *)title;
 // The loop mode of the player current runing.
 - (BOOL)loopPlayOpen;
+// super resolution open
+- (BOOL)srOpen;
 // The play speed range which you want in protocol 'VEPlayProtocol'.
 - (NSArray *)playSpeedSet;
 // The method param by play speed of the player current runing.

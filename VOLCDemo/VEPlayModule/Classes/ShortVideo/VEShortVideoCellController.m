@@ -11,9 +11,9 @@
 #import "VESettingManager.h"
 
 #import <Masonry/Masonry.h>
-#import <VEPlayerUIModule/VEPlayerUIModule.h>
-#import <VEPlayerUIModule/VEInterfaceSimpleMethodSceneConf.h>
-#import <VEPlayerKit/VEPlayerKit.h>
+#import "VEPlayerUIModule.h"
+#import "VEInterfaceSimpleMethodSceneConf.h"
+#import "VEPlayerKit.h"
 
 
 @interface VEShortVideoCellController () <VEInterfaceDelegate>
@@ -64,7 +64,7 @@
         return;
     }
     [self createPlayer];
-    [self.playerController loadBackgourdImageWithMediaSource:[VEVideoModel videoEngineVidSource:self.videoModel]];
+    [self.playerController loadBackgourdImageWithMediaSource:[VEVideoModel ConvertVideoEngineSource:self.videoModel]];
 }
 
 - (void)playerStart {
@@ -76,8 +76,9 @@
     }
     [self createPlayerControl];
     [self playerOptions];
-    [self.playerController playWithMediaSource:[VEVideoModel videoEngineVidSource:self.videoModel]];
+    [self.playerController playWithMediaSource:[VEVideoModel ConvertVideoEngineSource:self.videoModel]];
     [self.playerController play];
+    self.playerController.looping = YES;
 }
 
 - (void)playerStop {
@@ -124,6 +125,9 @@
     
     VESettingModel *hardwareDecode = [[VESettingManager universalManager] settingForKey:VESettingKeyUniversalHardwareDecode];
     self.playerController.hardwareDecodeOpen = hardwareDecode.open;
+    
+    VESettingModel *sr = [[VESettingManager universalManager] settingForKey:VESettingKeyUniversalSR];
+    self.playerController.srOpen = sr.open;
 }
 
 

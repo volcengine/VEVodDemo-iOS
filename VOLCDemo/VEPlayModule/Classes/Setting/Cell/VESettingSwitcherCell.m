@@ -8,6 +8,8 @@
 
 #import "VESettingSwitcherCell.h"
 #import "VESettingModel.h"
+#import "TTVideoEngine.h"
+#import "MBProgressHUD/MBProgressHUD.h"
 
 const NSString *VESettingSwitcherCellReuseID = @"VESettingSwitcherCellReuseID";
 
@@ -30,7 +32,22 @@ const NSString *VESettingSwitcherCellReuseID = @"VESettingSwitcherCellReuseID";
 }
 
 - (IBAction)switcherValueChanged:(UISwitch *)sender {
+    if (self.settingModel.settingType == VESettingKeyUniversalSR) {
+        TTVideoEngine *videoEngine = [[TTVideoEngine alloc] init];
+        if (![videoEngine isSupportSR]) {
+            [sender setOn:!sender.isOn];
+            [self showTips:@"The device not support SR"];
+            return;
+        }
+    }
     self.settingModel.open = sender.on;
+}
+
+- (void)showTips:(NSString *)tips {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:UIApplication.sharedApplication.keyWindow animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    hud.label.text = tips;
+    [hud hideAnimated:YES afterDelay:1.0];
 }
 
 @end

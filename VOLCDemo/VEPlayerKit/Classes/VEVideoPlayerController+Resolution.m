@@ -7,7 +7,7 @@
 
 #import "VEVideoPlayerController+Resolution.h"
 
-static TTVideoEngineResolutionType kDefaultResolutionType = TTVideoEngineResolutionTypeHD;
+static TTVideoEngineResolutionType kDefaultResolutionType = TTVideoEngineResolutionType1080P;
 
 @implementation VEVideoPlayerController (Resolution)
 

@@ -30,11 +30,23 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
 
 @implementation VEFeedVideoViewController
 
+- (instancetype)initWtihVideoSources:(NSArray<VEVideoModel *> *)videoModels {
+    self = [super init];
+    if (self) {
+        self.videoModels = [videoModels mutableCopy];
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initialUI];
     [self startVideoStategy];
-    [self loadData];
+    if (self.videoModels && self.videoModels.count > 0) {
+        [self.tableView reloadData];
+    } else {
+        [self loadData];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -63,7 +75,7 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
-    self.title = NSLocalizedString(@"title_middle_video", nil);
+    self.title = NSLocalizedStringFromTable(@"title_middle_video", @"VodLocalizable", nil);
     self.navigationItem.leftBarButtonItem = ({
         UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back"] style:UIBarButtonItemStylePlain target:self action:@selector(close)];
         leftItem.tintColor = [UIColor blackColor];
@@ -155,7 +167,7 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
             // trans video model to strategy source
             NSMutableArray *sources = [NSMutableArray array];
             [videoModels enumerateObjectsUsingBlock:^(VEVideoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                [sources addObject:[VEVideoModel videoEngineVidSource:obj]];
+                [sources addObject:[VEVideoModel ConvertVideoEngineSource:obj]];
             }];
             [VEVideoPlayerController setStrategyVideoSources:sources];
             

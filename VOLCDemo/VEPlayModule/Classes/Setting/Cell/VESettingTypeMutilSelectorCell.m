@@ -23,6 +23,10 @@ const NSString *VESettingTypeMutilSelectorCellReuseID = @"VESettingTypeMutilSele
 
 @implementation VESettingTypeMutilSelectorCell
 
-
+- (void)setSettingModel:(VESettingModel *)settingModel {
+    _settingModel = settingModel;
+    self.titleLabel.text = [NSString stringWithFormat:@"%@", settingModel.displayText ?: @""];
+    self.detailLabel.text = [NSString stringWithFormat:@"%@", settingModel.detailText ?: @""];
+}
 
 @end

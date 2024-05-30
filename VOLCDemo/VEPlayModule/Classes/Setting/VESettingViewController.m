@@ -11,6 +11,7 @@
 #import "VESettingSwitcherCell.h"
 #import "VESettingDisplayDetailCell.h"
 #import "VESettingTypeMutilSelectorCell.h"
+#import "VEPlayUrlConfigViewController.h"
 #import "VESettingManager.h"
 #import <Masonry/Masonry.h>
 #import "UIColor+RGB.h"
@@ -45,7 +46,7 @@ extern NSString *universalActionSectionKey;
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
-    self.title = NSLocalizedString(@"title_video_setting", nil);
+    self.title = NSLocalizedStringFromTable(@"title_video_setting", @"VodLocalizable", nil);
     self.navigationItem.leftBarButtonItem = ({
         UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back"] style:UIBarButtonItemStylePlain target:self action:@selector(close)];
         leftItem.tintColor = [UIColor blackColor];
@@ -90,9 +91,10 @@ extern NSString *universalActionSectionKey;
     } else {
         return ({
             UILabel *headerLabel = [UILabel new];
+            headerLabel.backgroundColor = [UIColor colorWithRed:247.0/255.0 green:248.0/255.0 blue:250.0/255.0 alpha:1.0];
             headerLabel.text = [NSString stringWithFormat:@"    %@", sectionKey];
-            headerLabel.font = [UIFont boldSystemFontOfSize:16.0];
-            headerLabel.textColor = [UIColor darkGrayColor];
+            headerLabel.font = [UIFont systemFontOfSize:14.0];
+            headerLabel.textColor = [UIColor colorWithRed:134.0/255.0 green:144.0/255.0 blue:136.0/255.0 alpha:1.0];
             headerLabel;
         });
     }
@@ -113,15 +115,46 @@ extern NSString *universalActionSectionKey;
     NSArray *settings = [[[VESettingManager universalManager] settings] valueForKey:sectionKey];
     VESettingModel *model = [settings objectAtIndex:indexPath.row];
     if (model.allAreaAction) model.allAreaAction();
+    
+    /// select play source
+    if (model.settingKey == VESettingKeyUniversalPlaySourceType) {
+        [self alertUrlViewWithCurrentSettingsModel:model];
+    } else if (model.settingKey == VESettingKeyDebugCustomPlaySourceType) {
+        VEPlayUrlConfigViewController *playUrlViewController = [VEPlayUrlConfigViewController new];
+        [self.navigationController pushViewController:playUrlViewController animated:YES];
+    }
 }
 
+
+- (void)alertUrlViewWithCurrentSettingsModel:(VESettingModel *)settingsModel {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTable(@"title_setting_Source_Type_Select", @"VodLocalizable", nil) message:@"support vid and url play source" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *vidSource = [UIAlertAction actionWithTitle:@"Vid Play Source" style:[settingsModel.currentValue integerValue] == VEPlaySourceType_Vid ? UIAlertActionStyleDestructive : UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        settingsModel.currentValue = @(VEPlaySourceType_Vid);
+        settingsModel.detailText = NSLocalizedStringFromTable(@"title_setting_Source_Type_Vid", @"VodLocalizable", nil);
+        [self.tableView reloadData];
+    }];
+    UIAlertAction *urlSource = [UIAlertAction actionWithTitle:@"Url Play Source" style:[settingsModel.currentValue integerValue] == VEPlaySourceType_Url ? UIAlertActionStyleDestructive : UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        settingsModel.currentValue = @(VEPlaySourceType_Url);
+        settingsModel.detailText = NSLocalizedStringFromTable(@"title_setting_Source_Type_Url", @"VodLocalizable", nil);
+        [self.tableView reloadData];
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    
+    [alert addAction:vidSource];
+    [alert addAction:urlSource];
+    [alert addAction:cancel];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+}
 
 #pragma mark ----- Lazy Load
 
 - (UITableView *)tableView {
     if (!_tableView) {
         _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
-        _tableView.backgroundColor = [UIColor colorWithRGB:0xF7F8FA alpha:1.0];
+        _tableView.backgroundColor = [UIColor colorWithRed:247.0/255.0 green:248.0/255.0 blue:250.0/255.0 alpha:1.0];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.estimatedRowHeight = 0.0;

@@ -13,8 +13,8 @@
 #import "VESettingManager.h"
 #import "UIScrollView+Refresh.h"
 
-#import <VESceneKit/VEPageViewController.h>
-#import <VEPlayerKit/VEPlayerKit.h>
+#import "VEPageViewController.h"
+#import "VEPlayerKit.h"
 #import <Masonry/Masonry.h>
 
 static NSInteger VEShortVideoPageCount = 10;
@@ -29,24 +29,38 @@ static NSString *VEShortVideoCellReuseID = @"VEShortVideoCellReuseID";
 
 @property (nonatomic, strong) UIButton *backButton;
 
-@property (nonatomic, strong) NSMutableArray *videoModels;
+@property (nonatomic, strong) NSMutableArray<VEVideoModel *> *videoModels;
 
 @end
 
 @implementation VEShortVideoViewController
 
+- (instancetype)initWtihVideoSources:(NSArray<VEVideoModel *> *)videoModels {
+    self = [super init];
+    if (self) {
+        self.videoModels = [videoModels mutableCopy];
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initialUI];
     [self startVideoStategy];
-    [self loadData:NO];
+    if (self.videoModels && self.videoModels.count > 0) {
+        // set video strategy source
+        [self setVideoStrategySource:YES];
+        
+        [self.pageContainer reloadData];
+    } else {
+        [self loadData:NO];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     [VEVideoPlayerController clearAllEngineStrategy];
 }
-
 
 #pragma mark ---- ATPageViewControllerDataSource & Delegate
 - (NSInteger)numberOfItemInPageViewController:(VEPageViewController *)pageViewController {
@@ -121,16 +135,10 @@ static NSString *VEShortVideoCellReuseID = @"VEShortVideoCellReuseID";
     }
     [VEDataManager dataForScene:VESceneTypeShortVideo range:NSMakeRange(self.videoModels.count, VEShortVideoPageCount) result:^(NSArray<VEVideoModel *> *videoModels) {
         [self.videoModels addObjectsFromArray:videoModels];
-        // trans video model to strategy source
-        NSMutableArray *sources = [NSMutableArray array];
-        [videoModels enumerateObjectsUsingBlock:^(VEVideoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [sources addObject:[VEVideoModel videoEngineVidSource:obj]];
-        }];
-        if (isLoadMore) {
-            [VEVideoPlayerController addStrategyVideoSources:sources];
-        } else {
-            [VEVideoPlayerController setStrategyVideoSources:sources];
-        }
+        
+        // set video strategy source
+        [self setVideoStrategySource:!isLoadMore];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             if (isLoadMore) {
                 [self.pageContainer reloadContentSize];
@@ -141,6 +149,18 @@ static NSString *VEShortVideoCellReuseID = @"VEShortVideoCellReuseID";
             }
         });
     }];
+}
+
+- (void)setVideoStrategySource:(BOOL)reset {
+    NSMutableArray *sources = [NSMutableArray array];
+    [self.videoModels enumerateObjectsUsingBlock:^(VEVideoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [sources addObject:[VEVideoModel ConvertVideoEngineSource:obj]];
+    }];
+    if (reset) {
+        [VEVideoPlayerController setStrategyVideoSources:sources];
+    } else {
+        [VEVideoPlayerController addStrategyVideoSources:sources];
+    }
 }
 
 - (void)startVideoStategy {

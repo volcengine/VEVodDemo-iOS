@@ -11,9 +11,9 @@
 #import "VEVideoModel.h"
 #import "UIColor+RGB.h"
 
-#import <VEPlayerUIModule/VEPlayerUIModule.h>
-#import <VEPlayerUIModule/VEInterfaceFeedBlockSceneConf.h>
-#import <VEPlayerKit/VEPlayerKit.h>
+#import "VEPlayerUIModule.h"
+#import "VEInterfaceFeedBlockSceneConf.h"
+#import "VEPlayerKit.h"
 #import <SDWebImage/SDWebImage.h>
 #import <Masonry/Masonry.h>
 
@@ -102,7 +102,7 @@
         [self.playerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.centerContainerView);
         }];
-        [self.playerController loadBackgourdImageWithMediaSource:[VEVideoModel videoEngineVidSource:self.videoModel]];
+        [self.playerController loadBackgourdImageWithMediaSource:[VEVideoModel ConvertVideoEngineSource:self.videoModel]];
         [self createPlayerControl];
     }
 }
@@ -120,8 +120,9 @@
         [self.playerController play];
     } else {
         [self playerOptions];
-        [self.playerController playWithMediaSource:[VEVideoModel videoEngineVidSource:self.videoModel]];
+        [self.playerController playWithMediaSource:[VEVideoModel ConvertVideoEngineSource:self.videoModel]];
     }
+    self.playerController.looping = YES;
 }
 
 - (void)playerOptions {
@@ -136,6 +137,9 @@
     
     VESettingModel *hardwareDecode = [[VESettingManager universalManager] settingForKey:VESettingKeyUniversalHardwareDecode];
     self.playerController.hardwareDecodeOpen = hardwareDecode.open;
+    
+    VESettingModel *sr = [[VESettingManager universalManager] settingForKey:VESettingKeyUniversalSR];
+    self.playerController.srOpen = sr.open;
 }
 
 

@@ -8,7 +8,7 @@
 #import "VEInterfaceSlideMenuCell.h"
 #import "VEInterfaceElementDescription.h"
 #import "UIView+VEElementDescripition.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 
 @implementation VEInterfaceSlideMenuCell
 
@@ -28,7 +28,7 @@
         make.top.equalTo(self.contentView);
         make.leading.equalTo(self.contentView).offset(7.5);
         make.trailing.equalTo(self.contentView).offset(-7.5);;
-        make.height.equalTo(@(45.0)); // width
+        make.height.equalTo(@(30.0)); // width
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.iconImgView.mas_bottom);
@@ -42,6 +42,7 @@
 - (UIImageView *)iconImgView {
     if (!_iconImgView) {
         _iconImgView = [UIImageView new];
+        _iconImgView.contentMode = UIViewContentModeCenter;
     }
     return _iconImgView;
 }

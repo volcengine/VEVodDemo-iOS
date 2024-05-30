@@ -7,7 +7,7 @@
 
 #import "VEInterfacePlayElement.h"
 #import "VEPlayerUIModule.h"
-#import "Masonry.h"
+#import <Masonry/Masonry.h>
 
 NSString *const playButtonId = @"playButtonId";
 
