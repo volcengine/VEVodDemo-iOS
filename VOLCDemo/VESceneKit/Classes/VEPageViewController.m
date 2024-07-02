@@ -462,7 +462,6 @@ static NSString *VEPageViewControllerExceptionKey = @"VEPageViewControllerExcept
     CGFloat offsetABS = offset - itemWidth * self.currentIndex;
     UIViewController *changeToViewController = nil;
     CGFloat progress = fabs(offsetABS) / itemWidth;
-    NSLog(@"zxy check abs offset = %lf", offsetABS);
     if (offsetABS > 0 && self.currentDirection != VEPageItemMoveDirectionNext) {
         if (self.currentIndex == self.itemCount - 1) {
             return;

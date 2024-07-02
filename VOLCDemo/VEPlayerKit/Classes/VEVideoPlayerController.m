@@ -151,6 +151,7 @@ TTVideoEngineResolutionDelegate>
 
 - (void)reLayoutVideoPlayerView {
     if ([self.videoEngine.playerView superview] == nil) {
+        self.videoEngine.playerView.clipsToBounds = YES;
         [self.view insertSubview:self.videoEngine.playerView aboveSubview:self.posterImageView];
     }
     [self.videoEngine.playerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -170,6 +171,8 @@ TTVideoEngineResolutionDelegate>
         if (preRenderVideoEngine) {
             preRenderVideoEngine.playerView.hidden = NO;
             self.posterImageView.hidden = YES;
+            preRenderVideoEngine.playerView.clipsToBounds = YES;
+            [self __configPlayerScaleMode:preRenderVideoEngine viewMode:_videoViewMode];
             [self.view insertSubview:preRenderVideoEngine.playerView aboveSubview:self.posterImageView];
             [preRenderVideoEngine.playerView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.edges.equalTo(self.view);
@@ -275,6 +278,7 @@ TTVideoEngineResolutionDelegate>
             return;
         }
     }
+    [self.videoEngine prepareToPlay];
     [self.videoEngine play];
     [self __addPeriodicTimeObserver];
 }
@@ -523,6 +527,31 @@ TTVideoEngineResolutionDelegate>
     }
 }
 
+- (void)__configPlayerScaleMode:(TTVideoEngine *)videoEngine viewMode:(VEVideoViewMode)videoViewMode {
+    switch (videoViewMode) {
+        case VEVideoViewModeAspectFit: {
+            [videoEngine setOptionForKey:VEKKeyViewScaleMode_ENUM value:@(TTVideoEngineScalingModeAspectFit)];
+            self.posterImageView.contentMode = UIViewContentModeScaleAspectFit;
+        }
+            break;
+        case VEVideoViewModeAspectFill: {
+            [videoEngine setOptionForKey:VEKKeyViewScaleMode_ENUM value:@(TTVideoEngineScalingModeAspectFill)];
+            self.posterImageView.contentMode = UIViewContentModeScaleAspectFill;
+        }
+            break;
+        case VEVideoViewModeModeFill: {
+            [videoEngine setOptionForKey:VEKKeyViewScaleMode_ENUM value:@(TTVideoEngineScalingModeFill)];
+            self.posterImageView.contentMode = UIViewContentModeScaleToFill;
+        }
+            break;
+        default: {
+            [videoEngine setOptionForKey:VEKKeyViewScaleMode_ENUM value:@(TTVideoEngineScalingModeNone)];
+            self.posterImageView.contentMode = UIViewContentModeScaleAspectFit;
+        }
+            break;
+    }
+}
+
 + (void)cleanCache {
     [TTVideoEngine ls_clearAllCaches:YES];
 }
@@ -536,29 +565,8 @@ TTVideoEngineResolutionDelegate>
 }
 
 - (void)setVideoViewMode:(VEVideoViewMode)videoViewMode {
-    switch (videoViewMode) {
-        case VEVideoViewModeAspectFit: {
-            [self.videoEngine setOptionForKey:VEKKeyViewScaleMode_ENUM value:@(TTVideoEngineScalingModeAspectFit)];
-            self.posterImageView.contentMode = UIViewContentModeScaleAspectFit;
-        }
-            break;
-        case VEVideoViewModeAspectFill: {
-            [self.videoEngine setOptionForKey:VEKKeyViewScaleMode_ENUM value:@(TTVideoEngineScalingModeAspectFill)];
-            self.posterImageView.contentMode = UIViewContentModeScaleAspectFill;
-        }
-            break;
-        case VEVideoViewModeModeFill: {
-            [self.videoEngine setOptionForKey:VEKKeyViewScaleMode_ENUM value:@(TTVideoEngineScalingModeFill)];
-            self.posterImageView.contentMode = UIViewContentModeScaleToFill;
-        }
-            break;
-        default: {
-            [self.videoEngine setOptionForKey:VEKKeyViewScaleMode_ENUM value:@(TTVideoEngineScalingModeNone)];
-            self.posterImageView.contentMode = UIViewContentModeScaleAspectFit;
-        }
-            break;
-    }
     _videoViewMode = videoViewMode;
+    [self __configPlayerScaleMode:self.videoEngine viewMode:_videoViewMode];
 }
 
 - (void)setStartTime:(NSTimeInterval)startTime {

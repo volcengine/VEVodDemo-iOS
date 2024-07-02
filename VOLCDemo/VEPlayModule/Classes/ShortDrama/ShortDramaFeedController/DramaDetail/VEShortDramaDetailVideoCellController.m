@@ -100,6 +100,7 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
         return;
     }
     [self createPlayer];
+    self.playerController.videoViewMode = VEVideoViewModeAspectFill;
     [self.playerController loadBackgourdImageWithMediaSource:[VEDramaVideoInfoModel toVideoEngineSource:self.dramaVideoInfo]];
 }
 
