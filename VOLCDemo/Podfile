@@ -12,14 +12,14 @@ target 'VOLCDemo' do
   
   # vod main
   pod 'VEVodMain', :path=> './VEVodMain/'
+  # vod base kit
+  pod 'VEBaseKit', :path=> './VEBaseKit/'
   # vod all scene exhibition
-  pod 'VEPlayModule', :path=> './VEPlayModule/'
+  pod 'VESceneModule', :path=> './VESceneModule/'
   # vod player kit
   pod 'VEPlayerKit', :path=> './VEPlayerKit/'
   # vod player control UI kit
   pod 'VEPlayerUIModule', :path=> './VEPlayerUIModule/'
-  # vod short scene kit
-  pod 'VESceneKit', :path=> './VESceneKit/'
   
   # public SDK
   pod 'Masonry'
