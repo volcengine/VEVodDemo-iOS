@@ -10,7 +10,7 @@
 @interface ShortDramaCachePayManager ()
 
 @property (nonatomic, assign) BOOL openPayTest;
-@property (nonatomic, strong) NSMutableDictionary *cahcePaidDramaDic;
+@property (nonatomic, strong) NSDictionary *cahcePaidDramaDic;
 
 @end
 
@@ -36,16 +36,31 @@
     return self;
 }
 
-- (BOOL)isPaidDrama:(NSString *)dramaId {
+- (BOOL)isPaidDrama:(NSString *)dramaId episodeNumber:(NSInteger)episodeNumber {
     if (dramaId && self.openPayTest) {
-        return [[self.cahcePaidDramaDic objectForKey:dramaId] boolValue];
+        NSDictionary *dic = [self.cahcePaidDramaDic objectForKey:dramaId];
+        if (dic) {
+            bool ret = [[dic objectForKey:@(episodeNumber)] boolValue];
+            return ret;
+        }
     }
-    return YES;
+    return NO;
 }
 
-- (void)cachePaidDrama:(NSString *)dramaId {
-    if (dramaId) {
-        [self.cahcePaidDramaDic setObject:@(YES) forKey:dramaId];
+- (void)cachePaidDrama:(NSString *)dramaId episodeNumber:(NSInteger)episodeNumber {
+    @synchronized (self) {
+        if (dramaId) {
+            NSDictionary *dic = [self.cahcePaidDramaDic objectForKey:dramaId];
+            if (dic) {
+                bool ret = [[dic objectForKey:@(episodeNumber)] boolValue];
+                if (!ret) {
+                    dic = @{ @(episodeNumber) : @(YES) };
+                }
+            } else {
+                dic = @{ dramaId: @{ @(episodeNumber) : @(YES) } };
+                self.cahcePaidDramaDic = dic;
+            }
+        }
     }
 }
 

@@ -108,7 +108,7 @@ static NSString *VEShortDramaSelectionCellReuseID = @"VEShortDramaSelectionCellR
 - (void)loadData {
     NSString *dramaId = self.curPlayDramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId;
     __weak typeof(self) weak_self = self;
-    [VEDramaDataManager requestDramaEpisodeList:dramaId offset:self.pageOffset pageSize:VEShortDramaSelectionPageCount result:^(id  _Nullable responseData, NSString * _Nullable errorMsg) {
+    [VEDramaDataManager requestDramaEpisodeList:dramaId episodeNumber:self.curPlayDramaVideoInfo.dramaEpisodeInfo.episodeNumber offset:self.pageOffset pageSize:VEShortDramaSelectionPageCount result:^(id  _Nullable responseData, NSString * _Nullable errorMsg) {
         typeof(weak_self) strong_self = weak_self;
         if (!errorMsg) {
             NSArray *resArray = (NSArray *)responseData;

@@ -26,7 +26,7 @@
 
 - (void)reloadData:(VEDramaVideoInfoModel *)dramaVideoInfo {
     self.titleLabel.text = dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaTitle;
-    self.desLabel.text = dramaVideoInfo.dramaEpisodeInfo.episodeDesc;
+    self.desLabel.text = [NSString stringWithFormat:@"第%@集 %@", @(dramaVideoInfo.dramaEpisodeInfo.episodeNumber), dramaVideoInfo.dramaEpisodeInfo.episodeDesc];
 }
 
 - (void)showView:(BOOL)show {

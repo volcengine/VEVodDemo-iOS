@@ -86,7 +86,14 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
 #pragma mark - Public
 
 - (void)reloadData:(VEDramaVideoInfoModel *)dramaVideoInfo {
+    if (self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber == dramaVideoInfo.dramaEpisodeInfo.episodeNumber &&
+        [self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId isEqualToString:dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId]) {
+        return;
+    }
+    
     self.dramaVideoInfo = dramaVideoInfo;
+    NSLog(@"drama detail reloadData %p %@ %@", self, self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId, @(self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber));
+    
     // 提前加载封面图
     [self loadPlayerCover];
 }
@@ -130,10 +137,13 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
     if (self.delegate && [self.delegate respondsToSelector:@selector(onDramaDetailVideoPlayStart:)]) {
         [self.delegate onDramaDetailVideoPlayStart:self.dramaVideoInfo];
     }
+    NSLog(@"drama detail play %p %@ %@", self, self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId, @(self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber));
 }
 
 - (void)playerStop {
-    @autoreleasepool {
+    if (self.playerController) {
+        NSLog(@"drama detail stop %p %@ %@", self, self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId, @(self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber));
+        
         // 处理无缝切换
         if ([[VEPlayerUtility lm_topmostViewController] isKindOfClass:[VEShortDramaDetailFeedViewController class]]) {
             [self recordStartTime];
@@ -160,26 +170,39 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
 }
 
 - (void)createPlayer {
-    self.moduleLoader = [[ShortDramaDetailPlayerModuleLoader alloc] init];
-    self.moduleLoader.delegate = self;
-    VEVideoPlayerConfiguration *playerConfig = [VEVideoPlayerConfiguration defaultPlayerConfiguration];
-    if (self.dramaVideoInfo.startTime > 0) {
-        playerConfig.startTime = self.dramaVideoInfo.startTime;
-    }
+    if (self.playerController == nil) {
+        NSLog(@"drama detail create %p %@ %@", self, self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId, @(self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber));
+        self.moduleLoader = [[ShortDramaDetailPlayerModuleLoader alloc] init];
+        self.moduleLoader.delegate = self;
+        VEVideoPlayerConfiguration *playerConfig = [VEVideoPlayerConfiguration defaultPlayerConfiguration];
+        if (self.dramaVideoInfo.startTime > 0) {
+            playerConfig.startTime = self.dramaVideoInfo.startTime;
+        }
 
-    self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:playerConfig moduleLoader:self.moduleLoader playerContainerView:self.view];
-    self.playerController.delegate = self;
-    [self.view addSubview:self.playerController.view];
-    [self.view bringSubviewToFront:self.collectViewController.view];
-    [self.view bringSubviewToFront:self.praiseViewController.view];
-    
-    [self.playerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.equalTo(self.view);
-        make.bottom.equalTo(self.view).with.offset(-VEShortDramaDetailVideoCellBottomOffset);
-    }];
-    [self playerOptions];
-    
-    [self.moduleLoader.context post:self.dramaVideoInfo forKey:VEPlayerContextKeyShortDramaDataModelChanged];
+        self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:playerConfig moduleLoader:self.moduleLoader playerContainerView:self.view];
+        self.playerController.delegate = self;
+        [self.view addSubview:self.playerController.view];
+        [self.view bringSubviewToFront:self.collectViewController.view];
+        [self.view bringSubviewToFront:self.praiseViewController.view];
+        
+        [self.playerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.left.right.equalTo(self.view);
+            make.bottom.equalTo(self.view).with.offset(-VEShortDramaDetailVideoCellBottomOffset);
+        }];
+        [self playerOptions];
+        
+        [self.moduleLoader.context post:self.dramaVideoInfo forKey:VEPlayerContextKeyShortDramaDataModelChanged];
+        
+        @weakify(self);
+        [self.moduleLoader.context addKey:VEPlayerContextKeySpeedTipViewShowed withObserver:self handler:^(id  _Nullable object, NSString *key) {
+            @strongify(self);
+            BOOL showSpeedTipView = [object boolValue];
+            [UIView animateWithDuration:0.3 animations:^{
+                self.collectViewController.view.alpha = showSpeedTipView ? 0 : 1;
+                self.praiseViewController.view.alpha = showSpeedTipView ? 0 : 1;
+            }];
+        }];
+    }
 }
 
 - (void)loadPlayerCover {

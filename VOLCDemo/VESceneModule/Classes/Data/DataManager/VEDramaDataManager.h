@@ -17,7 +17,7 @@ typedef void(^RequestDataComplete)(id _Nullable responseData, NSString * _Nullab
 
 + (void)requestDramaRecommondList:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplete)complete;
 
-+ (void)requestDramaEpisodeList:(NSString *)dramaId offset:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplete)complete;
++ (void)requestDramaEpisodeList:(NSString *)dramaId episodeNumber:(NSInteger)episodeNumber offset:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplete)complete;
 
 @end
 

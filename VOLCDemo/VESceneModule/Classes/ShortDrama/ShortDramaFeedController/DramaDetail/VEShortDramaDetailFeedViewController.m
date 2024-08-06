@@ -16,6 +16,7 @@
 #import <MJRefresh/MJRefresh.h>
 #import "NSArray+BTDAdditions.h"
 #import "BTDMacros.h"
+#import "ShortDramaCachePayManager.h"
 
 static NSInteger VEShortDramaDetailVideoFeedPageCount = -1; // default load all
 static NSInteger VEShortDramaDetailVideoFeedLoadMoreDetection = 3;
@@ -100,12 +101,13 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
     VEDramaVideoInfoModel *dramaVideoInfo = [self.dramaVideoModels btd_objectAtIndex:self.pageContainer.currentIndex];
     if (dramaVideoInfo) {
         @weakify(self);
-        [VEDramaDataManager requestDramaEpisodeList:dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId offset:0 pageSize:VEShortDramaDetailVideoFeedPageCount result:^(id  _Nullable responseData, NSString * _Nullable errorMsg) {
+        [VEDramaDataManager requestDramaEpisodeList:dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId episodeNumber:dramaVideoInfo.dramaEpisodeInfo.episodeNumber offset:0 pageSize:VEShortDramaDetailVideoFeedPageCount result:^(id  _Nullable responseData, NSString * _Nullable errorMsg) {
             @strongify(self);
             btd_dispatch_async_on_main_queue(^{
                 if (!errorMsg) {
                     // response drama data
                     NSArray<VEDramaVideoInfoModel *> *resArray = (NSArray *)responseData;
+
                     for (VEDramaVideoInfoModel *dramaVideoInfo in resArray) {
                         for (NSInteger i = 0; i < self.dramaVideoModels.count; i++) {
                             VEDramaVideoInfoModel *targetVideoInfo = [self.dramaVideoModels objectAtIndex:i];
@@ -170,17 +172,18 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
     self.isLoadingData = YES;
     
     @weakify(self);
-    [VEDramaDataManager requestDramaEpisodeList:dramaId offset:0 pageSize:VEShortDramaDetailVideoFeedPageCount result:^(id  _Nullable responseData, NSString * _Nullable errorMsg) {
+    [VEDramaDataManager requestDramaEpisodeList:dramaId episodeNumber:-1 offset:0 pageSize:VEShortDramaDetailVideoFeedPageCount result:^(id  _Nullable responseData, NSString * _Nullable errorMsg) {
         @strongify(self);
         if (!errorMsg) {
             btd_dispatch_async_on_main_queue(^{
                 // response drama data
                 NSArray *resArray = (NSArray *)responseData;
+                
                 if (resArray && resArray.count) {
                     if (isLoadMore) {
                         [self.dramaVideoModels addObjectsFromArray:resArray];
                         [self onHandleFromDramaVideoInfo];
-                        [self.pageContainer reloadContentSize];
+                        [self.pageContainer reloadData];
                     } else {
                         self.dramaVideoModels = [resArray mutableCopy];
                         [self.pageContainer.scrollView.mj_header endRefreshing];
@@ -298,9 +301,12 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
 - (void)onDramaSelectionCallback:(VEDramaVideoInfoModel *)dramaVideoInfo {
     for (NSInteger i = 0; i < self.dramaVideoModels.count; i++) {
         VEDramaVideoInfoModel *tempDramaVideoInfo = [self.dramaVideoModels objectAtIndex:i];
-        if (dramaVideoInfo.dramaEpisodeInfo.episodeNumber == tempDramaVideoInfo.dramaEpisodeInfo.episodeNumber) {
+        if ([dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId isEqualToString:tempDramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId] && dramaVideoInfo.dramaEpisodeInfo.episodeNumber == tempDramaVideoInfo.dramaEpisodeInfo.episodeNumber) {
             [self.pageContainer setCurrentIndex:i];
             [self updateDramaTitle];
+            if (i == (self.dramaVideoModels.count - 1)) {
+                [self needLoadMoreDramaVideoInfo];
+            }
             break;
         }
     }

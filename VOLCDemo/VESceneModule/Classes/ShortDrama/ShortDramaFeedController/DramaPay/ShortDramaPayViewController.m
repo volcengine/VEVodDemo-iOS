@@ -108,7 +108,7 @@ NSString * const VEDramaPaySuccessNotification = @"VEDramaPaySuccessNotification
 
 - (void)payButtonHandle {
     // test payment success
-    [[ShortDramaCachePayManager shareInstance] cachePaidDrama:self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId];
+    [[ShortDramaCachePayManager shareInstance] cachePaidDrama:self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId episodeNumber:self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber];
     self.dramaVideoInfo.payInfo.payStatus = VEDramaPayStatus_Paid;
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(onPaySuccessCallback:)]) {

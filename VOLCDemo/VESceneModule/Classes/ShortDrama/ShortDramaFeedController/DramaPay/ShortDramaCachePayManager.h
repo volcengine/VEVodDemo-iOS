@@ -13,9 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (ShortDramaCachePayManager *)shareInstance;
 
-- (BOOL)isPaidDrama:(NSString *)dramaId;
+@property (nonatomic, assign, readonly) BOOL openPayTest;
 
-- (void)cachePaidDrama:(NSString *)dramaId;
+- (BOOL)isPaidDrama:(NSString *)dramaId episodeNumber:(NSInteger)episodeNumber;
+
+- (void)cachePaidDrama:(NSString *)dramaId episodeNumber:(NSInteger)episodeNumber;
 
 @end
 

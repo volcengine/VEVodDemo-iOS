@@ -46,6 +46,14 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
         @strongify(self);
         [self.seriesView reloadData:dramaVideoInfo];
     }];
+    
+    [self.context addKey:VEPlayerContextKeySpeedTipViewShowed withObserver:self handler:^(id  _Nullable object, NSString *key) {
+        @strongify(self);
+        BOOL showSpeedTipView = [object boolValue];
+        [UIView animateWithDuration:0.3 animations:^{
+            self.seriesView.alpha = showSpeedTipView ? 0 : 1;;
+        }];
+    }];
 }
 
 - (void)controlViewTemplateDidUpdate {

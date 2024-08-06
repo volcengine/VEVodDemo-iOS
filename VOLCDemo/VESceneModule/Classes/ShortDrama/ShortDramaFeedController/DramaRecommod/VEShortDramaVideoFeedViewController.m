@@ -178,7 +178,7 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
         VEDramaVideoInfoModel *dramaVideoModel = [self.dramaVideoModels objectAtIndex:i];
         if ([nextDramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId isEqualToString:dramaVideoModel.dramaEpisodeInfo.dramaInfo.dramaId]) {
             [self.dramaVideoModels replaceObjectAtIndex:i withObject:nextDramaVideoInfo];
-            [self.pageContainer reloadDataWithPageIndex:i animated:YES];
+            [self.pageContainer setCurrentIndex:i];
             break;
         }
     }

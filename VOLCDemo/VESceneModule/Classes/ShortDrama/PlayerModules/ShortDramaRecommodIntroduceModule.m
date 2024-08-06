@@ -50,6 +50,11 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
         @strongify(self);
         [self.introduceView showView:YES];
     }];
+    [self.context addKey:VEPlayerContextKeySpeedTipViewShowed withObserver:self handler:^(id  _Nullable object, NSString *key) {
+        @strongify(self);
+        BOOL showSpeedTipView = [object boolValue];
+        [self.introduceView showView:!showSpeedTipView];
+    }];
 }
 
 - (void)controlViewTemplateDidUpdate {

@@ -74,7 +74,7 @@ static NSString *requestDramaEpisodeUrl = @"https://vevod-demo-server.volcvod.co
     });
 }
 
-+ (void)requestDramaEpisodeList:(NSString *)dramaId offset:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplete)complete {
++ (void)requestDramaEpisodeList:(NSString *)dramaId episodeNumber:(NSInteger)episodeNumber offset:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplete)complete {
     if (!dramaId) {
         if (complete) {
             complete(nil, @"dramaId is nil !!!");
@@ -102,7 +102,7 @@ static NSString *requestDramaEpisodeUrl = @"https://vevod-demo-server.volcvod.co
                     [dramas addObject:dramaVideoInfoModel];
                 }
                 // test drama pay
-                if (![[ShortDramaCachePayManager shareInstance] isPaidDrama:dramaId]) {
+                if ([ShortDramaCachePayManager shareInstance].openPayTest) {
                     [[self class] testDramaPayVideoInfo:dramas];
                 }
             }
@@ -120,7 +120,11 @@ static NSString *requestDramaEpisodeUrl = @"https://vevod-demo-server.volcvod.co
 + (void)testDramaPayVideoInfo:(NSArray<VEDramaVideoInfoModel *> *)dramaVideoInfos {
     for (NSInteger i = 5; i < dramaVideoInfos.count; i++) {
         VEDramaVideoInfoModel *videoInfo = [dramaVideoInfos objectAtIndex:i];
-        videoInfo.payInfo.payStatus = VEDramaPayStatus_Unpaid;
+        if ([[ShortDramaCachePayManager shareInstance] isPaidDrama:videoInfo.dramaEpisodeInfo.dramaInfo.dramaId episodeNumber:videoInfo.dramaEpisodeInfo.episodeNumber]) {
+            videoInfo.payInfo.payStatus = VEDramaPayStatus_Paid;
+        } else {
+            videoInfo.payInfo.payStatus = VEDramaPayStatus_Unpaid;
+        }
     }
 }
 
