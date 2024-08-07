@@ -10,7 +10,7 @@
 @interface ShortDramaCachePayManager ()
 
 @property (nonatomic, assign) BOOL openPayTest;
-@property (nonatomic, strong) NSDictionary *cahcePaidDramaDic;
+@property (nonatomic, strong) NSMutableDictionary *cahcePaidDramaDic;
 
 @end
 
@@ -54,11 +54,13 @@
             if (dic) {
                 bool ret = [[dic objectForKey:@(episodeNumber)] boolValue];
                 if (!ret) {
-                    dic = @{ @(episodeNumber) : @(YES) };
+                    NSMutableDictionary *tempDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+                    [tempDic setObject:@(YES) forKey:@(episodeNumber)];
+                    [self.cahcePaidDramaDic setObject:tempDic.copy forKey:dramaId];
                 }
             } else {
                 dic = @{ dramaId: @{ @(episodeNumber) : @(YES) } };
-                self.cahcePaidDramaDic = dic;
+                self.cahcePaidDramaDic = [dic mutableCopy];
             }
         }
     }
