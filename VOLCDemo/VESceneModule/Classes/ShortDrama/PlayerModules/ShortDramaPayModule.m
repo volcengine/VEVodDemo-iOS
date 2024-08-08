@@ -88,13 +88,9 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
 
 - (void)onPayingCallback:(VEDramaVideoInfoModel *)dramaVideoInfo {
     [self removePayViewController];
-    NSString *message = NSLocalizedStringFromTable(@"short_drama_pay_paying", @"VodLocalizable", nil);
-    [self.context post:message forKey:VEPlayerContextKeyShowToastModule];
 }
 
 - (void)onPaySuccessCallback:(VEDramaVideoInfoModel *)dramaVideoInfo {
-    NSString *message = NSLocalizedStringFromTable(@"short_drama_pay_success", @"VodLocalizable", nil);
-    [self.context post:message forKey:VEPlayerContextKeyShowToastModule];
     [self removePayViewController];
 }
 

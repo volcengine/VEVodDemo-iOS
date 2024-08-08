@@ -342,7 +342,7 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
 }
 
 - (void)onDramaDetailVideoPlayFinish:(VEDramaVideoInfoModel *)dramaVideoInfo {
-    if (self.pageContainer.currentIndex < self.dramaVideoModels.count) {
+    if (self.pageContainer.currentIndex < (self.dramaVideoModels.count - 1) ) {
         if (dramaVideoInfo.dramaEpisodeInfo.episodeNumber == dramaVideoInfo.dramaEpisodeInfo.dramaInfo.totalEpisodeNumber) {
             if (self.selectionViewController) {
                 [self onCloseHandleCallback];

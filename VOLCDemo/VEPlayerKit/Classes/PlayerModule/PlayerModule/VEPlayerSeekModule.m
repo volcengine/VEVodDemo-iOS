@@ -69,6 +69,11 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
         NSTimeInterval playbackTime = seekState.progress * seekState.duration;
         [self.playerInterface seekToTime:playbackTime complete:nil renderComplete:nil];
     }];
+    [self.context addKey:VEPlayerContextKeySpeedTipViewShowed withObserver:self handler:^(id  _Nullable object, NSString *key) {
+        @strongify(self);
+        BOOL showSpeedTipView = [object boolValue];
+        self.sliderControlView.userInteractionEnabled = !showSpeedTipView;
+    }];
 }
 
 - (void)controlViewTemplateDidUpdate {

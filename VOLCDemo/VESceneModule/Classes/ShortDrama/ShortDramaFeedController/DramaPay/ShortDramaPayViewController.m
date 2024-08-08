@@ -9,6 +9,7 @@
 #import <Masonry/Masonry.h>
 #import "UIColor+RGB.h"
 #import "ShortDramaCachePayManager.h"
+#import <MBProgressHUD/MBProgressHUD.h>
 
 NSString * const VEDramaPaySuccessNotification = @"VEDramaPaySuccessNotification";
 
@@ -110,7 +111,15 @@ NSString * const VEDramaPaySuccessNotification = @"VEDramaPaySuccessNotification
     if (self.delegate && [self.delegate respondsToSelector:@selector(onPayingCallback:)]) {
         [self.delegate onPayingCallback:self.dramaVideoInfo];
     }
+
+    NSString *message = NSLocalizedStringFromTable(@"short_drama_pay_paying", @"VodLocalizable", nil);
+    MBProgressHUD *hud = [self showPaymentLoading:message];
+
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSString *message = NSLocalizedStringFromTable(@"short_drama_pay_success", @"VodLocalizable", nil);
+        hud.label.text = message;
+        [hud hideAnimated:YES afterDelay:2.0];
+        
         // test payment success
         [[ShortDramaCachePayManager shareInstance] cachePaidDrama:self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId episodeNumber:self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber];
         self.dramaVideoInfo.payInfo.payStatus = VEDramaPayStatus_Paid;
@@ -118,6 +127,7 @@ NSString * const VEDramaPaySuccessNotification = @"VEDramaPaySuccessNotification
         if (self.delegate && [self.delegate respondsToSelector:@selector(onPaySuccessCallback:)]) {
             [self.delegate onPaySuccessCallback:self.dramaVideoInfo];
         }
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:VEDramaPaySuccessNotification object:nil];
     });
 }
@@ -126,6 +136,14 @@ NSString * const VEDramaPaySuccessNotification = @"VEDramaPaySuccessNotification
     if (self.delegate && [self.delegate respondsToSelector:@selector(onPayCancelCallback:)]) {
         [self.delegate onPayCancelCallback:self.dramaVideoInfo];
     }
+}
+
+- (MBProgressHUD *)showPaymentLoading:(NSString *)message {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:UIApplication.sharedApplication.keyWindow animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    hud.label.text = message;
+    hud.offset = CGPointMake(0, 50);
+    return hud;
 }
 
 @end
