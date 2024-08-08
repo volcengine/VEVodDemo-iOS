@@ -261,7 +261,7 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
         if (curDramaVideoInfo.payInfo.payStatus != VEDramaPayStatus_Paid) {
             for (NSInteger i = (self.dramaVideoModels.count - 1); i >= 0; i--) {
                 VEDramaVideoInfoModel *retDramaVideoInfo = [self.dramaVideoModels objectAtIndex:i];
-                if (retDramaVideoInfo.payInfo.payStatus == VEDramaPayStatus_Paid) {
+                if ([retDramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId isEqualToString:curDramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId] &&  retDramaVideoInfo.payInfo.payStatus == VEDramaPayStatus_Paid) {
                     curDramaVideoInfo = retDramaVideoInfo;
                     break;
                 }
