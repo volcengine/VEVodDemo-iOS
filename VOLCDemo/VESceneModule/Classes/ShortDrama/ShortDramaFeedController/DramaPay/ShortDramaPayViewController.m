@@ -107,14 +107,19 @@ NSString * const VEDramaPaySuccessNotification = @"VEDramaPaySuccessNotification
 #pragma mark - Private
 
 - (void)payButtonHandle {
-    // test payment success
-    [[ShortDramaCachePayManager shareInstance] cachePaidDrama:self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId episodeNumber:self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber];
-    self.dramaVideoInfo.payInfo.payStatus = VEDramaPayStatus_Paid;
-    
-    if (self.delegate && [self.delegate respondsToSelector:@selector(onPaySuccessCallback:)]) {
-        [self.delegate onPaySuccessCallback:self.dramaVideoInfo];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onPayingCallback:)]) {
+        [self.delegate onPayingCallback:self.dramaVideoInfo];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:VEDramaPaySuccessNotification object:nil];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        // test payment success
+        [[ShortDramaCachePayManager shareInstance] cachePaidDrama:self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId episodeNumber:self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber];
+        self.dramaVideoInfo.payInfo.payStatus = VEDramaPayStatus_Paid;
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(onPaySuccessCallback:)]) {
+            [self.delegate onPaySuccessCallback:self.dramaVideoInfo];
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:VEDramaPaySuccessNotification object:nil];
+    });
 }
 
 - (void)leaveButtonHandle {

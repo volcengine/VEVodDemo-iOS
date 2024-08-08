@@ -86,11 +86,7 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
 #pragma mark - Public
 
 - (void)reloadData:(VEDramaVideoInfoModel *)dramaVideoInfo {
-    if (self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber == dramaVideoInfo.dramaEpisodeInfo.episodeNumber &&
-        [self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId isEqualToString:dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId]) {
-        return;
-    }
-    
+
     self.dramaVideoInfo = dramaVideoInfo;
     NSLog(@"drama detail reloadData %p %@ %@", self, self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId, @(self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber));
     
@@ -191,8 +187,6 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
         }];
         [self playerOptions];
         
-        [self.moduleLoader.context post:self.dramaVideoInfo forKey:VEPlayerContextKeyShortDramaDataModelChanged];
-        
         @weakify(self);
         [self.moduleLoader.context addKey:VEPlayerContextKeySpeedTipViewShowed withObserver:self handler:^(id  _Nullable object, NSString *key) {
             @strongify(self);
@@ -203,6 +197,8 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
             }];
         }];
     }
+    
+    [self.moduleLoader.context post:self.dramaVideoInfo forKey:VEPlayerContextKeyShortDramaDataModelChanged];
 }
 
 - (void)loadPlayerCover {

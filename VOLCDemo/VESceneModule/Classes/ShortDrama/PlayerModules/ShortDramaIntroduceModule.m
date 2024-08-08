@@ -18,6 +18,7 @@
 @property (nonatomic, strong) ShortDramaIntroduceView *introduceView;
 @property (nonatomic, weak) id<VEVideoPlayback> playerInterface;
 @property (nonatomic, weak) id<VEPlayerActionViewInterface> actionViewInterface;
+@property (nonatomic, weak) VEDramaVideoInfoModel *dramaVideoInfo;
 
 @end
 
@@ -40,6 +41,7 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
     @weakify(self);
     [self.context addKey:VEPlayerContextKeyShortDramaDataModelChanged withObserver:self handler:^(VEDramaVideoInfoModel *dramaVideoInfo, NSString *key) {
         @strongify(self);
+        self.dramaVideoInfo = dramaVideoInfo;
         [self.introduceView reloadData:dramaVideoInfo];
     }];
     [self.context addKey:VEPlayerContextKeySliderSeekBegin withObserver:self handler:^(id  _Nullable object, NSString *key) {
@@ -50,7 +52,6 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
         @strongify(self);
         [self.introduceView showView:YES];
     }];
-    
     [self.context addKey:VEPlayerContextKeySpeedTipViewShowed withObserver:self handler:^(id  _Nullable object, NSString *key) {
         @strongify(self);
         BOOL showSpeedTipView = [object boolValue];

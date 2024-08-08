@@ -14,6 +14,8 @@ extern NSString * const VEDramaPaySuccessNotification;
 
 @protocol ShortDramaPayViewControllerDelegate <NSObject>
 
+- (void)onPayingCallback:(VEDramaVideoInfoModel *)dramaVideoInfo;
+
 - (void)onPaySuccessCallback:(VEDramaVideoInfoModel *)dramaVideoInfo;
 
 - (void)onPayCancelCallback:(VEDramaVideoInfoModel *)dramaVideoInfo;

@@ -17,6 +17,8 @@
 #import "NSArray+BTDAdditions.h"
 #import "BTDMacros.h"
 #import "ShortDramaCachePayManager.h"
+#import <MBProgressHUD/MBProgressHUD.h>
+#import "VEPlayerUtility.h"
 
 static NSInteger VEShortDramaDetailVideoFeedPageCount = -1; // default load all
 static NSInteger VEShortDramaDetailVideoFeedLoadMoreDetection = 3;
@@ -82,12 +84,14 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
     
     [self configuratoinCustomView];
+    [self firstUpdateDramaTitle];
+    
     [self startVideoStategy];
     if (self.dramaVideoModels && self.dramaVideoModels.count > 0) {
         [self.pageContainer reloadData];
     }
     [self loadData:NO dramaId:self.fromDramaId];
-    
+ 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPaySuccessNotificationHandle:) name:VEDramaPaySuccessNotification object:nil];
 }
 
@@ -235,6 +239,14 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
 
 #pragma mark - private
 
+- (void)firstUpdateDramaTitle {
+    NSInteger episodeNumber = 1;
+    if (self.fromDramaVideoInfo) {
+        episodeNumber = self.fromDramaVideoInfo.dramaEpisodeInfo.episodeNumber;
+    }
+    self.dramaEpisodeLabel.text = [NSString stringWithFormat:@"第%@集", @(episodeNumber)];
+}
+
 - (void)updateDramaTitle {
     if (self.pageContainer.currentIndex < self.dramaVideoModels.count) {
         VEDramaVideoInfoModel *dramaVideoInfo = [self.dramaVideoModels objectAtIndex:self.pageContainer.currentIndex];
@@ -330,7 +342,20 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
 }
 
 - (void)onDramaDetailVideoPlayFinish:(VEDramaVideoInfoModel *)dramaVideoInfo {
-    if (dramaVideoInfo.dramaEpisodeInfo.episodeNumber < self.dramaVideoModels.count) {
+    if (self.pageContainer.currentIndex < self.dramaVideoModels.count) {
+        if (dramaVideoInfo.dramaEpisodeInfo.episodeNumber == dramaVideoInfo.dramaEpisodeInfo.dramaInfo.totalEpisodeNumber) {
+            if (self.selectionViewController) {
+                [self onCloseHandleCallback];
+            }
+            VEDramaVideoInfoModel *nextDrama = [self.dramaVideoModels btd_objectAtIndex:self.pageContainer.currentIndex + 1];
+            if (nextDrama) {
+                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:UIApplication.sharedApplication.keyWindow animated:YES];
+                hud.mode = MBProgressHUDModeText;
+                hud.label.text = [NSString stringWithFormat:@"本剧已看完，播放下一步：%@", nextDrama.dramaEpisodeInfo.dramaInfo.dramaTitle];
+                hud.offset = CGPointMake(0, [VEPlayerUtility portraitFullScreenBounds].size.height - 100);
+                [hud hideAnimated:YES afterDelay:1.5];
+            }
+        }
         [self.pageContainer reloadNextData];
     } else {
         [self needLoadMoreDramaVideoInfo];

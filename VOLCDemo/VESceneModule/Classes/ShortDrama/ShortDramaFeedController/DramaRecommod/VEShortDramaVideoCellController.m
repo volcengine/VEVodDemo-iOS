@@ -91,10 +91,6 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
 #pragma mark - Public
 
 - (void)reloadData:(VEDramaVideoInfoModel *)dramaVideoInfo {
-    if (self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber == dramaVideoInfo.dramaEpisodeInfo.episodeNumber &&
-        [self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId isEqualToString:dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId]) {
-        return;
-    }
     self.dramaVideoInfo = dramaVideoInfo;
     // 提前加载封面图
     [self loadPlayerCover];
@@ -169,8 +165,7 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
             make.bottom.equalTo(self.view).with.offset(-VEShortDramaVideoCellBottomOffset);
         }];
         [self playerOptions];
-        [self.moduleLoader.context post:self.dramaVideoInfo forKey:VEPlayerContextKeyShortDramaDataModelChanged];
-        
+
         @weakify(self);
         [self.moduleLoader.context addKey:VEPlayerContextKeySpeedTipViewShowed withObserver:self handler:^(id  _Nullable object, NSString *key) {
             @strongify(self);
@@ -181,6 +176,7 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
             }];
         }];
     }
+    [self.moduleLoader.context post:self.dramaVideoInfo forKey:VEPlayerContextKeyShortDramaDataModelChanged];
 }
 
 - (void)loadPlayerCover {

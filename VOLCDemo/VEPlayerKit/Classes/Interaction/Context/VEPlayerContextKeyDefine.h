@@ -24,7 +24,6 @@ extern NSString * const VEPlayerContextKeyPlaybackSpeedChanged; // TODO
 extern NSString * const VEPlayerContextKeyResolutionChanged; // TODO
 extern NSString * const VEPlayerContextKeyRadioModeChanged; // TODO
 extern NSString * const VEPlayerContextKeyScaleModeChanged; // TODO
-extern NSString * const VEPlayerContextKeyMediaInfoIDChanged; // TODO
 
 
 #pragma mark - Player control
@@ -65,6 +64,9 @@ extern NSString * const VEPlayerContextKeyDataModelChanged;
 #pragma mark - ShortDrama
 extern NSString * const VEPlayerContextKeyShortDramaDataModelChanged;
 extern NSString * const VEPlayerContextKeyShortDramaShowPayModule;
+
+#pragma mark - Toast
+extern NSString * const VEPlayerContextKeyShowToastModule;
 
 NS_ASSUME_NONNULL_END
 

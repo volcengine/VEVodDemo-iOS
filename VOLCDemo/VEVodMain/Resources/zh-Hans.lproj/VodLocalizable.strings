@@ -60,3 +60,7 @@
 "short_drama_pay_title" = "付费解锁本集";
 "short_drama_pay_button_title" = "立即支付";
 "short_drama_pay_leave_button_title" = "残忍离开";
+
+"short_drama_pay_paying" = "正在支付...";
+"short_drama_pay_success" = "支付成功";
+"short_drama_pay_cancel" = "支付取消";

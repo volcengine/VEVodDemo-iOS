@@ -76,7 +76,7 @@
 }
 
 - (void)playerStop {
-    @autoreleasepool {
+    if (self.playerController) {
         [self.playerController stop];
         [self.playerController.view removeFromSuperview];
         [self.playerController removeFromParentViewController];
@@ -87,17 +87,19 @@
 #pragma mark ----- Player
 
 - (void)createPlayer {
-    VEShortVideoPlayerModuleLoader *moduleLoader = [[VEShortVideoPlayerModuleLoader alloc] init];
-    
-    VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfiguration defaultPlayerConfiguration];
-    self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:configration moduleLoader:moduleLoader playerContainerView:self.view];
-    [self.view addSubview:self.playerController.view];
-    [self.view bringSubviewToFront:self.playerController.view];
-    [self.playerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.equalTo(self.view);
-        make.bottom.equalTo(self.view).with.offset(-80);
-    }];
-    [self playerOptions];
+    if (self.playerController == nil) {
+        VEShortVideoPlayerModuleLoader *moduleLoader = [[VEShortVideoPlayerModuleLoader alloc] init];
+        
+        VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfiguration defaultPlayerConfiguration];
+        self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:configration moduleLoader:moduleLoader playerContainerView:self.view];
+        [self.view addSubview:self.playerController.view];
+        [self.view bringSubviewToFront:self.playerController.view];
+        [self.playerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.left.right.equalTo(self.view);
+            make.bottom.equalTo(self.view).with.offset(-80);
+        }];
+        [self playerOptions];
+    }
 }
 
 - (void)loadPlayerCover {

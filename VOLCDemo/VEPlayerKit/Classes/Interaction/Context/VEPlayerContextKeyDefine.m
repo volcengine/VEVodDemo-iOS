@@ -21,8 +21,6 @@ NSString * const VEPlayerContextKeyPlaybackSpeedChanged = @"VEPlayerContextKeyPl
 NSString * const VEPlayerContextKeyResolutionChanged = @"VEPlayerContextKeyResolutionChanged";
 NSString * const VEPlayerContextKeyRadioModeChanged = @"VEPlayerContextKeyRadioModeChanged";
 NSString * const VEPlayerContextKeyScaleModeChanged = @"VEPlayerContextKeyScaleModeChanged";
-NSString * const VEPlayerContextKeyMediaInfoIDChanged = @"VEPlayerContextKeyMediaInfoIDChanged";
-
 
 #pragma mark - Player control
 NSString * const VEPlayerContextKeyControlTemplateChanged = @"VEPlayerContextKeyControlTemplateChanged";
@@ -62,5 +60,8 @@ NSString * const VEPlayerContextKeyDataModelChanged = @"VEPlayerContextKeyDataMo
 #pragma mark - ShortDrama
 NSString * const VEPlayerContextKeyShortDramaDataModelChanged = @"VEPlayerContextKeyShortDramaDataModelChanged";
 NSString * const VEPlayerContextKeyShortDramaShowPayModule = @"VEPlayerContextKeyShortDramaShowPayModule";
+
+#pragma mark - Toast
+NSString * const VEPlayerContextKeyShowToastModule = @"VEPlayerContextKeyShowToastModule";
 
 

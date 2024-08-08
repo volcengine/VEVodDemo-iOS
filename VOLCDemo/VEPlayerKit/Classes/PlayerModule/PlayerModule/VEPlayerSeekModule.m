@@ -27,7 +27,6 @@
 @property (nonatomic, weak) id<VEPlayerActionViewInterface> actionViewInterface;
 
 @property (nonatomic, strong) NSTimer *timer;
-
 @end
 
 @implementation VEPlayerSeekModule
