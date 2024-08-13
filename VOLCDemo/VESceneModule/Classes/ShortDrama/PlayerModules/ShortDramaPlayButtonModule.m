@@ -13,8 +13,6 @@
 #import "VEVideoPlayback.h"
 #import "VEDramaVideoInfoModel.h"
 
-#define DisableAutoHiddenKey_NotPlaying @"DisableAutoHiddenKey_NotPlaying"
-
 @interface ShortDramaPlayButtonModule() <VEPlayerGestureHandlerProtocol>
 
 @property (nonatomic, strong) UIButton *playButton;

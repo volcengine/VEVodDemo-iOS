@@ -11,8 +11,6 @@
 #import <Masonry/Masonry.h>
 #import "VEVideoPlayback.h"
 
-#define DisableAutoHiddenKey_NotPlaying @"DisableAutoHiddenKey_NotPlaying"
-
 @interface ShortVideoPlayButtonModule() <VEPlayerGestureHandlerProtocol>
 
 @property (nonatomic, strong) UIButton *playButton;
