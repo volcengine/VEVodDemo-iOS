@@ -19,6 +19,5 @@ Pod::Spec.new do |s|
   ]
 
   s.dependency 'TTSDKFramework/Player-SR'
-  s.dependency 'VEPlayModule'
 
 end
