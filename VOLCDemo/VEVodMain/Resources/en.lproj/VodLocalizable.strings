@@ -54,3 +54,11 @@
 
 "title_short_drama_list" = "All";
 "title_short_drama_hot" = "Hot";
+
+"short_drama_pay_title" = "Pay to unlock this episode";
+"short_drama_pay_button_title" = "Pay immediately";
+"short_drama_pay_leave_button_title" = "Leave cruelly";
+
+"short_drama_pay_paying" = "Payment in progress";
+"short_drama_pay_success" = "Payment succeeded";
+"short_drama_pay_cancel" = "Payment cancel";

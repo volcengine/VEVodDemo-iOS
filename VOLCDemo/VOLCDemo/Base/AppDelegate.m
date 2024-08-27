@@ -15,7 +15,6 @@
 #import <RangersAppLog/RangersAppLogCore.h>
 #endif
 
-
 @interface AppDelegate ()
 
 @property (nonatomic, assign) UIInterfaceOrientation screenDirection;
