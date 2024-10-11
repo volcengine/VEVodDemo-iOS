@@ -7,13 +7,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol TTVPlayerLoadingViewProtocol;
+@protocol VEPlayerLoadingViewProtocol;
 
 @interface VEPlayerLoadingModule : VEPlayerBaseModule
 
-@property (nonatomic, strong, readonly, nullable) UIView<TTVPlayerLoadingViewProtocol> *loadingView;
+@property (nonatomic, strong, readonly, nullable) UIView<VEPlayerLoadingViewProtocol> *loadingView;
 
-- (UIView<TTVPlayerLoadingViewProtocol> *)createLoadingView;
+- (UIView<VEPlayerLoadingViewProtocol> *)createLoadingView;
 
 @end
 

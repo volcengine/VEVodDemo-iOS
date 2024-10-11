@@ -14,6 +14,7 @@
 #import "ShortDramaRecommodIntroduceModule.h"
 #import "ShortDramaPlayerSpeedModule.h"
 #import "ShortDramaSeriesModule.h"
+#import "ShortDramaRecordStartTimeModule.h"
 
 @interface ShortDramaRecommodPlayerModuleLoader () <ShortDramaSeriesModuleDelegate>
 
@@ -32,6 +33,7 @@
     [coreModules addObject:[VEPlayerSeekProgressModule new]];
     [coreModules addObject:[ShortDramaRecommodIntroduceModule new]];
     [coreModules addObject:[ShortDramaPlayerSpeedModule new]];
+    [coreModules addObject:[ShortDramaRecordStartTimeModule new]];
     
     self.seriesModel = [ShortDramaSeriesModule new];
     self.seriesModel.delegate = self;

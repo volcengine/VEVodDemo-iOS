@@ -14,6 +14,7 @@
 #import "ShortDramaPlayerSpeedModule.h"
 #import "ShortDramaPayModule.h"
 #import "ShortDramaPlayerToastModule.h"
+#import "ShortDramaRecordStartTimeModule.h"
 
 @interface ShortDramaDetailPlayerModuleLoader () <ShortDramaSelectionModuleDelegate>
 
@@ -39,6 +40,7 @@
     [coreModules addObject:[ShortDramaPlayerSpeedModule new]];
     [coreModules addObject:[ShortDramaPayModule new]];
     [coreModules addObject:[ShortDramaPlayerToastModule new]];
+    [coreModules addObject:[ShortDramaRecordStartTimeModule new]];
     return coreModules;
 }
 

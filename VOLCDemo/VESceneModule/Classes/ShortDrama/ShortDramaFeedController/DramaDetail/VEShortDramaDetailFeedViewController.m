@@ -91,46 +91,6 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
         [self.pageContainer reloadData];
     }
     [self loadData:NO dramaId:self.fromDramaId];
- 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPaySuccessNotificationHandle:) name:VEDramaPaySuccessNotification object:nil];
-}
-
-#pragma mark - Pay Success
-
-- (void)onPaySuccessNotificationHandle:(NSNotification *)notification {
-    if (self.isLoadingData) {
-        return;
-    }
-    self.isLoadingData = YES;
-    VEDramaVideoInfoModel *dramaVideoInfo = [self.dramaVideoModels btd_objectAtIndex:self.pageContainer.currentIndex];
-    if (dramaVideoInfo) {
-        @weakify(self);
-        [VEDramaDataManager requestDramaEpisodeList:dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId episodeNumber:dramaVideoInfo.dramaEpisodeInfo.episodeNumber offset:0 pageSize:VEShortDramaDetailVideoFeedPageCount result:^(id  _Nullable responseData, NSString * _Nullable errorMsg) {
-            @strongify(self);
-            btd_dispatch_async_on_main_queue(^{
-                if (!errorMsg) {
-                    // response drama data
-                    NSArray<VEDramaVideoInfoModel *> *resArray = (NSArray *)responseData;
-
-                    for (VEDramaVideoInfoModel *dramaVideoInfo in resArray) {
-                        for (NSInteger i = 0; i < self.dramaVideoModels.count; i++) {
-                            VEDramaVideoInfoModel *targetVideoInfo = [self.dramaVideoModels objectAtIndex:i];
-                            if ([dramaVideoInfo.videoId isEqualToString:targetVideoInfo.videoId]) {
-                                [self.dramaVideoModels replaceObjectAtIndex:i withObject:dramaVideoInfo];
-                                break;
-                            }
-                        }
-                    }
-                    [self.pageContainer reloadData];
-                } else {
-                    BTDLog(@"request pay data error, please try again later.");
-                }
-                self.isLoadingData = NO;
-            });
-        }];
-    } else {
-        self.isLoadingData = NO;
-    }
 }
 
 #pragma mark ----- UI

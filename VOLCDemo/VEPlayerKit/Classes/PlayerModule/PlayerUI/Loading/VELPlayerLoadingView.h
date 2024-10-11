@@ -1,19 +1,16 @@
 //
 //  VELPlayerLoadingView.h
-//  Article
-//
-//  Created by panxiang on 2018/10/12.
-//
+//  
 
 #import <UIKit/UIKit.h>
 
-@protocol TTVPlayerLoadingViewDataSource <NSObject>
+@protocol VEPlayerLoadingViewDataSource <NSObject>
 /// 网速信息
 - (NSString *)netWorkSpeedInfo;
 @end
 
 
-@protocol TTVPlayerLoadingViewProtocol <NSObject>
+@protocol VEPlayerLoadingViewProtocol <NSObject>
 
 - (void)startLoading;
 - (void)stopLoading;
@@ -28,7 +25,7 @@
 /// 刷新网速时间间隔，单位s，显示网速才会生效，默认1s
 @property (nonatomic, assign) NSTimeInterval refreshNetSpeedTipTimeInternal;
 /// 数据源代理
-@property (nonatomic, weak) id<TTVPlayerLoadingViewDataSource> dataSource;
+@property (nonatomic, weak) id<VEPlayerLoadingViewDataSource> dataSource;
 
 /// 配置loading提示
 /// @param text text
@@ -38,7 +35,7 @@
 
 @end
 
-@interface VELPlayerLoadingView : UIView<TTVPlayerLoadingViewProtocol>
+@interface VELPlayerLoadingView : UIView<VEPlayerLoadingViewProtocol>
 
 @property (nonatomic) BOOL isLoading;
 
