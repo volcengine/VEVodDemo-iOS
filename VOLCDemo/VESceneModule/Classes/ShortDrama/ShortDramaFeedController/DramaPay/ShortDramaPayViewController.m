@@ -11,8 +11,6 @@
 #import "ShortDramaCachePayManager.h"
 #import <MBProgressHUD/MBProgressHUD.h>
 
-NSString * const VEDramaPaySuccessNotification = @"VEDramaPaySuccessNotification";
-
 @interface ShortDramaPayViewController ()
 
 @property (nonatomic, strong) UILabel *priceLabel;
@@ -127,8 +125,6 @@ NSString * const VEDramaPaySuccessNotification = @"VEDramaPaySuccessNotification
         if (self.delegate && [self.delegate respondsToSelector:@selector(onPaySuccessCallback:)]) {
             [self.delegate onPaySuccessCallback:self.dramaVideoInfo];
         }
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:VEDramaPaySuccessNotification object:nil];
     });
 }
 

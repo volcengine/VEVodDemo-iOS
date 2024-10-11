@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol TTPlayerContextDIService <NSObject>
+@protocol VEPlayerContextDIService <NSObject>
 
 /**
  * @locale zh

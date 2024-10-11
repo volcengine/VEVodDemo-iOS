@@ -1,8 +1,5 @@
 //
 //  VELPlayerLoadingView.m
-//  Article
-//
-//  Created by panxiang on 2018/10/12.
 //
 
 #import "VELPlayerLoadingView.h"
