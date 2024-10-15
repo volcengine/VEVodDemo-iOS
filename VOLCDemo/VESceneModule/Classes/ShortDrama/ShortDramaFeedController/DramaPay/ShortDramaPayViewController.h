@@ -10,8 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString * const VEDramaPaySuccessNotification;
-
 @protocol ShortDramaPayViewControllerDelegate <NSObject>
 
 - (void)onPayingCallback:(VEDramaVideoInfoModel *)dramaVideoInfo;

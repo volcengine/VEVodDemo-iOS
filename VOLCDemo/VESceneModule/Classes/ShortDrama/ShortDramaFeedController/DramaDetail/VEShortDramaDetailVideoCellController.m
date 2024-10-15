@@ -86,24 +86,10 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
 #pragma mark - Public
 
 - (void)reloadData:(VEDramaVideoInfoModel *)dramaVideoInfo {
-
     self.dramaVideoInfo = dramaVideoInfo;
-    NSLog(@"drama detail reloadData %p %@ %@", self, self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId, @(self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber));
     
     // 提前加载封面图
     [self loadPlayerCover];
-}
-
-- (void)recordStartTime {
-    if (self.playerController) {
-        NSInteger curTime = self.playerController.currentPlaybackTime;
-        NSInteger duration = self.playerController.duration;
-        if (curTime && duration && (duration - curTime > 5)) {
-            self.dramaVideoInfo.startTime = curTime;
-        } else {
-            self.dramaVideoInfo.startTime = 0;
-        }
-    }
 }
 
 #pragma mark - ShortDramaDetailPlayerModuleLoaderDelegate
@@ -133,22 +119,17 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
     if (self.delegate && [self.delegate respondsToSelector:@selector(onDramaDetailVideoPlayStart:)]) {
         [self.delegate onDramaDetailVideoPlayStart:self.dramaVideoInfo];
     }
-    NSLog(@"drama detail play %p %@ %@", self, self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId, @(self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber));
 }
 
 - (void)playerStop {
     if (self.playerController) {
-        NSLog(@"drama detail stop %p %@ %@", self, self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId, @(self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber));
-        
         // 处理无缝切换
         if ([[VEPlayerUtility lm_topmostViewController] isKindOfClass:[VEShortDramaDetailFeedViewController class]]) {
-            [self recordStartTime];
             [self.playerController stop];
         } else {
             UIViewController *topViewController = [VEPlayerUtility lm_topmostViewController];
             if ([topViewController isKindOfClass:[VEShortDramaPagingViewController class]]) {
                 if ([(VEShortDramaPagingViewController *)topViewController currentPage] == VEShortDramaTypeDrama) {
-                    [self recordStartTime];
                     [self.playerController stop];
                 }
             }
@@ -167,13 +148,9 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
 
 - (void)createPlayer {
     if (self.playerController == nil) {
-        NSLog(@"drama detail create %p %@ %@", self, self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId, @(self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber));
         self.moduleLoader = [[ShortDramaDetailPlayerModuleLoader alloc] init];
         self.moduleLoader.delegate = self;
         VEVideoPlayerConfiguration *playerConfig = [VEVideoPlayerConfiguration defaultPlayerConfiguration];
-        if (self.dramaVideoInfo.startTime > 0) {
-            playerConfig.startTime = self.dramaVideoInfo.startTime;
-        }
 
         self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:playerConfig moduleLoader:self.moduleLoader playerContainerView:self.view];
         self.playerController.delegate = self;
@@ -221,14 +198,13 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
 #pragma mark - VEVideoPlaybackDelegate
 
 - (void)videoPlayer:(id<VEVideoPlayback> _Nullable)player playbackStateDidChange:(VEVideoPlaybackState)state {
-    BTDLog(@"playbackStateDidChange11 %@ %@", @(state), @(self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber));
+    BTDLog(@"playbackStateDidChange %@ %@", @(state), @(self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber));
 }
 
 - (void)videoPlayer:(id<VEVideoPlayback> _Nullable)player didFinishedWithStatus:(VEPlayFinishStatus *_Nullable)finishStatus {
     if (finishStatus.error) {
-        NSLog(@"播放失败::%@", finishStatus.error);
+        BTDLog(@"play error::%@", finishStatus.error);
     } else {
-        [self recordStartTime];
         if (finishStatus.finishState == VEVideoPlayFinishStatusType_SystemFinish) {
             if (self.delegate && [self.delegate respondsToSelector:@selector(onDramaDetailVideoPlayFinish:)]) {
                 [self.delegate onDramaDetailVideoPlayFinish:self.dramaVideoInfo];

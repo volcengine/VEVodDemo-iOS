@@ -96,18 +96,6 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
     [self loadPlayerCover];
 }
 
-- (void)recordStartTime {
-    if (self.playerController) {
-        NSInteger curTime = self.playerController.currentPlaybackTime;
-        NSInteger duration = self.playerController.duration;
-        if (curTime && duration && (duration - curTime > 5)) {
-            self.dramaVideoInfo.startTime = curTime;
-        } else {
-            self.dramaVideoInfo.startTime = 0;
-        }
-    }
-}
-
 #pragma mark ----- Play
 
 - (void)playerStart {
@@ -129,7 +117,6 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
     if (self.playerController) {
         // 处理无缝续播
         if (!self.continuePlay) {
-            [self recordStartTime];
             [self.playerController stop];
         }
         [self.collectViewController removeFromParentViewController];
@@ -151,9 +138,6 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
         self.moduleLoader.delegate = self;
         
         VEVideoPlayerConfiguration *playerConfig = [VEVideoPlayerConfiguration defaultPlayerConfiguration];
-        if (self.dramaVideoInfo.startTime > 0) {
-            playerConfig.startTime = self.dramaVideoInfo.startTime;
-        }
         self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:playerConfig moduleLoader:self.moduleLoader playerContainerView:self.view];
         self.playerController.delegate = self;
         self.playerController.videoViewMode = VEVideoViewModeAspectFill;
@@ -215,7 +199,6 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
     if (finishStatus.error) {
         BTDLog(@"paly error %@", finishStatus.error);
     } else {
-        [self recordStartTime];
         if (finishStatus.finishState == VEVideoPlayFinishStatusType_SystemFinish) {
             if (self.delegate && [self.delegate respondsToSelector:@selector(onDramaDetailVideoPlayFinish:)]) {
                 [self.delegate onDramaDetailVideoPlayFinish:self.dramaVideoInfo];

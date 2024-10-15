@@ -8,7 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface VEPlayerContextDI : NSObject <TTPlayerContextDIService>
+@interface VEPlayerContextDI : NSObject <VEPlayerContextDIService>
 
 @end
 

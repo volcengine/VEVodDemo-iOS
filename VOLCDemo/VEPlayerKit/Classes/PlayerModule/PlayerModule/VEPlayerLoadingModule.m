@@ -14,9 +14,9 @@
 #import "VEPlayerGestureServiceInterface.h"
 #import "VEVideoPlayback.h"
 
-@interface VEPlayerLoadingModule () <TTVPlayerLoadingViewDataSource>
+@interface VEPlayerLoadingModule () <VEPlayerLoadingViewDataSource>
 
-@property (nonatomic, strong, readwrite) UIView<TTVPlayerLoadingViewProtocol> *loadingView;
+@property (nonatomic, strong, readwrite) UIView<VEPlayerLoadingViewProtocol> *loadingView;
 
 @property (nonatomic, weak) id<VEVideoPlayback> playerInterface;
 
@@ -30,7 +30,7 @@
 
 @property (nonatomic, assign) BOOL isLoading; // 播放器是否处于loading状态
 
-@property (nonatomic, strong) Class<TTVPlayerLoadingViewProtocol> noNetworTipClass;
+@property (nonatomic, strong) Class<VEPlayerLoadingViewProtocol> noNetworTipClass;
 
 @property(nonatomic, strong) id<VEPlayerGestureHandlerProtocol> disableAllGestureHandler;
 
@@ -156,7 +156,7 @@ VEPlayerContextDILink(gestureService, VEPlayerGestureServiceInterface, self.cont
 
 #pragma mark - getter & setter
 
-- (UIView<TTVPlayerLoadingViewProtocol> *)createLoadingView {
+- (UIView<VEPlayerLoadingViewProtocol> *)createLoadingView {
     VELPlayerLoadingView *loadingView = [[VELPlayerLoadingView alloc] init];
     loadingView.isFullScreen = [[self.context objectForHandlerKey:VEPlayerContextKeyRotateScreen] isFullScreen];
     loadingView.showNetSpeedTip = [self.context boolForHandlerKey:VEPlayerContextKeyShowLoadingNetWorkSpeed];
@@ -164,7 +164,7 @@ VEPlayerContextDILink(gestureService, VEPlayerGestureServiceInterface, self.cont
     return loadingView;
 }
 
-#pragma mark - TTVPlayerLoadingViewDataSource
+#pragma mark - VEPlayerLoadingViewDataSource
 
 - (NSString *)netWorkSpeedInfo {
     return [VEPlayerUtility netWorkSpeedStringWithKBPerSeconds:self.playerInterface.netWorkSpeed];

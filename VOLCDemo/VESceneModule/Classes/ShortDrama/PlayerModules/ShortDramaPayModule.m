@@ -92,6 +92,9 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
 
 - (void)onPaySuccessCallback:(VEDramaVideoInfoModel *)dramaVideoInfo {
     [self removePayViewController];
+    self.dramaVideoInfo = dramaVideoInfo;
+    [self.playerInterface playWithMediaSource:[VEDramaVideoInfoModel toVideoEngineSource:dramaVideoInfo]];
+    [self.playerInterface play];
 }
 
 - (void)onPayCancelCallback:(VEDramaVideoInfoModel *)dramaVideoInfo {

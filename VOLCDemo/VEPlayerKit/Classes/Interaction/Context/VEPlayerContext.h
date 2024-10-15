@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface VEPlayerContext (DIService) <TTPlayerContextDIService>
+@interface VEPlayerContext (DIService) <VEPlayerContextDIService>
 
 @end
 
