@@ -57,6 +57,8 @@ extern NSString *const VEUIEventShowPlaySpeedMenu;
 
 extern NSString *const VEUIEventLockScreen;
 
+extern NSString *const VEUIEventStartPip;
+
 extern NSString *const VEUIEventScreenLockStateChanged;
 
 extern NSString *const VEUIEventClearScreen;

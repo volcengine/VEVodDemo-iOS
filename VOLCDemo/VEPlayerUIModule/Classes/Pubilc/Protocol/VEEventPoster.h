@@ -38,6 +38,8 @@ extern NSString *const VEUIEventScreenRotation;
 extern NSString *const VEUIEventPageBack;
 // VEInterface should lock, param -> VEEventPoster.screenIsLocking
 extern NSString *const VEUIEventLockScreen;
+// VEInterface pip, param -> VEEventPoster.startPip
+extern NSString *const VEUIEventStartPip;
 // VEInterface should clear, param -> VEEventPoster.screenIsClear
 extern NSString *const VEUIEventClearScreen;
 // VEInterface should show slide menu.

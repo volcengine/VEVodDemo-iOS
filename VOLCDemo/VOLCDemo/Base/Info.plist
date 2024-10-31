@@ -30,7 +30,9 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
-	<array/>
+	<array>
+		<string>audio</string>
+	</array>
 	<key>UILaunchImageFile</key>
 	<string>LaunchImage</string>
 	<key>UILaunchStoryboardName</key>
