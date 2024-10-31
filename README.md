@@ -15,10 +15,10 @@
     ├── TTSDK   // 火山引擎SDK（点播SDK载体）
         ...
     ├── VEVodMain           // App入口（VEMainViewController）
-    ├── VEPlayModule        // 火山引擎场景模块（短、中、长视频模块示例, 新版本新增短剧场景）
-    ├── VEPlayerKit         // 火山引擎点播播放器封装层
-    ├── VEPlayerUIModule    // 火山引擎点播UI控件封装层
-    ├── VESceneKit          // 火山引擎短视频业务场景框架    
+    ├── VEBaseKit           // 基础组件
+    ├── VEPlayerKit         // 点播播放器控件
+    ├── VEPlayerUIModule    // 点播UI控件封装层
+    ├── VESceneModule       // 场景模块（短、中、长视频模块示例, 新版本新增短剧场景）    
 ```
 
 

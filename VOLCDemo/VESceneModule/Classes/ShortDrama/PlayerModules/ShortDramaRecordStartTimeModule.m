@@ -16,6 +16,7 @@
 
 @property (nonatomic, weak) id<VEVideoPlayback> playerInterface;
 @property (nonatomic, weak) VEDramaVideoInfoModel *dramaVideoInfo;
+@property (nonatomic, assign) BOOL isPlayed;
 
 @end
 
@@ -41,7 +42,7 @@ VEPlayerContextDILink(playerInterface, VEVideoPlayback, self.context);
         @strongify(self);
         [self setPlayerStartTime];
     }];
-    [self.context addKeys:@[VEPlayerContextKeyStopAction, VEPlayerContextKeyPlaybackDidFinish] withObserver:self handler:^(id  _Nullable object, NSString *key) {
+    [self.context addKeys:@[VEPlayerContextKeyStopAction, VEPlayerContextKeyPlaybackDidFinish, VEPlayerContextKeyPauseAction] withObserver:self handler:^(id  _Nullable object, NSString *key) {
         @strongify(self);
         [self recordStartTime];
     }];
@@ -71,10 +72,13 @@ VEPlayerContextDILink(playerInterface, VEVideoPlayback, self.context);
 }
 
 - (void)setPlayerStartTime {
-    NSString *cacheKey = [NSString stringWithFormat:@"%@_%@", self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId, @(self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber)];
-    NSInteger startTime = [[[VELRUCache shareInstance] getValueForKey:cacheKey] integerValue];
-    if (startTime > 0) {
-        self.playerInterface.startTime = startTime;
+    if (!self.isPlayed) {
+        self.isPlayed = YES;
+        NSString *cacheKey = [NSString stringWithFormat:@"%@_%@", self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId, @(self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber)];
+        NSInteger startTime = [[[VELRUCache shareInstance] getValueForKey:cacheKey] integerValue];
+        if (startTime > 0) {
+            self.playerInterface.startTime = startTime;
+        }
     }
 }
 
