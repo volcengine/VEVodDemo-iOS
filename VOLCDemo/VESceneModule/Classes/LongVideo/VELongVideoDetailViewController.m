@@ -104,6 +104,9 @@
 - (VEVideoPlayerController *)playerController {
     if (!_playerController) {
         VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfiguration defaultPlayerConfiguration];
+		if (@available(iOS 15.0, *)) {
+			configration.enablePip = YES;
+		}
         _playerController = [[VEVideoPlayerController alloc] initWithConfiguration:configration];
     }
     return _playerController;
@@ -136,6 +139,10 @@
     UIDeviceOrientation oriention = ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) ? UIDeviceOrientationLandscapeRight : UIDeviceOrientationPortrait;
     [self setDeviceInterfaceOrientation:oriention];
     [self layoutUI];
+}
+
+- (void)interfaceCallStartPip:(UIView *)interface {
+	[self.playerController startPip];
 }
 
 

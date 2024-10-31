@@ -17,6 +17,8 @@ NSString *const VEUIEventPageBack = @"VEUIEventPageBack";
 
 NSString *const VEUIEventLockScreen = @"VEUIEventLockScreen";
 
+NSString *const VEUIEventStartPip = @"VEUIEventStartPip";
+
 NSString *const VEUIEventClearScreen = @"VEUIEventClearScreen";
 
 @implementation VEInterfaceArea

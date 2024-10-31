@@ -31,6 +31,8 @@ static NSString *moreButtonIdentifier = @"moreButtonIdentifier";
 
 static NSString *lockButtonIdentifier = @"lockButtonIdentifier";
 
+static NSString *pipButtonIdentifier = @"pipButtonIdentifier";
+
 static NSString *titleLabelIdentifier = @"titleLabelIdentifier";
 
 static NSString *loopPlayButtonIdentifier = @"loopPlayButtonIdentifier";
@@ -397,6 +399,44 @@ static inline CGSize squareSize () {
     });
 }
 
+- (VEInterfaceElementDescriptionImp *)pipButton {
+	return ({
+		VEInterfaceElementDescriptionImp *pipButtonDes = [VEInterfaceElementDescriptionImp new];
+		pipButtonDes.elementID = pipButtonIdentifier;
+		pipButtonDes.type = VEInterfaceElementTypeButton;
+		pipButtonDes.elementDisplay = ^(VEActionButton *button) {
+			if (@available(iOS 13.0, *)) {
+				[button setImage:[UIImage systemImageNamed:@"pip.enter"] forState:UIControlStateNormal];
+				[button setTintColor:UIColor.whiteColor];
+			} else {
+				// Fallback on earlier versions
+			}
+		};
+		pipButtonDes.elementAction = ^NSString* (VEActionButton *button) {
+			return VEUIEventStartPip;
+		};
+		pipButtonDes.elementNotify = ^id (VEActionButton *button, NSString *key, id obj) {
+			BOOL screenIsClear = [[VEEventPoster currentPoster] screenIsClear];
+			BOOL screenIsLocking = [[VEEventPoster currentPoster] screenIsLocking];
+			if ([key isEqualToString:VEUIEventScreenClearStateChanged]) {
+				button.hidden = screenIsLocking ?: screenIsClear;
+			} else if ([key isEqualToString:VEUIEventScreenLockStateChanged]) {
+				button.hidden = screenIsLocking;
+			}
+			return @[VEUIEventScreenClearStateChanged, VEUIEventScreenLockStateChanged];;
+		};
+		pipButtonDes.elementWillLayout = ^(UIView *elementView, NSSet<UIView *> *elementGroup, UIView *groupContainer) {
+			UIView *backBtn = [self viewOfElementIdentifier:backButtonIdentifier inGroup:elementGroup];
+			[elementView mas_remakeConstraints:^(MASConstraintMaker *make) {
+				make.leading.equalTo(backBtn);
+				make.top.equalTo(groupContainer.mas_centerY).offset(20);
+				make.size.equalTo(@(squareSize()));
+			}];
+		};
+		pipButtonDes;
+	});
+}
+
 - (VEInterfaceElementDescriptionImp *)titleLabel {
     return ({
         VEInterfaceElementDescriptionImp *titleLabelDes = [VEInterfaceElementDescriptionImp new];
@@ -548,6 +588,7 @@ static inline CGSize squareSize () {
     [elements addObject:[self playSpeedButton]];
     [elements addObject:[self moreButton]];
     [elements addObject:[self lockButton]];
+	[elements addObject:[self pipButton]];
     [elements addObject:[self titleLabel]];
     [elements addObject:[self loopPlayButton]];
     [elements addObject:[self volumeGesture]];

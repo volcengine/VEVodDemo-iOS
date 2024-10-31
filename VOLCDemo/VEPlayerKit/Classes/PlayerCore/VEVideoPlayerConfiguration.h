@@ -35,6 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 开启下载速度
 @property (nonatomic, assign) BOOL enableLoadSpeed;
 
+// Pipture in picture , supported on iOS15+
+@property (nonatomic, assign) BOOL enablePip;
+
 + (VEVideoPlayerConfiguration *)defaultPlayerConfiguration;
 
 @end

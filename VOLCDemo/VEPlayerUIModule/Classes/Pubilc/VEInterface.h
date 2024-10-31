@@ -20,6 +20,8 @@
 
 - (void)interfaceCallScreenRotation:(UIView *)interface;
 
+- (void)interfaceCallStartPip:(UIView *)interface;
+
 - (void)interfaceCallPageBack:(UIView *)interface;
 
 - (void)interfaceShouldEnableSlide:(BOOL)enable;

@@ -56,7 +56,7 @@ extern NSString *const VEPlayProgressSliderGestureEnable;
 - (void)registEvents {
     [[VEEventMessageBus universalBus] registEvent:VEUIEventScreenRotation withAction:@selector(screenRotationAction:) ofTarget:self];
     [[VEEventMessageBus universalBus] registEvent:VEUIEventPageBack withAction:@selector(pageBackAction:) ofTarget:self];
-    
+	[[VEEventMessageBus universalBus] registEvent:VEUIEventStartPip withAction:@selector(startPipAction:) ofTarget:self];
     [[VEEventMessageBus universalBus] registEvent:VEPlayProgressSliderGestureEnable withAction:@selector(sliderAction:) ofTarget:self];
 }
 
@@ -84,6 +84,12 @@ extern NSString *const VEPlayProgressSliderGestureEnable;
     if ([self.delegate respondsToSelector:@selector(interfaceCallScreenRotation:)]) {
         [self.delegate interfaceCallScreenRotation:self];
     }
+}
+
+- (void)startPipAction:(id)param {
+	if ([self.delegate respondsToSelector:@selector(interfaceCallStartPip:)]) {
+		[self.delegate interfaceCallStartPip:self];
+	}
 }
 
 - (void)pageBackAction:(id)param {

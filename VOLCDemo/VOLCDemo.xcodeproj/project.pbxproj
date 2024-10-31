@@ -126,14 +126,12 @@
 			buildConfigurationList = 2BEC93DB2657907400C64503 /* Build configuration list for PBXNativeTarget "VOLCDemo" */;
 			buildPhases = (
 				3C783863794F104C62A02C9E /* [CP] Check Pods Manifest.lock */,
-				FA338AA4EF067EA26915C8E6 /* [CP-User] Hummer-before-hooks */,
 				2BEC93BE2657907300C64503 /* Sources */,
 				2BEC93BF2657907300C64503 /* Frameworks */,
 				2BEC93C02657907300C64503 /* Resources */,
 				7ECE482F4A5502C5B185868F /* [CP] Copy Pods Resources */,
 				93072FCB55305E80C28B1036 /* [CP] Embed Pods Frameworks */,
 				2BEF203B28CAE58C00B55D34 /* Embed Frameworks */,
-				07D2910541CE473AE7F8FA1F /* [CP-User] Hummer-after-hooks */,
 			);
 			buildRules = (
 			);
@@ -190,16 +188,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		07D2910541CE473AE7F8FA1F /* [CP-User] Hummer-after-hooks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "[CP-User] Hummer-after-hooks";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ -f \"${PODS_ROOT}/hummer_after_hooks.sh\" ];then\n  bash \"${PODS_ROOT}/hummer_after_hooks.sh\"\nfi\n";
-		};
 		3C783863794F104C62A02C9E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -228,11 +216,9 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-VOLCDemo/Pods-VOLCDemo-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-VOLCDemo/Pods-VOLCDemo-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -245,26 +231,14 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-VOLCDemo/Pods-VOLCDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-VOLCDemo/Pods-VOLCDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-VOLCDemo/Pods-VOLCDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		FA338AA4EF067EA26915C8E6 /* [CP-User] Hummer-before-hooks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "[CP-User] Hummer-before-hooks";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ -f \"${PODS_ROOT}/hummer_before_hooks.sh\" ];then\n  bash \"${PODS_ROOT}/hummer_before_hooks.sh\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

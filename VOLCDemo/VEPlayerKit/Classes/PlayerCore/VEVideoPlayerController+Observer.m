@@ -10,10 +10,10 @@
 #import <Reachability/Reachability.h>
 #import <objc/runtime.h>
 
+
 @implementation VEVideoPlayerController (Observer)
 
 @dynamic needResumePlay;
-
 
 #pragma mark - Observer
 
@@ -21,6 +21,8 @@
     [self removeObserver];
     [[Reachability reachabilityForInternetConnection] startNotifier];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(netStatusChanged) name:kReachabilityChangedNotification object:nil];
+	
+//	 画中画场景 不再控制后台暂停
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterBackground) name: UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActiveNotification) name: UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willResignActiveNotification) name: UIApplicationWillResignActiveNotification object:nil];
@@ -62,6 +64,9 @@
 }
 
 - (void)applicationEnterBackground {
+	if (self.playerConfig.enablePip) {
+		return;
+	}
     if ([self isPlaying]) {
         self.needResumePlay = YES;
     }
@@ -69,6 +74,9 @@
 }
 
 - (void)willResignActiveNotification {
+	if (self.playerConfig.enablePip) {
+		return;
+	}
     if ([self isPlaying]) {
         self.needResumePlay = YES;
     }
@@ -76,6 +84,9 @@
 }
 
 - (void)didBecomeActiveNotification {
+	if (self.playerConfig.enablePip) {
+		return;
+	}
     if (self.needResumePlay) {
         [self play];
     }

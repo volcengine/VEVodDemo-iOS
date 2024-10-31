@@ -23,6 +23,19 @@
 #import "ShortDramaDetailPlayerModuleLoader.h"
 #import "VEVideoEnginePool.h"
 #import "BTDMacros.h"
+#import <AVKit/AVKit.h>
+
+@interface VEVideoPlayerDisplayView : UIView
+
+@end
+
+@implementation VEVideoPlayerDisplayView
+
++ (Class)layerClass {
+  return [AVSampleBufferDisplayLayer class];
+}
+
+@end
 
 @implementation VEPreRenderVideoEngineMediatorDelegate
 
@@ -55,7 +68,9 @@ VEVideoPlaybackDelegate,
 TTVideoEngineDelegate,
 TTVideoEngineDataSource,
 TTVideoEngineResolutionDelegate,
-TTVideoEnginePreloadDelegate>
+TTVideoEnginePreloadDelegate,
+AVPictureInPictureControllerDelegate,
+AVPictureInPictureSampleBufferPlaybackDelegate>
 
 @property (nonatomic, strong) VEVideoPlayerConfiguration *playerConfig;
 @property (nonatomic, strong) TTVideoEngine *videoEngine;
@@ -72,6 +87,11 @@ TTVideoEnginePreloadDelegate>
 @property (nonatomic, strong) VEPlayerContext *context;
 
 @property (nonatomic, strong) VEPlayerInteraction<VEPlayerInteractionPlayerProtocol> *interaction;
+
+// Pip
+@property (nonatomic, strong) AVPictureInPictureController *pipController;
+@property (nonatomic, strong) AVSampleBufferDisplayLayer *displayLayer;
+@property (nonatomic, strong) VEVideoPlayerDisplayView *displayView;
 
 @end
 
@@ -133,14 +153,6 @@ TTVideoEnginePreloadDelegate>
     [self.interaction removeAllModules];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -152,6 +164,16 @@ TTVideoEnginePreloadDelegate>
         self.interaction.playerContainerView = self.playerContainerView;
         [self.interaction viewDidLoad]; //分发生命周期
     }
+	
+	if (self.playerConfig.enablePip) {
+		[self __setupPipEnv];
+	}
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+	[super viewDidDisappear:animated];
+	[self __resetPipController];
+	[self __resetDisplayView];
 }
 
 - (void)createVideoEngine:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource needPrerenderEngine:(BOOL)needPrerender {
@@ -159,6 +181,10 @@ TTVideoEnginePreloadDelegate>
         @weakify(self);
         [[VEVideoEnginePool shareInstance] createVideoEngine:mediaSource needPrerenderEngine:needPrerender block:^(TTVideoEngine * _Nullable engine, VECreateEngineFrom engineFrom) {
             @strongify(self);
+			// Pip 
+			[engine setOptionForKey:VEKKeyPlayerLoopWay_NSInteger value:@1];
+			[engine setSupportPictureInPictureMode:YES];
+
             self.videoEngine = engine;
             self.engineFrom = engineFrom;
             if (engineFrom == VECreateEngineFrom_Init) {
@@ -172,6 +198,245 @@ TTVideoEnginePreloadDelegate>
     }
     _mediaSource = mediaSource;
     [self configurationVideoEngine];
+	
+	if (self.playerConfig.enablePip) {
+		[self __startObserveVideoFrame];
+	}
+}
+
+#pragma mark - Pip
+
+- (void)__setupPipEnv {
+	[self __setupDisplayerView];
+	[self __setupPipController];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(didBecomeActiveNotification)
+												 name: UIApplicationDidBecomeActiveNotification
+											   object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(didLockScreen:)
+												 name:UIApplicationProtectedDataWillBecomeUnavailable
+											   object:nil];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(didUnLockScreen:)
+												 name:UIApplicationProtectedDataDidBecomeAvailable
+											   object:nil];
+}
+
+- (void)__setupDisplayerView {
+	self.displayView = [[VEVideoPlayerDisplayView alloc] init];
+	self.displayView.userInteractionEnabled = NO;
+	self.displayView.clipsToBounds = YES;
+	self.displayLayer = (AVSampleBufferDisplayLayer *)self.displayView.layer;
+	self.displayLayer.opaque = YES;
+	self.displayLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+	[self.view insertSubview:self.displayView aboveSubview:self.posterImageView];
+	[self.displayView mas_makeConstraints:^(MASConstraintMaker *make) {
+		make.edges.equalTo(self.view);
+	}];
+}
+
+- (void)__resetDisplayView {
+	[self.displayView removeFromSuperview];
+	[self.displayLayer stopRequestingMediaData];
+	self.displayView = nil;
+}
+
+- (void)__setupPipController {
+	[self __updateAudioSession];
+	AVPictureInPictureControllerContentSource *contentSource = [[AVPictureInPictureControllerContentSource alloc] initWithSampleBufferDisplayLayer:self.displayLayer playbackDelegate:self];
+	self.pipController = [[AVPictureInPictureController alloc] initWithContentSource:contentSource];
+	self.pipController.canStartPictureInPictureAutomaticallyFromInline = YES;
+	self.pipController.requiresLinearPlayback = YES;
+	self.pipController.delegate = self;
+}
+
+- (void)__resetPipController {
+	if (@available(iOS 15.0, *)) {
+		[self.pipController stopPictureInPicture];
+		[self.pipController invalidatePlaybackState];
+		self.pipController = nil;
+	}
+}
+
+- (void)__updateAudioSession {
+	AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+	NSError *categoryError = nil;
+	[audioSession setCategory:AVAudioSessionCategoryPlayback
+						 mode:AVAudioSessionModeMoviePlayback
+					  options:AVAudioSessionCategoryOptionOverrideMutedMicrophoneInterruption error:&categoryError];
+	if (categoryError) {
+		NSLog(@"volc--set audio session category error: %@", categoryError.localizedDescription);
+	}
+	NSError *activeError = nil;
+	[audioSession setActive:YES error:&activeError];
+	if (activeError) {
+		NSLog(@"volc--set audio session active error: %@", activeError.localizedDescription);
+	}
+}
+
+- (void)__startObserveVideoFrame {
+	EngineVideoWrapper *wrapper = malloc(sizeof(EngineAudioWrapper));
+	wrapper->process = process;
+	wrapper->release = release;
+	wrapper->context = (__bridge void *)self;
+	[self.videoEngine setVideoWrapper:wrapper];
+}
+
+- (void)startPip {
+	if (self.playerConfig.enablePip) {
+		if (self.pipController.isPictureInPictureActive) {
+			[self.pipController stopPictureInPicture];
+		} else {
+			[self.pipController startPictureInPicture];
+		}
+	} else {
+		UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Tips"
+																				message:@"Only Support iOS15+"
+																		 preferredStyle:UIAlertControllerStyleAlert];
+		UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+		[alertController addAction:okAction];
+		[self presentViewController:alertController animated:YES completion:nil];
+	}
+}
+
+- (void)__dispatchPixelBuffer:(CVPixelBufferRef)pixelBuffer {
+	if (!pixelBuffer) {
+		return;
+	}
+	CMSampleTimingInfo timing = {kCMTimeInvalid, kCMTimeInvalid, kCMTimeInvalid};
+	CMVideoFormatDescriptionRef videoInfo = NULL;
+	OSStatus result = CMVideoFormatDescriptionCreateForImageBuffer(NULL, pixelBuffer, &videoInfo);
+	NSParameterAssert(result == 0 && videoInfo != NULL);
+	
+	CMSampleBufferRef sampleBuffer = NULL;
+	result = CMSampleBufferCreateForImageBuffer(kCFAllocatorDefault,pixelBuffer, true, NULL, NULL, videoInfo, &timing, &sampleBuffer);
+	NSParameterAssert(result == 0 && sampleBuffer != NULL);
+	CFRelease(videoInfo);
+	CFArrayRef attachments = CMSampleBufferGetSampleAttachmentsArray(sampleBuffer, YES);
+	CFMutableDictionaryRef dict = (CFMutableDictionaryRef)CFArrayGetValueAtIndex(attachments, 0);
+	CFDictionarySetValue(dict, kCMSampleAttachmentKey_DisplayImmediately, kCFBooleanTrue);
+	[self enqueueSampleBuffer:sampleBuffer toLayer:self.displayLayer];
+	CFRelease(sampleBuffer);
+}
+
+- (void)enqueueSampleBuffer:(CMSampleBufferRef)sampleBuffer toLayer:(AVSampleBufferDisplayLayer*)layer {
+	if (!sampleBuffer || !layer.readyForMoreMediaData) {
+		NSLog(@"volc--sampleBuffer invalid");
+		return;
+	}
+	if (@available(iOS 16.0, *)) {
+		if (layer.status == AVQueuedSampleBufferRenderingStatusFailed) {
+			NSLog(@"volc--sampleBufferLayer error:%@",layer.error);
+			[layer flush];
+		}
+	} else {
+		[layer flush];
+	}
+	if (@available(iOS 15.0, *)) {
+		[layer enqueueSampleBuffer:sampleBuffer];
+	} else {
+		VEPlayerContextRunOnMainThread(^{
+			[layer enqueueSampleBuffer:sampleBuffer];
+		});
+	}
+}
+
+static void process(void *context, CVPixelBufferRef frame, int64_t timestamp) {
+	NSLog(@"volc--frame=%@, ts=%.f", frame, timestamp);
+	id ocContext = (__bridge id)context;
+	VEVideoPlayerController *controller = ocContext;
+	[controller __dispatchPixelBuffer:frame];
+}
+
+static void release(void *context) {
+	NSLog(@"volc--frame release");
+}
+
+- (void)didBecomeActiveNotification {
+	NSLog(@"volc--didBecomeActive");
+	if (self.playerConfig.enablePip) {
+		[self.pipController stopPictureInPicture];
+		[self.pipController invalidatePlaybackState];
+	}
+}
+
+- (void)didLockScreen:(NSNotificationCenter *)notification {
+	if (self.playerConfig.enablePip) {
+		[self __resetPipController];
+		[self pause];
+	}
+	NSLog(@"volc--didLockScreen");
+
+}
+- (void)didUnLockScreen:(NSNotificationCenter *)notification {
+	if (self.playerConfig.enablePip) {
+		[self __setupPipController];
+	}
+	NSLog(@"volc--didUnLockScreen");
+}
+
+#pragma mark - AVPictureInPictureControllerDelegate
+- (void)pictureInPictureControllerWillStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+	NSLog(@"volc--pictureInPictureControllerWillStartPictureInPicture");
+}
+
+- (void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+	NSLog(@"volc--pictureInPictureControllerDidStartPictureInPicture");
+}
+
+- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController
+failedToStartPictureInPictureWithError:(NSError *)error {
+	NSLog(@"volc--failedToStartPictureInPictureWithError");
+}
+
+- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController
+restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL))completionHandler {
+	NSLog(@"volc--restoreUserInterfaceForPictureInPictureStopWithCompletionHandler");
+	completionHandler(true);
+}
+
+- (void)pictureInPictureControllerWillStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+	NSLog(@"volc--pictureInPictureControllerWillStopPictureInPicture");
+}
+
+- (void)pictureInPictureControllerDidStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+	NSLog(@"volc--pictureInPictureControllerDidStopPictureInPicture");
+}
+
+
+#pragma mark - AVPictureInPictureSampleBufferPlaybackDelegate
+- (BOOL)pictureInPictureControllerIsPlaybackPaused:(nonnull AVPictureInPictureController *)pictureInPictureController {
+	NSLog(@"volc--pictureInPictureControllerIsPlaybackPaused");
+	return self.playbackState != VEVideoPlaybackStatePlaying;
+}
+
+- (CMTimeRange)pictureInPictureControllerTimeRangeForPlayback:(AVPictureInPictureController *)pictureInPictureController {
+	NSLog(@"volc--pictureInPictureControllerTimeRangeForPlayback");
+	// 需要在初始化时预设视频时长(从播放器读取有延迟)，此处以10min为例
+	return CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(10 * 60, NSEC_PER_SEC));
+}
+
+- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController
+		 didTransitionToRenderSize:(CMVideoDimensions)newRenderSize {
+	NSLog(@"volc--didTransitionToRenderSize");
+}
+
+- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController setPlaying:(BOOL)playing {
+	NSLog(@"volc--pictureInPictureController setPlaying");
+	if (playing) {
+		[self.videoEngine play];
+	} else {
+		[self.videoEngine pause];
+	}
+	[self.pipController invalidatePlaybackState];
+}
+
+- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController
+					skipByInterval:(CMTime)skipInterval
+				 completionHandler:(void (^)(void))completionHandler {
+	NSLog(@"volc--pictureInPictureController skipByInterval");
 }
 
 - (void)configurationVideoEngine {
@@ -220,14 +485,18 @@ TTVideoEnginePreloadDelegate>
     [self.posterImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
+	
+	[self __setupDisplayerView];
 }
 
 - (void)reLayoutVideoPlayerView {
-    self.videoEngine.playerView.clipsToBounds = YES;
-    [self.view insertSubview:self.videoEngine.playerView aboveSubview:self.posterImageView];
-    [self.videoEngine.playerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
-    }];
+	if (!self.playerConfig.enablePip) {
+		self.videoEngine.playerView.clipsToBounds = YES;
+		[self.view insertSubview:self.videoEngine.playerView aboveSubview:self.posterImageView];
+		[self.videoEngine.playerView mas_makeConstraints:^(MASConstraintMaker *make) {
+			make.edges.equalTo(self.view);
+		}];
+	}
 }
 
 #pragma mark - Pirvate
@@ -345,7 +614,7 @@ TTVideoEnginePreloadDelegate>
     VEPlayerContextRunOnMainThread(^{
         [self.context post:@(YES) forKey:VEPlayerContextKeyPauseAction];
         [self.videoEngine pause];
-    });
+	});
 }
 
 - (void)seekToTime:(NSTimeInterval)time
@@ -544,16 +813,20 @@ TTVideoEnginePreloadDelegate>
     self.playbackState = state;
     switch (state) {
         case VEVideoPlaybackStatePlaying: {
+			NSLog(@"volc--state VEVideoPlaybackStatePlaying");
             self.videoEngine.playerView.hidden = NO;
         }
             break;
         case VEVideoPlaybackStatePaused: {
+			NSLog(@"volc--state VEVideoPlaybackStatePaused");
         }
             break;
         case VEVideoPlaybackStateStopped: {
+			NSLog(@"volc--state VEVideoPlaybackStateStopped");
         }
             break;
         case VEVideoPlaybackStateError: {
+			NSLog(@"volc--state VEVideoPlaybackStateError");
             [self showTips:NSLocalizedStringFromTable(@"tip_play_error_normal", @"VodLocalizable", nil)];
         }
             break;
@@ -564,6 +837,9 @@ TTVideoEnginePreloadDelegate>
         [self.delegate videoPlayer:self playbackStateDidChange:self.playbackState];
     }
     [self.context post:@(self.playbackState) forKey:VEPlayerContextKeyPlaybackState];
+	if (self.playerConfig.enablePip) {
+		[self.pipController invalidatePlaybackState];
+	}
 }
 
 - (void)__handleLoadStateChanged:(VEVideoLoadState)state {

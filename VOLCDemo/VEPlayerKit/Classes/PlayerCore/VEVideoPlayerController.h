@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) TTVideoEngine *videoEngine;
 
+@property (nonatomic, readonly) VEVideoPlayerConfiguration *playerConfig;
+
 // VEPlayCoreAbilityProtocol
 @property (nonatomic, weak) id<VEPlayCoreCallBackAbilityProtocol> _Nullable receiver;
 
@@ -38,6 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
                   playerContainerView:(UIView * _Nullable)containerView;
 
 - (void)loadBackgourdImageWithMediaSource:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource;
+
+- (void)startPip;
 
 + (void)cleanCache;
 
