@@ -17,6 +17,8 @@ typedef NS_ENUM(NSInteger, VERequestPlaySourceType) {
 
 @interface VEDataManager : NSObject
 
++ (void)dataForScene:(VESceneType)type range:(NSRange)range result:(void(^)(NSArray<VEVideoModel *> *))result onError:(void(^)(NSString* errorMessage))onError;
+
 + (void)dataForScene:(VESceneType)type range:(NSRange)range result:(void(^)(NSArray<VEVideoModel *> *))result;
 
 + (VERequestPlaySourceType)getRequestSourceType;

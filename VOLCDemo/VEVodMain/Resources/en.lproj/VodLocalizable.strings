@@ -62,3 +62,8 @@
 "short_drama_pay_paying" = "Payment in progress";
 "short_drama_pay_success" = "Payment succeeded";
 "short_drama_pay_cancel" = "Payment cancel";
+
+"title_setting_ad" = "Ad Settings";
+"title_setting_ad_enable" = "Enable ad";
+"title_setting_ad_preload_count" = "Number of preloaded ads";
+"title_setting_ad_interval" = "The number of videos to wait between showing ads";

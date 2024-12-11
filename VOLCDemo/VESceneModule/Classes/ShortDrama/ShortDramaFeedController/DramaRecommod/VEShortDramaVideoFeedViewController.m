@@ -16,20 +16,25 @@
 #import "VEShortDramaDetailFeedViewController.h"
 #import <MJRefresh/MJRefresh.h>
 #import "BTDMacros.h"
+#import "VEAdOperator.h"
+#import "ExampleAdManager.h"
+#import "ExampleAdProvider.h"
+#import "VEAdActionResponderDelegate.h"
+#import "VEMediaCellFactory.h"
 
 static NSInteger VEShortDramaVideoFeedPageCount = 10;
 static NSInteger VEShortDramaVideoFeedLoadMoreDetection = 3;
 
-static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellReuseID";
-
-@interface VEShortDramaVideoFeedViewController () <VEPageDataSource, VEPageDelegate, VEShortDramaVideoCellControllerDelegate, VEShortDramaDetailFeedViewControllerDelegate, VEShortDramaDetailFeedViewControllerDataSource>
+@interface VEShortDramaVideoFeedViewController () <VEPageDataSource, VEPageDelegate, VEShortDramaVideoCellControllerDelegate, VEShortDramaDetailFeedViewControllerDelegate, VEShortDramaDetailFeedViewControllerDataSource, VEAdActionResponderDelegate>
 
 @property (nonatomic, strong) VEPageViewController *pageContainer;
-@property (nonatomic, strong) NSMutableArray<VEDramaVideoInfoModel *> *dramaVideoModels;
+@property (nonatomic, strong) NSMutableArray<id> *dramaVideoModels;
 @property (nonatomic, assign) NSInteger pageOffset;
 @property (nonatomic, assign) BOOL viewDidAppear;
 @property (nonatomic, assign) BOOL isLoadingData;
 @property (nonatomic, assign) BOOL enableLoadMore;
+@property (nonatomic, strong) VEAdOperator* adOperator;
+@property (nonatomic, strong) ExampleAdManager* exampleAd;
 
 @end
 
@@ -38,6 +43,9 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
 - (instancetype)init {
     self = [super init];
     if (self) {
+        _exampleAd = [[ExampleAdManager alloc] initWithConfig:@{@"AdUserId": @"TestAdUserId"}];
+        _adOperator = [[VEAdOperator alloc] init];
+        _adOperator.delegate = _exampleAd;
         self.pageOffset = 0;
         self.enableLoadMore = YES;
     }
@@ -51,6 +59,11 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
         [self setVideoStrategySource:YES];
     }
     self.viewDidAppear = YES;
+
+    VESettingModel *adEnabled = [[VESettingManager universalManager] settingForKey:VESettingKeyAdEnable];
+    if (adEnabled && adEnabled.open) {
+        [[ExampleAdProvider sharedInstance] loadAdModels];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -108,15 +121,24 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
                 NSArray *resArray = (NSArray *)responseData;
                 if (resArray && resArray.count) {
                     if (isLoadMore) {
+                        NSInteger previousCount = _dramaVideoModels.count;
                         [self.dramaVideoModels addObjectsFromArray:resArray];
+                        VESettingModel* adEnabled = [[VESettingManager universalManager] settingForKey:VESettingKeyAdEnable];
+                        if (adEnabled && adEnabled.open) {
+                            [self.adOperator insertAdsItems:self.dramaVideoModels fromIndex:previousCount];
+                        }
                         [self.pageContainer reloadContentSize];
                         [self.pageContainer.scrollView.mj_footer endRefreshing];
                     } else {
                         self.dramaVideoModels = [resArray mutableCopy];
+                        VESettingModel* adEnabled = [[VESettingManager universalManager] settingForKey:VESettingKeyAdEnable];
+                        if (adEnabled && adEnabled.open) {
+                            [self.adOperator insertAdsItems:self.dramaVideoModels fromIndex:0];
+                        }
                         [self.pageContainer.scrollView.mj_header endRefreshing];
                         [self.pageContainer reloadData];
                     }
-                    
+
                     // set video strategy source
                     [self setVideoStrategySource:!isLoadMore];
                     
@@ -140,7 +162,9 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
 - (void)setVideoStrategySource:(BOOL)reset {
     NSMutableArray *sources = [NSMutableArray array];
     [self.dramaVideoModels enumerateObjectsUsingBlock:^(VEDramaVideoInfoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [sources addObject:[VEDramaVideoInfoModel toVideoEngineSource:obj]];
+        if ([obj isKindOfClass:[VEDramaVideoInfoModel class]]) {
+            [sources addObject:[VEDramaVideoInfoModel toVideoEngineSource:obj]];
+        }
     }];
     if (reset) {
         [VEVideoPlayerController setStrategyVideoSources:sources];
@@ -164,7 +188,11 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
 
 - (void)shortDramaDetailFeedViewWillback:(VEDramaVideoInfoModel *)dramaVideoInfo {
     for (NSInteger i = 0; i < self.dramaVideoModels.count; i++) {
-        VEDramaVideoInfoModel *tempDramaVideoInfo = [self.dramaVideoModels objectAtIndex:i];
+        id mediaInfo = [self.dramaVideoModels objectAtIndex:i];
+        if (![mediaInfo isKindOfClass:[VEDramaVideoInfoModel class]]) {
+            continue;
+        }
+        VEDramaVideoInfoModel *tempDramaVideoInfo = (VEDramaVideoInfoModel *)mediaInfo;
         if ([dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId isEqualToString:tempDramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId]) {
             [self.dramaVideoModels replaceObjectAtIndex:i withObject:dramaVideoInfo];
             break;
@@ -175,7 +203,11 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
 
 - (void)shortDramaDetailFeedViewWillPlayNextDrama:(VEDramaVideoInfoModel *)nextDramaVideoInfo {
     for (NSInteger i = 0; i < self.dramaVideoModels.count; i++) {
-        VEDramaVideoInfoModel *dramaVideoModel = [self.dramaVideoModels objectAtIndex:i];
+        id mediaInfo = [self.dramaVideoModels objectAtIndex:i];
+        if (![mediaInfo isKindOfClass:[VEDramaVideoInfoModel class]]) {
+            continue;
+        }
+        VEDramaVideoInfoModel *dramaVideoModel = (VEDramaVideoInfoModel *)mediaInfo;
         if ([nextDramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId isEqualToString:dramaVideoModel.dramaEpisodeInfo.dramaInfo.dramaId]) {
             [self.dramaVideoModels replaceObjectAtIndex:i withObject:nextDramaVideoInfo];
             [self.pageContainer setCurrentIndex:i];
@@ -187,16 +219,19 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
 #pragma mark - VEShortDramaDetailFeedViewControllerDataSource
 
 - (NSString *)nextRecommondDramaIdForDramaDetailFeedPlay:(NSString *)currentDramaId {
+    BOOL currentFound = NO;
     for (NSInteger i = 0; i < self.dramaVideoModels.count; i++) {
-        VEDramaVideoInfoModel *dramaVideoModel = [self.dramaVideoModels objectAtIndex:i];
-        if ([currentDramaId isEqualToString:dramaVideoModel.dramaEpisodeInfo.dramaInfo.dramaId]) {
-            if (i + 1 < self.dramaVideoModels.count) {
-                VEDramaVideoInfoModel *retDramaVideoModel = [self.dramaVideoModels objectAtIndex:i+1];
-                return retDramaVideoModel.dramaEpisodeInfo.dramaInfo.dramaId;
-            } else {
-                return nil;
-            }
-            break;
+        id mediaInfo = [self.dramaVideoModels objectAtIndex:i];
+        if (![mediaInfo isKindOfClass:[VEDramaVideoInfoModel class]]) {
+            continue;
+        }
+        VEDramaVideoInfoModel *dramaVideoModel = (VEDramaVideoInfoModel *)mediaInfo;
+        if (!currentFound && [currentDramaId isEqualToString:dramaVideoModel.dramaEpisodeInfo.dramaInfo.dramaId]) {
+            currentFound = YES;
+            continue;
+        }
+        if (currentFound) {
+            return dramaVideoModel.dramaEpisodeInfo.dramaInfo.dramaId;
         }
     }
     return nil;
@@ -235,14 +270,7 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
 }
 
 - (__kindof UIViewController<VEPageItem> *)pageViewController:(VEPageViewController *)pageViewController pageForItemAtIndex:(NSUInteger)index {
-    VEShortDramaVideoCellController *cell = [pageViewController dequeueItemForReuseIdentifier:VEShortDramaVideoFeedCellReuseID];
-    if (!cell) {
-        cell = [VEShortDramaVideoCellController new];
-        cell.delegate = self;
-        cell.reuseIdentifier = VEShortDramaVideoFeedCellReuseID;
-    }
-    [cell reloadData:[self.dramaVideoModels objectAtIndex:index]];
-    return cell;
+    return [VEMediaCellFactory createCellViewControllerByMediaModel:[self.dramaVideoModels objectAtIndex:index] pageViewController:pageViewController cellDelegate:self adDelegate:self.exampleAd adRespDelegate:self andSceneType:2];
 }
 
 - (BOOL)shouldScrollVertically:(VEPageViewController *)pageViewController{
@@ -279,6 +307,17 @@ static NSString *VEShortDramaVideoFeedCellReuseID = @"VEShortDramaVideoFeedCellR
 
 - (void)shortVideoController:(VEShortDramaVideoCellController *)controller shouldLockVerticalScroll:(BOOL)shouldLock {
     self.pageContainer.scrollView.scrollEnabled = !shouldLock;
+}
+
+#pragma mark - VEAdActionResponderDelegate
+- (void)adDidDisplay:(NSString*)adId {
+
+}
+
+- (void)adPlayFinished:(NSString*)adId {
+    if (self.pageContainer.currentIndex < (self.dramaVideoModels.count - 1) ) {
+        [self.pageContainer reloadNextData];
+    }
 }
 
 @end

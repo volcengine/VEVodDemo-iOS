@@ -119,6 +119,8 @@ extern NSString *universalActionSectionKey;
     /// select play source
     if (model.settingKey == VESettingKeyUniversalPlaySourceType) {
         [self alertUrlViewWithCurrentSettingsModel:model];
+    } else if (model.settingKey == VESettingKeyAdPreloadCount || model.settingKey == VESettingKeyAdInterval) {
+        [self alertAdViewWithCurrentSettingsModel:model];
     } else if (model.settingKey == VESettingKeyDebugCustomPlaySourceType) {
         VEPlayUrlConfigViewController *playUrlViewController = [VEPlayUrlConfigViewController new];
         [self.navigationController pushViewController:playUrlViewController animated:YES];
@@ -146,6 +148,26 @@ extern NSString *universalActionSectionKey;
     [alert addAction:urlSource];
     [alert addAction:cancel];
     
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)alertAdViewWithCurrentSettingsModel:(VESettingModel *)settingsModel {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:settingsModel.displayText message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    NSArray* nums = @[@"2", @"5", @"10"];
+    for (NSString *num in nums) {
+        UIAlertAction *action = [UIAlertAction actionWithTitle:num style:[settingsModel.currentValue integerValue] == [num integerValue] ? UIAlertActionStyleDestructive : UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            settingsModel.currentValue = @([num integerValue]);
+            settingsModel.detailText = num;
+            [self.tableView reloadData];
+        }];
+        [alert addAction:action];
+    }
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+
+    }];
+
+    [alert addAction:cancel];
+
     [self presentViewController:alert animated:YES completion:nil];
 }
 

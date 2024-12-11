@@ -20,6 +20,8 @@ const NSString *universalSectionKey = @"title_setting_common_option";
 
 const NSString *universalActionSectionKey = @"universal_action"; // clear, log out?
 
+const NSString *adSectionKey = @"title_setting_ad";
+
 @interface VESettingManager ()
 
 @property (nonatomic, strong) NSMutableDictionary *settings;
@@ -119,6 +121,35 @@ static dispatch_once_t onceToken;
         model;
     })];
     [self.settings setValue:universalSection forKey:NSLocalizedStringFromTable(universalSectionKey.copy, @"VodLocalizable", nil)];
+
+    NSMutableArray *adSection = [NSMutableArray array];
+    [adSection addObject:({
+        VESettingModel *model = [VESettingModel new];
+        model.displayText = NSLocalizedStringFromTable(@"title_setting_ad_enable", @"VodLocalizable", nil);
+        model.settingKey = VESettingKeyAdEnable;
+        model.open = YES;
+        model.settingType = VESettingTypeSwitcher;
+        model;
+    })];
+    [adSection addObject:({
+        VESettingModel *model = [VESettingModel new];
+        model.settingKey = VESettingKeyAdPreloadCount;
+        model.currentValue = @(10);
+        model.displayText = NSLocalizedStringFromTable(@"title_setting_ad_preload_count", @"VodLocalizable", nil);
+        model.detailText = @"10";
+        model.settingType = VESettingTypeMutilSelector;
+        model;
+    })];
+    [adSection addObject:({
+        VESettingModel *model = [VESettingModel new];
+        model.settingKey = VESettingKeyAdInterval;
+        model.currentValue = @(5);
+        model.displayText = NSLocalizedStringFromTable(@"title_setting_ad_interval", @"VodLocalizable", nil);
+        model.detailText = @"5";
+        model.settingType = VESettingTypeMutilSelector;
+        model;
+    })];
+    [self.settings setValue:adSection forKey:NSLocalizedStringFromTable(adSectionKey.copy, @"VodLocalizable", nil)];
     
     NSMutableArray *universalActionSection = [NSMutableArray array];
     [universalActionSection addObject:({
@@ -143,6 +174,7 @@ static dispatch_once_t onceToken;
         return @[NSLocalizedStringFromTable(debugSectionKey.copy, @"VodLocalizable", nil),
                  NSLocalizedStringFromTable(shortVideoSectionKey.copy, @"VodLocalizable", nil),
                  NSLocalizedStringFromTable(universalSectionKey.copy, @"VodLocalizable", nil),
+                 NSLocalizedStringFromTable(adSectionKey.copy, @"VodLocalizable", nil),
                  NSLocalizedStringFromTable(universalActionSectionKey.copy, @"VodLocalizable", nil)];
     }
 }
@@ -164,6 +196,9 @@ static dispatch_once_t onceToken;
         }
         case 100:{
             settings = [self.settings objectForKey:NSLocalizedStringFromTable(debugSectionKey.copy, @"VodLocalizable", nil)];
+        }
+        case 1000:{
+            settings = [self.settings objectForKey:NSLocalizedStringFromTable(adSectionKey.copy, @"VodLocalizable", nil)];
         }
             break;
     }

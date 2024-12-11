@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.public_header_files = 'Classes/**/*.{h}'
   s.resources = 'Classes/**/*.{xib}'
 
-  s.default_subspecs = 'Setting', 'LongVideo', 'FeedVideo', 'ShortVideo', 'ShortDrama'
+  s.default_subspecs = 'Setting', 'LongVideo', 'FeedVideo', 'ShortVideo', 'ShortDrama', 'Ad', 'MediaModel'
 
   s.subspec 'Setting' do |subspec|
       subspec.public_header_files = [
@@ -90,6 +90,27 @@ Pod::Spec.new do |s|
       subspec.dependency 'VESceneModule/ShortVideo'
       subspec.dependency 'VESceneModule/FeedVideo'
   end
+
+  s.subspec 'Ad' do |subspec|
+     subspec.public_header_files = [
+        'Classes/Ad/**/*.{h}'
+      ]
+      subspec.source_files = [
+        'Classes/Ad/**/*'
+      ]
+      subspec.dependency 'VESceneModule/Setting'
+  end
+
+  s.subspec 'MediaModel' do |subspec|
+    subspec.public_header_files = [
+       'Classes/MediaModel/**/*.{h}'
+     ]
+     subspec.source_files = [
+       'Classes/MediaModel/**/*'
+     ]
+     subspec.dependency 'VESceneModule/Ad'
+     subspec.dependency 'VESceneModule/ShortDrama'
+ end
 
   s.dependency 'Masonry'
   s.dependency 'SDWebImage'

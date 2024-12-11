@@ -80,4 +80,8 @@ typedef enum : NSUInteger {
 
 - (void)reloadContentSize;
 
+- (void)recalcContentSize;
+
+- (void)resetCurrentIndex:(NSInteger)index;
+
 @end

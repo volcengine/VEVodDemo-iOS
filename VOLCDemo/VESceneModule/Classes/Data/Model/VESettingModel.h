@@ -48,7 +48,10 @@ typedef enum : NSUInteger {
     VESettingKeyShortVideoPreRenderStrategy,
     
     VESettingKeyDebugCustomPlaySourceType = 100000,
-    
+
+    VESettingKeyAdEnable = 1000000,
+    VESettingKeyAdPreloadCount,
+    VESettingKeyAdInterval,
 } VESettingKey;
 
 @interface VESettingModel : NSObject

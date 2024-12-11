@@ -14,6 +14,8 @@
 #import "VEPlayUrlConfigViewController.h"
 #import <TTSDKFramework/TTSDKManager.h>
 #import <AVFoundation/AVFoundation.h>
+#import "VESceneModule/VESettingManager.h"
+#import "ExampleAdProvider.h"
 
 @interface VEMainViewController ()
 
@@ -51,7 +53,12 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES];
-    
+
+    VESettingModel *adEnabled = [[VESettingManager universalManager] settingForKey:VESettingKeyAdEnable];
+    if (adEnabled && adEnabled.open) {
+        [[ExampleAdProvider sharedInstance] loadAdModels];
+    }
+
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
 }

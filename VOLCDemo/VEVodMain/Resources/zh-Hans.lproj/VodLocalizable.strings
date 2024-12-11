@@ -64,3 +64,8 @@
 "short_drama_pay_paying" = "正在支付...";
 "short_drama_pay_success" = "支付成功";
 "short_drama_pay_cancel" = "支付取消";
+
+"title_setting_ad" = "广告设置";
+"title_setting_ad_enable" = "开启广告";
+"title_setting_ad_preload_count" = "预加载数量";
+"title_setting_ad_interval" = "间隔视频数";

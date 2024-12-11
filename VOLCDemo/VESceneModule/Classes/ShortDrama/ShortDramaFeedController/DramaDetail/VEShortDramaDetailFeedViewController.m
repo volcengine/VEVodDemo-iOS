@@ -19,23 +19,29 @@
 #import "ShortDramaCachePayManager.h"
 #import <MBProgressHUD/MBProgressHUD.h>
 #import "VEPlayerUtility.h"
+#import "VEAdOperator.h"
+#import "ExampleAdManager.h"
+#import "VEAdActionResponderDelegate.h"
+#import "VEMediaCellFactory.h"
+#import "ExampleAdProvider.h"
 
 static NSInteger VEShortDramaDetailVideoFeedPageCount = -1; // default load all
 static NSInteger VEShortDramaDetailVideoFeedLoadMoreDetection = 3;
-static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVideoFeedCellReuseID";
 
-@interface VEShortDramaDetailFeedViewController () <VEPageDataSource, VEPageDelegate, VEShortDramaDetailVideoCellControllerDelegate, ShortDramaSelectionViewControllerDelegate, UIGestureRecognizerDelegate>
+@interface VEShortDramaDetailFeedViewController () <VEPageDataSource, VEPageDelegate, VEShortDramaDetailVideoCellControllerDelegate, ShortDramaSelectionViewControllerDelegate, VEAdActionResponderDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) VEPageViewController *pageContainer;
 @property (nonatomic, strong) ShortDramaSelectionViewController *selectionViewController;
 @property (nonatomic, strong) UILabel *dramaEpisodeLabel;
-@property (nonatomic, strong) NSMutableArray<VEDramaVideoInfoModel *> *dramaVideoModels;
+@property (nonatomic, strong) NSMutableArray<id> *dramaVideoModels;
 @property (nonatomic, strong) NSString *lastDramaId;
 @property (nonatomic, strong) NSString *fromDramaId;
 @property (nonatomic, strong) VEDramaVideoInfoModel *fromDramaVideoInfo;
 @property (nonatomic, strong) UIButton *backButton;
 @property (nonatomic, assign) BOOL firstLoadData;
 @property (nonatomic, assign) BOOL isLoadingData;
+@property (nonatomic, strong) VEAdOperator* adOperator;
+@property (nonatomic, strong) ExampleAdManager* exampleAd;
 
 @end
 
@@ -43,6 +49,9 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
 
 - (instancetype)initWtihDramaVideoInfo:(VEDramaVideoInfoModel *)dramaVideoInfo {
     self = [super init];
+    _exampleAd = [[ExampleAdManager alloc] initWithConfig:@{@"AdUserId": @"TestAdUserId"}];
+    _adOperator = [[VEAdOperator alloc] init];
+    _adOperator.delegate = _exampleAd;
     if (self) {
         self.firstLoadData = YES;
         self.fromDramaId = dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId;
@@ -55,6 +64,9 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
 
 - (instancetype)initWithDramaInfo:(VEDramaInfoModel *)dramaInfo {
     self = [super init];
+    _exampleAd = [[ExampleAdManager alloc] initWithConfig:@{@"AdUserId": @"TestAdUserId"}];
+    _adOperator = [[VEAdOperator alloc] init];
+    _adOperator.delegate = _exampleAd;
     if (self) {
         self.fromDramaId = dramaInfo.dramaId;
         self.lastDramaId = self.fromDramaId;
@@ -68,8 +80,13 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
+
     self.navigationController.interactivePopGestureRecognizer.delegate = nil;
+
+    VESettingModel *adEnabled = [[VESettingManager universalManager] settingForKey:VESettingKeyAdEnable];
+    if (adEnabled && adEnabled.open) {
+        [[ExampleAdProvider sharedInstance] loadAdModels];
+    }
 }
 
 - (void)willMoveToParentViewController:(UIViewController *)parent {
@@ -145,13 +162,30 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
                 
                 if (resArray && resArray.count) {
                     if (isLoadMore) {
+                        NSInteger previousCount = _dramaVideoModels.count;
                         [self.dramaVideoModels addObjectsFromArray:resArray];
+                        VESettingModel* adEnabled = [[VESettingManager universalManager] settingForKey:VESettingKeyAdEnable];
+                        if (adEnabled && adEnabled.open) {
+                            [self.adOperator insertAdsItems:self.dramaVideoModels fromIndex:previousCount];
+                        }
+                        if (self.firstLoadData) {
+                            [self.pageContainer recalcContentSize];
+                        } else {
+                            [self.pageContainer reloadData];
+                        }
                         [self onHandleFromDramaVideoInfo];
-                        [self.pageContainer reloadData];
                     } else {
                         self.dramaVideoModels = [resArray mutableCopy];
+                        VESettingModel* adEnabled = [[VESettingManager universalManager] settingForKey:VESettingKeyAdEnable];
+                        if (adEnabled && adEnabled.open) {
+                            [self.adOperator insertAdsItems:self.dramaVideoModels fromIndex:0];
+                        }
                         [self.pageContainer.scrollView.mj_header endRefreshing];
-                        [self.pageContainer reloadData];
+                        if (self.firstLoadData) {
+                            [self.pageContainer recalcContentSize];
+                        } else {
+                            [self.pageContainer reloadData];
+                        }
                         [self onHandleFromDramaVideoInfo];
                     }
                     // set video strategy source
@@ -173,11 +207,16 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
         self.firstLoadData = NO;
         BOOL flag = NO;
         for (NSInteger i = 0; i < self.dramaVideoModels.count; i++) {
-            VEDramaVideoInfoModel *tempDramaVideoInfo = [self.dramaVideoModels objectAtIndex:i];
+            id mediaInfo = [self.dramaVideoModels objectAtIndex:i];
+            if (![mediaInfo isKindOfClass:[VEDramaVideoInfoModel class]]) {
+                continue;
+            }
+            VEDramaVideoInfoModel *tempDramaVideoInfo = (VEDramaVideoInfoModel *)mediaInfo;
             if (self.fromDramaVideoInfo.dramaEpisodeInfo.episodeNumber == tempDramaVideoInfo.dramaEpisodeInfo.episodeNumber) {
                 if (self.autoPlayNextDaram) {
                     if ((i + 1) < self.dramaVideoModels.count) {
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.2f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [self.pageContainer resetCurrentIndex:i];
                             [self.pageContainer reloadDataWithPageIndex:i+1 animated:YES];
                         });
                     }
@@ -209,18 +248,34 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
 
 - (void)updateDramaTitle {
     if (self.pageContainer.currentIndex < self.dramaVideoModels.count) {
-        VEDramaVideoInfoModel *dramaVideoInfo = [self.dramaVideoModels objectAtIndex:self.pageContainer.currentIndex];
-        self.dramaEpisodeLabel.text = [NSString stringWithFormat:@"第%@集", @(dramaVideoInfo.dramaEpisodeInfo.episodeNumber)];
+        id mediaInfo = [self.dramaVideoModels objectAtIndex:self.pageContainer.currentIndex];;
+        if (![mediaInfo isKindOfClass:[VEDramaVideoInfoModel class]]) {
+            self.dramaEpisodeLabel.text = @"";
+        } else {
+            VEDramaVideoInfoModel *dramaVideoInfo = mediaInfo;
+            self.dramaEpisodeLabel.text = [NSString stringWithFormat:@"第%@集", @(dramaVideoInfo.dramaEpisodeInfo.episodeNumber)];
+        }
     }
 }
 
 - (void)updateParentPlayDramaVideoInfo {
     if (self.delegate && [self.delegate respondsToSelector:@selector(shortDramaDetailFeedViewWillback:)]) {
-        VEDramaVideoInfoModel *curDramaVideoInfo = [self.dramaVideoModels objectAtIndex:self.pageContainer.currentIndex];
+        VEDramaVideoInfoModel *curDramaVideoInfo;
+        id curMediaInfo = [self.dramaVideoModels objectAtIndex:self.pageContainer.currentIndex];
+        if (![curMediaInfo isKindOfClass:[VEDramaVideoInfoModel class]]) {
+            // 如果当前播放的是广告，则把下一集作为当前播放的剧集
+            curDramaVideoInfo = [self.dramaVideoModels objectAtIndex:self.pageContainer.currentIndex + 1];
+        } else {
+            curDramaVideoInfo = [self.dramaVideoModels objectAtIndex:self.pageContainer.currentIndex];
+        }
         // 当前剧集未解锁，找到上一个最近解锁的视频
         if (curDramaVideoInfo.payInfo.payStatus != VEDramaPayStatus_Paid) {
             for (NSInteger i = (self.dramaVideoModels.count - 1); i >= 0; i--) {
-                VEDramaVideoInfoModel *retDramaVideoInfo = [self.dramaVideoModels objectAtIndex:i];
+                id mediaInfo = [self.dramaVideoModels objectAtIndex:i];
+                if (![mediaInfo isKindOfClass:[VEDramaVideoInfoModel class]]) {
+                    continue;
+                }
+                VEDramaVideoInfoModel *retDramaVideoInfo = (VEDramaVideoInfoModel *)mediaInfo;
                 if ([retDramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId isEqualToString:curDramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId] &&  retDramaVideoInfo.payInfo.payStatus == VEDramaPayStatus_Paid) {
                     curDramaVideoInfo = retDramaVideoInfo;
                     break;
@@ -247,8 +302,10 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
 
 - (void)setVideoStrategySource:(BOOL)reset {
     NSMutableArray *sources = [NSMutableArray array];
-    [self.dramaVideoModels enumerateObjectsUsingBlock:^(VEDramaVideoInfoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [sources addObject:[VEDramaVideoInfoModel toVideoEngineSource:obj]];
+    [self.dramaVideoModels enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[VEDramaVideoInfoModel class]]) {
+            [sources addObject:[VEDramaVideoInfoModel toVideoEngineSource:obj]];
+        }
     }];
     if (reset) {
         [VEVideoPlayerController setStrategyVideoSources:sources];
@@ -272,7 +329,11 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
 
 - (void)onDramaSelectionCallback:(VEDramaVideoInfoModel *)dramaVideoInfo {
     for (NSInteger i = 0; i < self.dramaVideoModels.count; i++) {
-        VEDramaVideoInfoModel *tempDramaVideoInfo = [self.dramaVideoModels objectAtIndex:i];
+        id mediaInfo = [self.dramaVideoModels objectAtIndex:i];
+        if (![mediaInfo isKindOfClass:[VEDramaVideoInfoModel class]]) {
+            continue;
+        }
+        VEDramaVideoInfoModel* tempDramaVideoInfo = (VEDramaVideoInfoModel*)mediaInfo;
         if ([dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId isEqualToString:tempDramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId] && dramaVideoInfo.dramaEpisodeInfo.episodeNumber == tempDramaVideoInfo.dramaEpisodeInfo.episodeNumber) {
             [self.pageContainer setCurrentIndex:i];
             [self updateDramaTitle];
@@ -307,11 +368,21 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
             if (self.selectionViewController) {
                 [self onCloseHandleCallback];
             }
-            VEDramaVideoInfoModel *nextDrama = [self.dramaVideoModels btd_objectAtIndex:self.pageContainer.currentIndex + 1];
+            id mediaModel = [self.dramaVideoModels btd_objectAtIndex:self.pageContainer.currentIndex + 1];
+            NSString* adPrefix = @"";
+            if (![mediaModel isKindOfClass:[VEDramaVideoInfoModel class]]) {
+                adPrefix = @"广告后";
+                if (self.pageContainer.currentIndex + 2 < self.dramaVideoModels.count) {
+                    mediaModel = [self.dramaVideoModels btd_objectAtIndex:self.pageContainer.currentIndex + 2];
+                } else {
+                    return;
+                }
+            }
+            VEDramaVideoInfoModel *nextDrama = mediaModel;
             if (nextDrama) {
                 MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:UIApplication.sharedApplication.keyWindow animated:YES];
                 hud.mode = MBProgressHUDModeText;
-                hud.label.text = [NSString stringWithFormat:@"本剧已看完，播放下一步：%@", nextDrama.dramaEpisodeInfo.dramaInfo.dramaTitle];
+                hud.label.text = [NSString stringWithFormat:@"本剧已看完，%@播放下一部：%@", adPrefix, nextDrama.dramaEpisodeInfo.dramaInfo.dramaTitle];
                 hud.offset = CGPointMake(0, [VEPlayerUtility portraitFullScreenBounds].size.height - 100);
                 [hud hideAnimated:YES afterDelay:1.5];
             }
@@ -349,14 +420,7 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
 }
 
 - (__kindof UIViewController<VEPageItem> *)pageViewController:(VEPageViewController *)pageViewController pageForItemAtIndex:(NSUInteger)index {
-    VEShortDramaDetailVideoCellController *cell = [pageViewController dequeueItemForReuseIdentifier:VEShortDramaDetailVideoFeedCellReuseID];
-    if (!cell) {
-        cell = [VEShortDramaDetailVideoCellController new];
-        cell.reuseIdentifier = VEShortDramaDetailVideoFeedCellReuseID;
-    }
-    cell.delegate = self;
-    [cell reloadData:[self.dramaVideoModels objectAtIndex:index]];
-    return cell;
+    return [VEMediaCellFactory createCellViewControllerByMediaModel:[self.dramaVideoModels objectAtIndex:index] pageViewController:pageViewController cellDelegate:self adDelegate:self.exampleAd adRespDelegate:self andSceneType:1];
 }
 
 - (BOOL)shouldScrollVertically:(VEPageViewController *)pageViewController{
@@ -373,6 +437,13 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
     if (((self.dramaVideoModels.count - 1) - self.pageContainer.currentIndex) <= VEShortDramaDetailVideoFeedLoadMoreDetection) {
         [self needLoadMoreDramaVideoInfo];
     }
+    if (self.pageContainer.currentIndex < self.dramaVideoModels.count) {
+        id mediaInfo = [self.dramaVideoModels objectAtIndex:self.pageContainer.currentIndex];
+        if (![mediaInfo isKindOfClass:[VEDramaVideoInfoModel class]]) {
+            return;
+        }
+    }
+
     // recommond view sync next drama
     VEDramaVideoInfoModel *dramaVideoInfo = [self.dramaVideoModels btd_objectAtIndex:self.pageContainer.currentIndex];
     if (dramaVideoInfo) {
@@ -426,6 +497,19 @@ static NSString *VEShortDramaDetailVideoFeedCellReuseID = @"VEShortDramaDetailVi
 
 - (void)shortVideoController:(VEShortDramaDetailVideoCellController *)controller shouldLockVerticalScroll:(BOOL)shouldLock {
     self.pageContainer.scrollView.scrollEnabled = !shouldLock;
+}
+
+#pragma mark - VEAdActionResponderDelegate
+- (void)adDidDisplay:(NSString*)adId {
+
+}
+
+- (void)adPlayFinished:(NSString*)adId {
+    if (self.pageContainer.currentIndex < (self.dramaVideoModels.count - 1) ) {
+        [self.pageContainer reloadNextData];
+    } else {
+        [self needLoadMoreDramaVideoInfo];
+    }
 }
 
 @end

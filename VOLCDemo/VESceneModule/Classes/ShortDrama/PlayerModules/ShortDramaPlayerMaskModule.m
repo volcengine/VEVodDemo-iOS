@@ -72,8 +72,8 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
     if (_playerTopMaskView == nil) {
         _playerTopMaskView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_feed_cover"]];
         _playerTopMaskView.transform = CGAffineTransformMakeRotation(M_PI);
-        _playerBottomMaskView.contentMode = UIViewContentModeScaleAspectFill;
-        _playerBottomMaskView.clipsToBounds = YES;
+        _playerTopMaskView.contentMode = UIViewContentModeScaleAspectFill;
+        _playerTopMaskView.clipsToBounds = YES;
     }
     return _playerTopMaskView;
 }

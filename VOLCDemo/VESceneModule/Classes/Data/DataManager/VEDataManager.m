@@ -22,7 +22,7 @@ static NSString *requestUrlSouceUrl = @"https://vevod-demo-server.volcvod.com/ap
 
 @implementation VEDataManager
 
-+ (void)dataForScene:(VESceneType)type range:(NSRange)range result:(void(^)(NSArray<VEVideoModel *> *))result  {
++ (void)dataForScene:(VESceneType)type range:(NSRange)range result:(void(^)(NSArray<VEVideoModel *> *))result  onError:(void(^)(NSString* errorMessage))onError {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSMutableArray *medias = [NSMutableArray array];
         NSString *key;
@@ -60,11 +60,19 @@ static NSString *requestUrlSouceUrl = @"https://vevod-demo-server.volcvod.com/ap
                     }
                 }
             }
-            if (result) result(medias);
+            if (result) {
+                result(medias);
+            }
         } failure:^(NSString * _Nonnull errorMessage) {
-            
+            if (onError) {
+                onError(errorMessage);
+            }
         }];
     });
+}
+
++ (void)dataForScene:(VESceneType)type range:(NSRange)range result:(void(^)(NSArray<VEVideoModel *> *))result {
+    [VEDataManager dataForScene:type range:range result:result onError:nil];
 }
 
 + (VERequestPlaySourceType)getRequestSourceType {

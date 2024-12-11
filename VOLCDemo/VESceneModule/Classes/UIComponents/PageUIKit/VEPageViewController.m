@@ -416,6 +416,37 @@ static NSString *VEPageViewControllerExceptionKey = @"VEPageViewControllerExcept
     }
 }
 
+- (void)recalcContentSize {
+    if (_dataSourceHas.hasNumberOfItemInPageViewController) {
+        self.itemCount = [_dataSource numberOfItemInPageViewController:self];
+        if (!self.isVerticalScroll) {
+            [self.scrollView setContentSize:CGSizeMake(self.view.frame.size.width * self.itemCount, 0)];
+        } else {
+            [self.scrollView setContentSize:CGSizeMake(0, self.view.frame.size.height * self.itemCount)];
+        }
+    }
+}
+
+- (void)resetCurrentIndex:(NSInteger)index {
+    if (index >= 0 && index < self.itemCount) {
+        self.currentIndex = index;
+
+        if (self.currentViewController) {
+            if (!self.isVerticalScroll) {
+                self.currentViewController.view.frame = CGRectMake(self.currentIndex * self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
+            } else {
+                self.currentViewController.view.frame = CGRectMake(0, self.currentIndex * self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+            }
+        }
+
+        if (!self.isVerticalScroll) {
+            self.scrollView.contentOffset = CGPointMake(self.currentIndex * self.view.frame.size.width, 0);
+        } else {
+            self.scrollView.contentOffset = CGPointMake(0, self.currentIndex * self.view.frame.size.height);
+        }
+    }
+}
+
 - (void)_shouldChangeToNextPage {
     UIViewController<VEPageItem> *lastViewController = self.currentViewController;
     CGFloat page = _currentIndex;
