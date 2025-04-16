@@ -8,7 +8,7 @@
 #import "VEFeedVideoDetailViewController.h"
 #import "VEVideoModel.h"
 #import "VESettingManager.h"
-
+#import "VEVideoPlayerConfigurationFactory.h"
 #import "VEPlayerUIModule.h"
 #import "VEInterfaceSimpleBlockSceneConf.h"
 #import "VEPlayerKit.h"
@@ -108,9 +108,10 @@
 
 - (VEVideoPlayerController *)playerController {
     if (!_playerController) {
-        VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfiguration defaultPlayerConfiguration];
+        VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfigurationFactory getConfiguration];
         _playerController = [[VEVideoPlayerController alloc] initWithConfiguration:configration];
     }
+    [_playerController preparePip];
     return _playerController;
 }
 
@@ -141,6 +142,9 @@
     [self layoutUI];
 }
 
+- (void)interfaceCallStartPip:(UIView *)interface {
+    [self.playerController switchPip];
+}
 
 #pragma mark ----- UIInterfaceOrientation
 

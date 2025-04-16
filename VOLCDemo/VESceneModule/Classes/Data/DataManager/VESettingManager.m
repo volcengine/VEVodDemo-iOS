@@ -22,6 +22,8 @@ const NSString *universalActionSectionKey = @"universal_action"; // clear, log o
 
 const NSString *adSectionKey = @"title_setting_ad";
 
+const NSString *subtitleSectionKey = @"title_setting_subtitle";
+
 @interface VESettingManager ()
 
 @property (nonatomic, strong) NSMutableDictionary *settings;
@@ -66,6 +68,12 @@ static dispatch_once_t onceToken;
         model.settingKey = VESettingKeyShortVideoPreloadStrategy;
         model.open = YES;
         model.settingType = VESettingTypeSwitcher;
+        model.switchAction = ^{
+            VESettingModel *subtitlePreloadEnable = [self settingForKey:VESettingKeySubtitlePreloadEnable];
+            if (!model.open && subtitlePreloadEnable.open) {
+                subtitlePreloadEnable.open = NO;
+            }
+        };
         model;
     })];
     [shortVideoSection addObject:({
@@ -86,6 +94,13 @@ static dispatch_once_t onceToken;
         model.displayText = NSLocalizedStringFromTable(@"title_setting_Source_Type_Select", @"VodLocalizable", nil);
         model.detailText = NSLocalizedStringFromTable(@"title_setting_Source_Type_Vid", @"VodLocalizable", nil);
         model.settingType = VESettingTypeMutilSelector;
+        model.selectAction = ^{
+            VESettingModel *subtitleSourceType = [self settingForKey:VESettingKeySubtitleSourceType];
+            if ([model.currentValue integerValue] == VEPlaySourceType_Url && [subtitleSourceType.currentValue integerValue] == VEPlayerKitSubtitleSourceAuthToken) {
+                subtitleSourceType.currentValue = @(VEPlayerKitSubtitleSourceDirectUrl);
+                subtitleSourceType.detailText = @"DirectUrl";
+            }
+        };
         model;
     })];
     [universalSection addObject:({
@@ -114,6 +129,14 @@ static dispatch_once_t onceToken;
     })];
     [universalSection addObject:({
         VESettingModel *model = [VESettingModel new];
+        model.displayText = NSLocalizedStringFromTable(@"title_setting_common_option_pip", @"VodLocalizable", nil);
+        model.settingKey = VESettingKeyUniversalPip;
+        model.settingType = VESettingTypeSwitcher;
+        model.open = NO;
+        model;
+    })];
+    [universalSection addObject:({
+        VESettingModel *model = [VESettingModel new];
         model.displayText = NSLocalizedStringFromTable(@"title_setting_common_option_deviceId", @"VodLocalizable", nil);
         model.settingKey = VESettingKeyUniversalDeviceID;
         model.detailText = [VEVideoPlayerController deviceID];
@@ -127,7 +150,7 @@ static dispatch_once_t onceToken;
         VESettingModel *model = [VESettingModel new];
         model.displayText = NSLocalizedStringFromTable(@"title_setting_ad_enable", @"VodLocalizable", nil);
         model.settingKey = VESettingKeyAdEnable;
-        model.open = YES;
+        model.open = NO;
         model.settingType = VESettingTypeSwitcher;
         model;
     })];
@@ -150,7 +173,57 @@ static dispatch_once_t onceToken;
         model;
     })];
     [self.settings setValue:adSection forKey:NSLocalizedStringFromTable(adSectionKey.copy, @"VodLocalizable", nil)];
-    
+
+    NSMutableArray *subtitleSection = [NSMutableArray array];
+    [subtitleSection addObject:({
+        VESettingModel *model = [VESettingModel new];
+        model.settingKey = VESettingKeySubtitleEnable;
+        model.open = NO;
+        model.displayText = NSLocalizedStringFromTable(@"title_setting_subtitle_enable", @"VodLocalizable", nil);
+        model.settingType = VESettingTypeSwitcher;
+        model;
+    })];
+    [subtitleSection addObject:({
+        VESettingModel *model = [VESettingModel new];
+        model.settingKey = VESettingKeySubtitlePreloadEnable;
+        model.open = YES;
+        model.displayText = NSLocalizedStringFromTable(@"title_setting_subtitle_preload_enable", @"VodLocalizable", nil);
+        model.settingType = VESettingTypeSwitcher;
+        model.switchAction = ^{
+            VESettingModel *preloadEnable = [self settingForKey:VESettingKeyShortVideoPreloadStrategy];
+            if (model.open && !preloadEnable.open) {
+                preloadEnable.open = YES;
+            }
+        };
+        model;
+    })];
+    [subtitleSection addObject:({
+        VESettingModel *model = [VESettingModel new];
+        model.settingKey = VESettingKeySubtitleSourceType;
+        model.currentValue = @(0);
+        model.displayText = NSLocalizedStringFromTable(@"title_setting_subtitle_source_type", @"VodLocalizable", nil);
+        model.detailText = @"Vid+SubtitleAuthToken";
+        model.settingType = VESettingTypeMutilSelector;
+        model.selectAction = ^{
+            VESettingModel *playSourceType = [self settingForKey:VESettingKeyUniversalPlaySourceType];
+            if ([model.currentValue integerValue] == 0 && [playSourceType.currentValue integerValue] == VEPlaySourceType_Url) {
+                playSourceType.currentValue = @(VEPlaySourceType_Vid);
+                playSourceType.detailText = NSLocalizedStringFromTable(@"title_setting_Source_Type_Vid", @"VodLocalizable", nil);
+            }
+        };
+        model;
+    })];
+    [subtitleSection addObject:({
+        VESettingModel *model = [VESettingModel new];
+        model.settingKey = VESettingKeySubtitleDefaultLang;
+        model.currentValue = @(1);
+        model.displayText = NSLocalizedStringFromTable(@"title_setting_subtitle_default_language", @"VodLocalizable", nil);
+        model.detailText = @"中文";
+        model.settingType = VESettingTypeMutilSelector;
+        model;
+    })];
+    [self.settings setValue:subtitleSection forKey:NSLocalizedStringFromTable(subtitleSectionKey.copy, @"VodLocalizable", nil)];
+
     NSMutableArray *universalActionSection = [NSMutableArray array];
     [universalActionSection addObject:({
         VESettingModel *model = [VESettingModel new];
@@ -175,6 +248,7 @@ static dispatch_once_t onceToken;
                  NSLocalizedStringFromTable(shortVideoSectionKey.copy, @"VodLocalizable", nil),
                  NSLocalizedStringFromTable(universalSectionKey.copy, @"VodLocalizable", nil),
                  NSLocalizedStringFromTable(adSectionKey.copy, @"VodLocalizable", nil),
+                 NSLocalizedStringFromTable(subtitleSectionKey.copy, @"VodLocalizable", nil),
                  NSLocalizedStringFromTable(universalActionSectionKey.copy, @"VodLocalizable", nil)];
     }
 }
@@ -196,9 +270,14 @@ static dispatch_once_t onceToken;
         }
         case 100:{
             settings = [self.settings objectForKey:NSLocalizedStringFromTable(debugSectionKey.copy, @"VodLocalizable", nil)];
+            break;
         }
         case 1000:{
             settings = [self.settings objectForKey:NSLocalizedStringFromTable(adSectionKey.copy, @"VodLocalizable", nil)];
+            break;
+        }
+        case 10000:{
+            settings = [self.settings objectForKey:NSLocalizedStringFromTable(subtitleSectionKey.copy, @"VodLocalizable", nil)];
         }
             break;
     }

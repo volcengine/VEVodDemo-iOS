@@ -7,8 +7,9 @@ platform :ios, '11.0'
 install! 'cocoapods', :disable_input_output_paths => true
 
 target 'VOLCDemo' do
+  
   # TTSDK-Player
-  pod 'TTSDKFramework', '1.44.2.7-premium', :subspecs => ['Player-SR']
+  pod 'TTSDKFramework', '1.45.3.102-premium', :subspecs => ['Player-SR']
   
   # vod main
   pod 'VEVodMain', :path=> './VEVodMain/'

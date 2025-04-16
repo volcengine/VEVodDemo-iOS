@@ -64,4 +64,6 @@ NSString * const VEPlayerContextKeyShortDramaShowPayModule = @"VEPlayerContextKe
 #pragma mark - Toast
 NSString * const VEPlayerContextKeyShowToastModule = @"VEPlayerContextKeyShowToastModule";
 
-
+#pragma mark - Pip
+NSString * const VEPlayerContextKeySwitchPictureInPicture = @"VEPlayerContextKeySwitchPictureInPicture";
+NSString * const VEPlayerContextKeyPictureInPictureStateChanged = @"VEPlayerContextKeyPictureInPictureStateChanged";

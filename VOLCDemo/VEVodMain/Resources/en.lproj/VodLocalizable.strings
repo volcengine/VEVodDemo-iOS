@@ -39,6 +39,7 @@
 "title_setting_common_option_sr" = "Super Resolution";
 "title_setting_common_option_deviceId" = "Device ID";
 "title_setting_clean_cache" = "clean cache";
+"title_setting_common_option_pip" = "Picture In Picture";
 
 "title_common_copy" = "copy";
 
@@ -67,3 +68,9 @@
 "title_setting_ad_enable" = "Enable ad";
 "title_setting_ad_preload_count" = "Number of preloaded ads";
 "title_setting_ad_interval" = "The number of videos to wait between showing ads";
+
+"title_setting_subtitle" = "Subtitle Settings";
+"title_setting_subtitle_enable" = "Enable subtitle";
+"title_setting_subtitle_preload_enable" = "Preload subtitle";
+"title_setting_subtitle_source_type" = "Subtitle source";
+"title_setting_subtitle_default_language" = "Subtitle default language";

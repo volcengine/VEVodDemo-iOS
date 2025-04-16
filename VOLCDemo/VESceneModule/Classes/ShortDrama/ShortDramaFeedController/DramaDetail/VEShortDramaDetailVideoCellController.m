@@ -16,14 +16,17 @@
 #import "ShortDramaPraiseViewController.h"
 #import "VEPlayerUtility.h"
 #import "BTDMacros.h"
+#import "VEVideoPlayerConfigurationFactory.h"
+#import "VEDataManager.h"
+#import "VEVideoPlayerPipController.h"
+#import "ShortDramaRecordStartTimeModule.h"
 
 static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
 
-@interface VEShortDramaDetailVideoCellController () <VEVideoPlaybackDelegate, ShortDramaDetailPlayerModuleLoaderDelegate>
+@interface VEShortDramaDetailVideoCellController () <VEVideoPlaybackDelegate, ShortDramaDetailPlayerModuleLoaderDelegate, VEVideoPlayerControllerSubtitleDelegate>
 
 @property (nonatomic, strong, readwrite) VEDramaVideoInfoModel *dramaVideoInfo;
 @property (nonatomic, strong) ShortDramaDetailPlayerModuleLoader *moduleLoader;
-@property (nonatomic, strong) VEVideoPlayerController *playerController;
 @property (nonatomic, strong) ShortDramaCollectViewController *collectViewController;
 @property (nonatomic, strong) ShortDramaPraiseViewController *praiseViewController;
 
@@ -40,11 +43,17 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
     
     [self configuratoinCustomView];
     [self loadPlayerCover];
+    if (self.continuePlay) {
+        [self playerStart];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self playerStart];
+    if (!self.continuePlay) {
+        [self playerStart];
+    }
+    self.continuePlay = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -92,6 +101,10 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
     [self loadPlayerCover];
 }
 
+- (void)recordPlaybackTime {
+    [self.moduleLoader.context post:nil forKey:VEPlayerContextKeyDramaSceneWillSwitch];
+}
+
 #pragma mark - ShortDramaDetailPlayerModuleLoaderDelegate
 
 - (void)onClickDramaSelectionCallback {
@@ -109,9 +122,16 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
     if (!self.playerController) {
         [self createPlayer];
     }
+    [self.playerController preparePip];
+    if ([VEDataManager getSubtitleSourceType] == VESubtitleSourceType_Vid_AuthToken) {
+        [self.playerController setSubtitleAuthToken:self.dramaVideoInfo.subtitleAuthToken];
+    } else if ([VEDataManager getSubtitleSourceType] == VESubtitleSourceType_Url) {
+        TTVideoEngineSubDecInfoModel *subtitleInfoModel = [[TTVideoEngineSubDecInfoModel alloc] initWithDictionary:self.dramaVideoInfo.subtitleInfoDict];
+        [self.playerController setSubtitleInfoModel:subtitleInfoModel];
+        [self.playerController setSubtitleId:[VEDataManager getMatchedSubtitleId:subtitleInfoModel]];
+    }
     if (self.dramaVideoInfo.payInfo.payStatus == VEDramaPayStatus_Paid) {
         [self.playerController playWithMediaSource:[VEDramaVideoInfoModel toVideoEngineSource:self.dramaVideoInfo]];
-        [self.playerController play];
     } else {
         [self.moduleLoader.context post:self.dramaVideoInfo forKey:VEPlayerContextKeyShortDramaShowPayModule];
     }
@@ -119,6 +139,10 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
     if (self.delegate && [self.delegate respondsToSelector:@selector(onDramaDetailVideoPlayStart:)]) {
         [self.delegate onDramaDetailVideoPlayStart:self.dramaVideoInfo];
     }
+}
+
+- (void)setContinuePlay:(BOOL)continuePlay {
+    _continuePlay = continuePlay;
 }
 
 - (void)playerStop {
@@ -146,14 +170,29 @@ static NSInteger VEShortDramaDetailVideoCellBottomOffset = 83;
     }
 }
 
+#pragma mark ----- VEVideoPlayerControllerSubtitleDelegate
+- (void)videoPlayerController:(VEVideoPlayerController *)videoPlayerController onSubtitleTextUpdated:(NSString *)subtitle {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"on subtitle: %@", subtitle);
+        [self.moduleLoader setSubtitle:subtitle];
+    });
+}
+
+- (NSInteger)getMatchedSubtitleId:(TTVideoEngineSubDecInfoModel *)subtitleInfoModel {
+    return [VEDataManager getMatchedSubtitleId:subtitleInfoModel];
+}
+
+#pragma mark ----- Player
+
 - (void)createPlayer {
     if (self.playerController == nil) {
         self.moduleLoader = [[ShortDramaDetailPlayerModuleLoader alloc] init];
         self.moduleLoader.delegate = self;
-        VEVideoPlayerConfiguration *playerConfig = [VEVideoPlayerConfiguration defaultPlayerConfiguration];
-
+        VEVideoPlayerConfiguration *playerConfig = [VEVideoPlayerConfigurationFactory getConfiguration];
+        [VEPreRenderVideoEngineMediatorDelegate shareInstance].playerConfig = playerConfig;
         self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:playerConfig moduleLoader:self.moduleLoader playerContainerView:self.view];
         self.playerController.delegate = self;
+        self.playerController.subtitleDelegate = self;
         [self.view addSubview:self.playerController.view];
         [self.view bringSubviewToFront:self.collectViewController.view];
         [self.view bringSubviewToFront:self.praiseViewController.view];

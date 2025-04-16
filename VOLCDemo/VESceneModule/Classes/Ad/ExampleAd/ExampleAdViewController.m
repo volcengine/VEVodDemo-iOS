@@ -15,6 +15,7 @@
 #import "VEPlayerUIModule.h"
 #import "VEPlayerKit.h"
 #import "VESettingManager.h"
+#import "VEVideoPlayerConfigurationFactory.h"
 #import "ExampleAdAction.h"
 
 @interface ExampleAdViewController () <VEVideoPlaybackDelegate>
@@ -47,6 +48,12 @@
 
 - (void)play {
     [self playerStart];
+}
+
+- (void)ignore {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(adPlayFinished:)]) {
+        [self.delegate adPlayFinished:self.adId];
+    }
 }
 
 #pragma mark ----- Life Circle
@@ -117,8 +124,9 @@
     if (self.playerController == nil) {
         self.moduleLoader = [[ExampleAdPlayerModuleLoader alloc] initWithSceneType:self.hostSceneType];
 
-        VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfiguration defaultPlayerConfiguration];
+        VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfigurationFactory getConfiguration];
         configration.looping = NO;
+        configration.enablePip = NO;
         self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:configration moduleLoader:self.moduleLoader playerContainerView:self.view];
         self.playerController.delegate = self;
         [self.view addSubview:self.playerController.view];

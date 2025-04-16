@@ -12,6 +12,7 @@
 #import "VEVideoModel.h"
 #import "ExampleAdViewController.h"
 #import "ExampleAdProvider.h"
+#import "VEVideoPlayerPipController.h"
 
 static NSInteger AdPreloadThreshold = 8;
 @interface ExampleAdManager () <VEAdManagerDelegate>
@@ -129,7 +130,11 @@ static NSInteger AdPreloadThreshold = 8;
     }
 
     ExampleAdViewController* adVC = (ExampleAdViewController*)vc;
-    [adVC play];
+    if ([[VEVideoPlayerPipController shared] isPipActive]) {
+        [adVC ignore];
+    } else {
+        [adVC play];
+    }
 }
 
 @end

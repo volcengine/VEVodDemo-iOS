@@ -40,6 +40,7 @@
 "title_setting_common_option_sr" = "超分";
 "title_setting_common_option_deviceId" = "Device ID";
 "title_setting_clean_cache" = "清理缓存";
+"title_setting_common_option_pip" = "小窗播放";
 
 "title_common_copy" = "复制";
 
@@ -69,3 +70,9 @@
 "title_setting_ad_enable" = "开启广告";
 "title_setting_ad_preload_count" = "预加载数量";
 "title_setting_ad_interval" = "间隔视频数";
+
+"title_setting_subtitle" = "字幕设置";
+"title_setting_subtitle_enable" = "开启字幕";
+"title_setting_subtitle_preload_enable" = "预加载字幕";
+"title_setting_subtitle_source_type" = "字幕源";
+"title_setting_subtitle_default_language" = "字幕默认语言";

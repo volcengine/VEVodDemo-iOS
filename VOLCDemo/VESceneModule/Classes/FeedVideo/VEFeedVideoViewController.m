@@ -16,6 +16,7 @@
 #import "VESettingManager.h"
 #import <Masonry/Masonry.h>
 #import "VESettingModel.h"
+#import "VEVideoPlayerConfigurationFactory.h"
 
 static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
 
@@ -124,8 +125,9 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
     if ([self willPlayCurrentSource:cell.videoModel]) {
     } else {
         [self stopVideos:YES];
-        VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfiguration defaultPlayerConfiguration];
+        VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfigurationFactory getConfiguration];
         self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:configration];
+        [self.playerController preparePip];
     }
     return self.playerController;
 }
@@ -169,7 +171,7 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
             // trans video model to strategy source
             NSMutableArray *sources = [NSMutableArray array];
             [videoModels enumerateObjectsUsingBlock:^(VEVideoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                [sources addObject:[VEVideoModel ConvertVideoEngineSource:obj]];
+                [sources addObject:[VEVideoModel ConvertVideoEngineSource:obj forPreloadStrategy:YES]];
             }];
             [VEVideoPlayerController setStrategyVideoSources:sources];
             

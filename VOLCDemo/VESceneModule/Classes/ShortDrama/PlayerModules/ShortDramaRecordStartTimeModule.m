@@ -12,6 +12,9 @@
 #import "VEVideoPlayback.h"
 #import "VELRUCache.h"
 
+NSString * const VEPlayerContextKeyDramaSceneWillSwitch = @"VEPlayerContextKeyDramaSceneWillSwitch";
+NSString * const VEPlayerContextKeyDramaWillPlay = @"VEPlayerContextKeyDramaWillPlay";
+
 @interface ShortDramaRecordStartTimeModule ()
 
 @property (nonatomic, weak) id<VEVideoPlayback> playerInterface;
@@ -38,11 +41,11 @@ VEPlayerContextDILink(playerInterface, VEVideoPlayback, self.context);
         @strongify(self);
         self.dramaVideoInfo = dramaVideoInfo;
     }];
-    [self.context addKey:VEPlayerContextKeyBeforePlayAction withObserver:self handler:^(id  _Nullable object, NSString * _Nullable key) {
+    [self.context addKeys:@[VEPlayerContextKeyBeforePlayAction, VEPlayerContextKeyDramaWillPlay] withObserver:self handler:^(id  _Nullable object, NSString * _Nullable key) {
         @strongify(self);
         [self setPlayerStartTime];
     }];
-    [self.context addKeys:@[VEPlayerContextKeyStopAction, VEPlayerContextKeyPlaybackDidFinish, VEPlayerContextKeyPauseAction] withObserver:self handler:^(id  _Nullable object, NSString *key) {
+    [self.context addKeys:@[VEPlayerContextKeyStopAction, VEPlayerContextKeyPlaybackDidFinish, VEPlayerContextKeyPauseAction, VEPlayerContextKeyDramaSceneWillSwitch] withObserver:self handler:^(id  _Nullable object, NSString *key) {
         @strongify(self);
         [self recordStartTime];
     }];
@@ -59,10 +62,10 @@ VEPlayerContextDILink(playerInterface, VEVideoPlayback, self.context);
 #pragma mark - private
 
 - (void)recordStartTime {
-    NSInteger curTime = self.playerInterface.currentPlaybackTime;
-    NSInteger duration = self.playerInterface.duration;
-    NSInteger startTime = 0;
-    if (curTime && duration && (duration - curTime > 5)) {
+    NSTimeInterval curTime = self.playerInterface.currentPlaybackTime;
+    NSTimeInterval duration = self.playerInterface.duration;
+    NSTimeInterval startTime = 0;
+    if (curTime && duration && (duration - curTime > 5.0)) {
         startTime = curTime;
     }
     
@@ -75,8 +78,8 @@ VEPlayerContextDILink(playerInterface, VEVideoPlayback, self.context);
     if (!self.isPlayed) {
         self.isPlayed = YES;
         NSString *cacheKey = [NSString stringWithFormat:@"%@_%@", self.dramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId, @(self.dramaVideoInfo.dramaEpisodeInfo.episodeNumber)];
-        NSInteger startTime = [[[VELRUCache shareInstance] getValueForKey:cacheKey] integerValue];
-        if (startTime > 0) {
+        NSTimeInterval startTime = [[[VELRUCache shareInstance] getValueForKey:cacheKey] doubleValue];
+        if (startTime > 0.0) {
             self.playerInterface.startTime = startTime;
         }
     }

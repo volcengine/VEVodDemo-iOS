@@ -11,6 +11,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface VEDramaItemModel : JSONModel
+
+@property (nonatomic, nullable, copy) NSString *playUrl;
+
+@property (nonatomic, nullable, copy) NSString *fileId;
+
+@end
+
+
+@interface VEDramaVideoModel : JSONModel
+
+@property (nonatomic, nullable, strong) NSArray<VEDramaItemModel *> *urlList;
+
+@end
+
 @interface VEDramaVideoInfoModel : JSONModel
 
 @property (nonatomic, nullable, copy) NSString *title;
@@ -21,11 +36,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, copy) NSString *subtitleAuthToken;
 @property (nonatomic, strong) VEDramaEpisodeInfoModel *dramaEpisodeInfo;
 @property (nonatomic, strong) VEDramaPayInfoModel *payInfo;
+@property (nonatomic, nullable, strong) NSDictionary *subtitleInfoDict;
+@property (nonatomic, nullable, strong) VEDramaVideoModel *videoModel;
 
 // client property
 @property (nonatomic, assign) CGFloat startTime;
 
 + (id<TTVideoEngineMediaSource>_Nullable)toVideoEngineSource:(VEDramaVideoInfoModel *_Nullable)dramaVideoModel;
++ (id<TTVideoEngineMediaSource>_Nullable)toVideoEngineSource:(VEDramaVideoInfoModel *_Nullable)dramaVideoModel forPreloadStrategy:(BOOL)forPreloadStrategy;
 
 @end
 

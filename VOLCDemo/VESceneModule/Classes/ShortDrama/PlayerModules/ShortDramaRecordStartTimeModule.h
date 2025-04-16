@@ -10,6 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSString * const VEPlayerContextKeyDramaSceneWillSwitch;
+extern NSString * const VEPlayerContextKeyDramaWillPlay;
+
 @interface ShortDramaRecordStartTimeModule : VEPlayerBaseModule
 
 @end

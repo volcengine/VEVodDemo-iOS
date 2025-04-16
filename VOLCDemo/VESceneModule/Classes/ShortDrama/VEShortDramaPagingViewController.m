@@ -12,6 +12,7 @@
 #import "VEVideoPlayerController+Strategy.h"
 #import <Masonry/Masonry.h>
 #import "UIColor+RGB.h"
+#import "VEVideoPlayerPipController.h"
 
 #define kHeaderBarHeight (MXCustomNavigationHeaderHeight+MXSafeTopMarginWithStatusBar)
 
@@ -150,6 +151,7 @@
         [self.navigationController popViewControllerAnimated:YES];
     }
     [VEVideoPlayerController clearAllEngineStrategy];
+    [[VEVideoPlayerPipController shared] stopPip];
 }
 
 #pragma mark - Getters & Setters.

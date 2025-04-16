@@ -15,5 +15,7 @@ Pod::Spec.new do |s|
   s.public_header_files = 'Classes/**/*.{h}'
 
   s.dependency 'Masonry'
+  s.dependency 'Reachability'
 
+  s.static_framework = true
 end

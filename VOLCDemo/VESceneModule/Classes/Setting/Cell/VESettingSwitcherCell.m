@@ -41,6 +41,9 @@ const NSString *VESettingSwitcherCellReuseID = @"VESettingSwitcherCellReuseID";
         }
     }
     self.settingModel.open = sender.on;
+    if (self.settingModel.switchAction) {
+        self.settingModel.switchAction();
+    }
 }
 
 - (void)showTips:(NSString *)tips {

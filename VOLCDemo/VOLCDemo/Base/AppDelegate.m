@@ -19,6 +19,8 @@
 
 @property (nonatomic, assign) UIInterfaceOrientation screenDirection;
 
+@property (nonatomic, weak) VEMainViewController *mainController;
+
 @end
 
 @implementation AppDelegate
@@ -28,6 +30,7 @@
     self.window.frame = UIScreen.mainScreen.bounds;
     self.window.backgroundColor = [UIColor blackColor];
     VEMainViewController *mainController = [VEMainViewController new];
+    self.mainController = mainController;
     UINavigationController *mainNav = [[UINavigationController alloc] initWithRootViewController:mainController];
     self.window.rootViewController = mainNav;
     [self.window makeKeyAndVisible];
@@ -36,6 +39,9 @@
     return YES;
 }
 
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    [self.mainController applicationDidBecomeActive];
+}
 
 #pragma mark ----- Rotate
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {

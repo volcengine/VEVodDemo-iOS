@@ -15,10 +15,15 @@
 #import "ShortDramaPayModule.h"
 #import "ShortDramaPlayerToastModule.h"
 #import "ShortDramaRecordStartTimeModule.h"
+#import "VEPlayerSubtitleModule.h"
+#import "VEPlayerPipModule.h"
+#import "VESettingManager.h"
 
 @interface ShortDramaDetailPlayerModuleLoader () <ShortDramaSelectionModuleDelegate>
 
 @property (nonatomic, strong) ShortDramaSelectionModule *selectionModule;
+
+@property (nonatomic, strong) VEPlayerSubtitleModule *subtitleModule;
 
 @end
 
@@ -41,9 +46,19 @@
     [coreModules addObject:[ShortDramaPayModule new]];
     [coreModules addObject:[ShortDramaPlayerToastModule new]];
     [coreModules addObject:[ShortDramaRecordStartTimeModule new]];
+    self.subtitleModule = [VEPlayerSubtitleModule new];
+    [coreModules addObject:self.subtitleModule];
+
+
+    if ([[VESettingManager universalManager] settingForKey:VESettingKeyUniversalPip].open) {
+        [coreModules addObject:[VEPlayerPipModule new]];
+    }
     return coreModules;
 }
 
+- (void)setSubtitle:(NSString *)subtitle {
+    [self.subtitleModule setSubtitle:subtitle];
+}
 
 #pragma mark - ShortDramaSelectionModuleDelegate
 

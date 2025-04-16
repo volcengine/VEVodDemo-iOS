@@ -10,19 +10,21 @@
 #import "TTVideoEngineSourceCategory.h"
 #import <JSONModel/JSONModel.h>
 
-@interface VEVideoEngineURLInfo : JSONModel
+@interface VEVideoItemModel : JSONModel
 
 @property (nonatomic, nullable, copy) NSString *playUrl;
 
-@end
-
-@interface VEVideoEngineInfoModel : JSONModel
-
-@property (nonatomic, nullable, copy) NSString *videoID;
-
-@property (nonatomic, nullable, strong) NSArray<VEVideoEngineURLInfo *> *urlList;
+@property (nonatomic, nullable, copy) NSString *fileId;
 
 @end
+
+
+@interface VEVideoInfoModel : JSONModel
+
+@property (nonatomic, nullable, strong) NSArray<VEVideoItemModel *> *urlList;
+
+@end
+
 
 @interface VEVideoModel : JSONModel
 
@@ -42,8 +44,13 @@
 
 @property (nonatomic, nullable, copy) NSString *duration;
 
-@property (nonatomic, nullable, strong) VEVideoEngineInfoModel *videoEngineInfoModel;
+@property (nonatomic, nullable, strong) VEVideoInfoModel *videoInfoModel;
+
+@property (nonatomic, nullable, copy) NSString *subtitleAuthToken;
+
+@property (nonatomic, nullable, strong) NSDictionary *subtitleInfoDict;
 
 + (id<TTVideoEngineMediaSource>_Nullable)ConvertVideoEngineSource:(VEVideoModel *_Nullable)videoModel;
++ (id<TTVideoEngineMediaSource>_Nullable)ConvertVideoEngineSource:(VEVideoModel *_Nullable)videoModel forPreloadStrategy:(BOOL)forPreloadStrategy;
 
 @end

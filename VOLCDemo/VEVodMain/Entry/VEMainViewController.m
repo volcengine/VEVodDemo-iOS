@@ -16,6 +16,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "VESceneModule/VESettingManager.h"
 #import "ExampleAdProvider.h"
+#import "VEVideoPlayerPipController.h"
 
 @interface VEMainViewController ()
 
@@ -91,6 +92,11 @@
     [self.navigationController pushViewController:shortDramaPagingViewController animated:YES];
 }
 
+-(void)applicationDidBecomeActive {
+    if ([[VEVideoPlayerPipController shared] isPipActive]) {
+        [[VEVideoPlayerPipController shared] stopPip];
+    }
+}
 
 #pragma mark - System
 

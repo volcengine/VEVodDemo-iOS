@@ -121,6 +121,10 @@ extern NSString *universalActionSectionKey;
         [self alertUrlViewWithCurrentSettingsModel:model];
     } else if (model.settingKey == VESettingKeyAdPreloadCount || model.settingKey == VESettingKeyAdInterval) {
         [self alertAdViewWithCurrentSettingsModel:model];
+    } else if (model.settingKey == VESettingKeySubtitleSourceType) {
+        [self alertSubtitleSourceTypeViewWithCurrentSettingsModel:model];
+    } else if (model.settingKey == VESettingKeySubtitleDefaultLang) {
+        [self alertSubtitleDefaultLangViewWithCurrentSettingsModel:model];
     } else if (model.settingKey == VESettingKeyDebugCustomPlaySourceType) {
         VEPlayUrlConfigViewController *playUrlViewController = [VEPlayUrlConfigViewController new];
         [self.navigationController pushViewController:playUrlViewController animated:YES];
@@ -133,11 +137,17 @@ extern NSString *universalActionSectionKey;
     UIAlertAction *vidSource = [UIAlertAction actionWithTitle:@"Vid Play Source" style:[settingsModel.currentValue integerValue] == VEPlaySourceType_Vid ? UIAlertActionStyleDestructive : UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         settingsModel.currentValue = @(VEPlaySourceType_Vid);
         settingsModel.detailText = NSLocalizedStringFromTable(@"title_setting_Source_Type_Vid", @"VodLocalizable", nil);
+        if (settingsModel.selectAction) {
+            settingsModel.selectAction();
+        }
         [self.tableView reloadData];
     }];
     UIAlertAction *urlSource = [UIAlertAction actionWithTitle:@"Url Play Source" style:[settingsModel.currentValue integerValue] == VEPlaySourceType_Url ? UIAlertActionStyleDestructive : UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         settingsModel.currentValue = @(VEPlaySourceType_Url);
         settingsModel.detailText = NSLocalizedStringFromTable(@"title_setting_Source_Type_Url", @"VodLocalizable", nil);
+        if (settingsModel.selectAction) {
+            settingsModel.selectAction();
+        }
         [self.tableView reloadData];
     }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
@@ -162,6 +172,57 @@ extern NSString *universalActionSectionKey;
         }];
         [alert addAction:action];
     }
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+
+    }];
+
+    [alert addAction:cancel];
+
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)alertSubtitleSourceTypeViewWithCurrentSettingsModel:(VESettingModel *)settingsModel {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:settingsModel.displayText message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    NSMutableDictionary *types = [NSMutableDictionary dictionaryWithDictionary:@{
+        @(0): @"Vid+SubtitleAuthToken",
+        @(1): @"DirectUrl"
+    }];
+
+    [types enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, NSString *value, BOOL *stop) {
+        UIAlertAction *action = [UIAlertAction actionWithTitle:value style:[settingsModel.currentValue integerValue] == [key integerValue] ? UIAlertActionStyleDestructive : UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            settingsModel.currentValue = key;
+            settingsModel.detailText = value;
+            if (settingsModel.selectAction) {
+                settingsModel.selectAction();
+            }
+            [self.tableView reloadData];
+        }];
+        [alert addAction:action];
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+
+    }];
+
+    [alert addAction:cancel];
+
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)alertSubtitleDefaultLangViewWithCurrentSettingsModel:(VESettingModel *)settingsModel {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:settingsModel.displayText message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    NSMutableDictionary *types = [NSMutableDictionary dictionaryWithDictionary:@{
+        @(1): @"中文",
+        @(2): @"English"
+    }];
+
+    [types enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, NSString *value, BOOL *stop) {
+        UIAlertAction *action = [UIAlertAction actionWithTitle:value style:[settingsModel.currentValue integerValue] == [key integerValue] ? UIAlertActionStyleDestructive : UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            settingsModel.currentValue = key;
+            settingsModel.detailText = value;
+            [self.tableView reloadData];
+        }];
+        [alert addAction:action];
+    }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
 
     }];

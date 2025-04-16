@@ -18,5 +18,7 @@ Pod::Spec.new do |s|
   s.dependency 'Masonry'
   s.dependency 'SDWebImage'
   s.dependency 'VEBaseKit'
+  s.dependency 'MBProgressHUD'
   
+  s.static_framework = true
 end

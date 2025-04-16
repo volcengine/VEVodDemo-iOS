@@ -7,4 +7,6 @@
 
 @interface VEMainViewController : UIViewController
 
+-(void)applicationDidBecomeActive;
+
 @end

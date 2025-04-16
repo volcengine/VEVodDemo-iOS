@@ -15,7 +15,9 @@
 #import "VEPageViewController.h"
 #import "VEPlayerKit.h"
 #import <Masonry/Masonry.h>
-
+#import "VEViewController.h"
+#import "NSString+BTDAdditions.h"
+#import "VEVideoPlayerPipController.h"
 static NSInteger VEShortVideoPageCount = 10;
 
 static NSInteger VEShortVideoLoadMoreDetection = 2;
@@ -49,18 +51,24 @@ static NSString *VEShortVideoCellReuseID = @"VEShortVideoCellReuseID";
     [self initialUI];
     [self startVideoStategy];
     if (self.videoModels && self.videoModels.count > 0) {
+        [self setPrerenderSubtitleModels];
         // set video strategy source
         [self setVideoStrategySource:YES];
-        
         [self.pageContainer reloadData];
     } else {
         [self loadData:NO];
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [[VEVideoPlayerPipController shared] setVideoViewMode:VEVideoViewModeAspectFill];
+}
+
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     [VEVideoPlayerController clearAllEngineStrategy];
+    [[VEVideoPlayerPipController shared] stopPip];
 }
 
 #pragma mark ---- ATPageViewControllerDataSource & Delegate
@@ -147,10 +155,11 @@ static NSString *VEShortVideoCellReuseID = @"VEShortVideoCellReuseID";
                     [self.pageContainer reloadData];
                 }
                 self.pageOffset = self.videoModels.count;
-                
+
+                [self setPrerenderSubtitleModels];
                 // set video strategy source
                 [self setVideoStrategySource:!isLoadMore];
-                
+
                 if (videoModels.count < VEShortVideoPageCount) {
                     self.enableLoadMore = NO;
                     self.pageContainer.scrollView.mj_footer.hidden = YES;
@@ -169,12 +178,21 @@ static NSString *VEShortVideoCellReuseID = @"VEShortVideoCellReuseID";
 - (void)setVideoStrategySource:(BOOL)reset {
     NSMutableArray *sources = [NSMutableArray array];
     [self.videoModels enumerateObjectsUsingBlock:^(VEVideoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [sources addObject:[VEVideoModel ConvertVideoEngineSource:obj]];
+        [sources addObject:[VEVideoModel ConvertVideoEngineSource:obj forPreloadStrategy:YES]];
     }];
     if (reset) {
         [VEVideoPlayerController setStrategyVideoSources:sources];
     } else {
         [VEVideoPlayerController addStrategyVideoSources:sources];
+    }
+}
+
+- (void)setPrerenderSubtitleModels {
+    if ([[VESettingManager universalManager] settingForKey:VESettingKeyShortVideoPreRenderStrategy].open) {
+        NSDictionary *subtitleModels = [VEDataManager buildSubtitleModels:self.videoModels];
+        if (subtitleModels) {
+            [VEPreRenderVideoEngineMediatorDelegate shareInstance].subtitleModels = subtitleModels;
+        }
     }
 }
 

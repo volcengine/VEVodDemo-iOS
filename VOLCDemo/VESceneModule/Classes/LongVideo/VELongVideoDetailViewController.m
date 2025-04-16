@@ -8,12 +8,13 @@
 #import "VELongVideoDetailViewController.h"
 #import "VEVideoModel.h"
 #import "VESettingManager.h"
-
+#import "VEVideoPlayerConfigurationFactory.h"
 #import "VEPlayerUIModule.h"
 #import "VEInterfaceSimpleBlockSceneConf.h"
 #import "VEPlayerKit.h"
 #import <Masonry/Masonry.h>
 #import "UIViewController+Orientation.h"
+#import "VEVideoPlayerPipController.h"
 
 @interface VELongVideoDetailViewController () <VEInterfaceDelegate>
 
@@ -41,6 +42,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [[VEVideoPlayerPipController shared] setVideoViewMode:VEVideoViewModeAspectFit];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -82,6 +88,7 @@
     self.playerController.playerTitle = videoModel.title;
     TTVideoEngineVidSource *vidSource = [VEVideoModel ConvertVideoEngineSource:videoModel];
     [self playerOptions];
+    [self.playerController preparePip];
     [self.playerController playWithMediaSource:vidSource];
     [self.playerController play];
 }
@@ -103,10 +110,7 @@
 
 - (VEVideoPlayerController *)playerController {
     if (!_playerController) {
-        VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfiguration defaultPlayerConfiguration];
-		if (@available(iOS 15.0, *)) {
-			configration.enablePip = YES;
-		}
+        VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfigurationFactory getConfiguration];
         _playerController = [[VEVideoPlayerController alloc] initWithConfiguration:configration];
     }
     return _playerController;
@@ -142,7 +146,7 @@
 }
 
 - (void)interfaceCallStartPip:(UIView *)interface {
-	[self.playerController startPip];
+	[self.playerController switchPip];
 }
 
 

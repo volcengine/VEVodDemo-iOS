@@ -6,7 +6,6 @@
 //
 
 #import "VEVideoPlayerController+VEPlayCoreAbility.h"
-#import "VEPlayerUIModule.h"
 
 @implementation VEVideoPlayerController (VEPlayCoreAbility)
 

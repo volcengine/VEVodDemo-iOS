@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id<ShortDramaRecommodPlayerModuleLoaderDelegate> delegate;
 
+- (void)setSubtitle:(NSString *)subtitle;
+
 @end
 
 NS_ASSUME_NONNULL_END

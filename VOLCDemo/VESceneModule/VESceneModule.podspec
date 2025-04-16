@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.platform = :ios, '11.0'
   s.requires_arc = true
 
-  s.source_files = 'Classes/**/*'
+  s.source_files = 'Classes/**/*.{m,h}'
   s.public_header_files = 'Classes/**/*.{h}'
   s.resources = 'Classes/**/*.{xib}'
 
@@ -24,9 +24,9 @@ Pod::Spec.new do |s|
         'Classes/Util/**/*.{h}'
       ]
       subspec.source_files = [
-        'Classes/Data/**/*',
-        'Classes/Setting/**/*',
-        'Classes/Util/**/*',
+        'Classes/Data/**/*.{m,h}',
+        'Classes/Setting/**/*.{m,h}',
+        'Classes/Util/**/*.{m,h}',
       ]
   end
 
@@ -35,7 +35,7 @@ Pod::Spec.new do |s|
         'Classes/LongVideo/**/*.{h}'
       ]
       subspec.source_files = [
-        'Classes/LongVideo/**/*'
+        'Classes/LongVideo/**/*.{m,h}'
       ]
       subspec.resources = [
         'Classes/LongVideo/**/*.{xib}'
@@ -48,7 +48,7 @@ Pod::Spec.new do |s|
         'Classes/FeedVideo/**/*.{h}'
       ]
       subspec.source_files = [
-        'Classes/FeedVideo/**/*'
+        'Classes/FeedVideo/**/*.{m,h}'
       ]
       subspec.resources = [
         'Classes/FeedVideo/**/*.{xib}'
@@ -61,7 +61,7 @@ Pod::Spec.new do |s|
         'Classes/ShortDrama/**/*.{h}'
       ]
       subspec.source_files = [
-        'Classes/ShortDrama/**/*'
+        'Classes/ShortDrama/**/*.{m,h}'
       ]
       subspec.resources = [
         'Classes/ShortDrama/**/*.{xib}'
@@ -74,9 +74,9 @@ Pod::Spec.new do |s|
         'Classes/ShortVideo/**/*.{h}'
       ]
       subspec.source_files = [
-        'Classes/ShortVideo/**/*'
+        'Classes/ShortVideo/**/*.{m,h}'
       ]
-      subspec.dependency 'VESceneModule/Setting'  
+      subspec.dependency 'VESceneModule/Setting'
   end
   
   s.subspec 'CustomPlayVideo' do |subspec|
@@ -84,7 +84,7 @@ Pod::Spec.new do |s|
         'Classes/CustomPlayVideo/**/*.{h}'
       ]
       subspec.source_files = [
-        'Classes/CustomPlayVideo/**/*'
+        'Classes/CustomPlayVideo/**/*.{m,h}'
       ]
       subspec.dependency 'VESceneModule/Setting'
       subspec.dependency 'VESceneModule/ShortVideo'
@@ -123,5 +123,6 @@ Pod::Spec.new do |s|
   s.dependency 'MJRefresh'
   s.dependency 'VEBaseKit'
   
+  s.static_framework = true
 end
 

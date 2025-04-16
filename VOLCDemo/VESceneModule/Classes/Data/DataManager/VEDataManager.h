@@ -6,8 +6,7 @@
 //  Copyright © 2022 ByteDance. All rights reserved.
 //
 
-@import Foundation;
-@class VEVideoModel;
+#import <Foundation/Foundation.h>
 #import "VESettingModel.h"
 
 typedef NS_ENUM(NSInteger, VERequestPlaySourceType) {
@@ -15,6 +14,13 @@ typedef NS_ENUM(NSInteger, VERequestPlaySourceType) {
     VERequestPlaySourceType_Url,
 };
 
+typedef NS_ENUM(NSInteger, VESubtitleSourceType) {
+    VESubtitleSourceType_Vid_AuthToken,
+    VESubtitleSourceType_Url,
+};
+
+@class VEVideoModel;
+@class TTVideoEngineSubDecInfoModel;
 @interface VEDataManager : NSObject
 
 + (void)dataForScene:(VESceneType)type range:(NSRange)range result:(void(^)(NSArray<VEVideoModel *> *))result onError:(void(^)(NSString* errorMessage))onError;
@@ -22,5 +28,13 @@ typedef NS_ENUM(NSInteger, VERequestPlaySourceType) {
 + (void)dataForScene:(VESceneType)type range:(NSRange)range result:(void(^)(NSArray<VEVideoModel *> *))result;
 
 + (VERequestPlaySourceType)getRequestSourceType;
+
++ (VESubtitleSourceType)getSubtitleSourceType;
+
++ (NSDictionary *)subtitleDictionaryFromSubtitleArray:(NSArray *)subtitleArray;
+
++ (NSInteger)getMatchedSubtitleId:(TTVideoEngineSubDecInfoModel *)subtitleInfoModel;
+
++ (NSDictionary *)buildSubtitleModels:(NSArray<VEVideoModel *> *)videoModels;
 
 @end

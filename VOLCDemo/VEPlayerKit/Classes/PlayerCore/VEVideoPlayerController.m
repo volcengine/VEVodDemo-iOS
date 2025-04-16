@@ -20,10 +20,10 @@
 #import "VEPlayerInteraction.h"
 #import "VEPlayerContextKeyDefine.h"
 #import "BTDMacros.h"
-#import "ShortDramaDetailPlayerModuleLoader.h"
 #import "VEVideoEnginePool.h"
 #import "BTDMacros.h"
 #import <AVKit/AVKit.h>
+#import "VEVideoPlayerPipController.h"
 
 @interface VEVideoPlayerDisplayView : UIView
 
@@ -52,14 +52,69 @@
 
 #pragma mark - TTVideoEnginePreRenderDelegate
 
-- (void)videoEngineWillPrepare:(TTVideoEngine *)videoEngine {
-    
-}
-
 - (void)videoEngine:(TTVideoEngine *)videoEngine willPreRenderSource:(id<TTVideoEngineMediaSource>)source {
-    
+    BOOL enableSubtitle = NO;
+    NSInteger subtitleSourceType = VEPlayerKitSubtitleSourceAuthToken;  // 0 vid + authtoken, 1 direct url
+    @synchronized (self) {
+        enableSubtitle = self.playerConfig.enableSubtitle;
+        subtitleSourceType = self.playerConfig.subtitleSourceType;
+    }
+    id value = nil;
+    @synchronized (self) {
+        value = [self.subtitleModels objectForKey:source.uniqueId];
+    }
+    if (enableSubtitle) {
+        if (subtitleSourceType == VEPlayerKitSubtitleSourceDirectUrl) {
+            if ([value isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *subInfoDict = value;
+                NSNumber *subtitleId = [subInfoDict objectForKey:@"id"];
+                TTVideoEngineSubDecInfoModel *subtitleInfoModel = [subInfoDict objectForKey:@"model"];
+                [videoEngine setSubDecInfoModel:subtitleInfoModel];
+                [videoEngine setOptionForKey:VEKeyPlayerSwitchSubtitleId_NSInteger value:subtitleId];
+            }
+        } else if (subtitleSourceType == VEPlayerKitSubtitleSourceAuthToken) {
+            if ([value isKindOfClass:[NSString class]]) {
+                NSString *subtitleAuthToken = value;
+                [videoEngine setSubtitleAuthToken:subtitleAuthToken];
+            }
+        }
+    }
 }
 
+- (void)videoEngineWillPrepare:(TTVideoEngine *)videoEngine {
+    BOOL enableSubtitle = NO;
+    id<TTVideoEngineSubtitleDelegate> subtitleDelegate = nil;
+    @synchronized (self) {
+        enableSubtitle = self.playerConfig.enableSubtitle;
+        subtitleDelegate = self.subtitleDelegate;
+    }
+    if (enableSubtitle) {
+        [videoEngine setOptionForKey:VEKeyPlayerEnableSubThread_BOOL value:@(YES)];
+        [videoEngine setOptionForKey:VEKKeyPlayerSubtitleOptEnable_BOOL value:@(YES)];
+        [videoEngine setOptionForKey:VEKKeyPlayerSubEnabled_BOOL value:@(YES)];
+        [videoEngine setOptionForKey:VEKKeySubTitleEnableMDL_BOOL value:@(YES)];
+        [videoEngine setSubtitleDelegate:subtitleDelegate];
+    }
+}
+
+#pragma mark - Setter
+- (void)setPlayerConfig:(VEVideoPlayerConfiguration *)playerConfig {
+    @synchronized (self) {
+        _playerConfig = playerConfig;
+    }
+}
+
+- (void)setSubtitleModels:(NSMutableDictionary *)subtitleModels {
+    @synchronized (self) {
+        _subtitleModels = subtitleModels;
+    }
+}
+
+- (void)setSubtitleDelegate:(id<TTVideoEngineSubtitleDelegate>)subtitleDelegate {
+    @synchronized (self) {
+        _subtitleDelegate = subtitleDelegate;
+    }
+}
 @end
 
 
@@ -69,8 +124,8 @@ TTVideoEngineDelegate,
 TTVideoEngineDataSource,
 TTVideoEngineResolutionDelegate,
 TTVideoEnginePreloadDelegate,
-AVPictureInPictureControllerDelegate,
-AVPictureInPictureSampleBufferPlaybackDelegate>
+TTVideoEngineSubtitleDelegate,
+VEVideoPlayerPipControllerDelegate>
 
 @property (nonatomic, strong) VEVideoPlayerConfiguration *playerConfig;
 @property (nonatomic, strong) TTVideoEngine *videoEngine;
@@ -88,10 +143,10 @@ AVPictureInPictureSampleBufferPlaybackDelegate>
 
 @property (nonatomic, strong) VEPlayerInteraction<VEPlayerInteractionPlayerProtocol> *interaction;
 
-// Pip
-@property (nonatomic, strong) AVPictureInPictureController *pipController;
-@property (nonatomic, strong) AVSampleBufferDisplayLayer *displayLayer;
-@property (nonatomic, strong) VEVideoPlayerDisplayView *displayView;
+@property (nonatomic, copy) NSString *subtitleAuthToken;
+@property (nonatomic, strong) TTVideoEngineSubDecInfoModel *subtitleInfoModel;
+@property (nonatomic, assign) NSInteger subtitleId;
+
 
 @end
 
@@ -116,6 +171,8 @@ AVPictureInPictureSampleBufferPlaybackDelegate>
     self = [super init];
     if (self) {
         self.playerConfig = configuration;
+        [VEPreRenderVideoEngineMediatorDelegate shareInstance].subtitleDelegate = self;
+        [TTVideoEngine setPreRenderVideoEngineDelegate:[VEPreRenderVideoEngineMediatorDelegate shareInstance]];
     }
     return self;
 }
@@ -138,6 +195,8 @@ AVPictureInPictureSampleBufferPlaybackDelegate>
         
         _interaction = [[VEPlayerInteraction alloc] initWithContext:_context];
         [_interaction addModule:moduleLoader];
+        [VEPreRenderVideoEngineMediatorDelegate shareInstance].subtitleDelegate = self;
+        [TTVideoEngine setPreRenderVideoEngineDelegate:[VEPreRenderVideoEngineMediatorDelegate shareInstance]];
     }
     return self;
 }
@@ -164,16 +223,14 @@ AVPictureInPictureSampleBufferPlaybackDelegate>
         self.interaction.playerContainerView = self.playerContainerView;
         [self.interaction viewDidLoad]; //分发生命周期
     }
-	
-	if (self.playerConfig.enablePip) {
-		[self __setupPipEnv];
-	}
+
+    if (self.playerConfig.enablePip) {
+        [VEVideoPlayerPipController shared];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
 	[super viewDidDisappear:animated];
-	[self __resetPipController];
-	[self __resetDisplayView];
 }
 
 - (void)createVideoEngine:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource needPrerenderEngine:(BOOL)needPrerender {
@@ -181,12 +238,15 @@ AVPictureInPictureSampleBufferPlaybackDelegate>
         @weakify(self);
         [[VEVideoEnginePool shareInstance] createVideoEngine:mediaSource needPrerenderEngine:needPrerender block:^(TTVideoEngine * _Nullable engine, VECreateEngineFrom engineFrom) {
             @strongify(self);
-			// Pip 
+			// Pip
 			[engine setOptionForKey:VEKKeyPlayerLoopWay_NSInteger value:@1];
 			[engine setSupportPictureInPictureMode:YES];
 
             self.videoEngine = engine;
             self.engineFrom = engineFrom;
+            if (self.playerConfig.enablePip) {
+                [self.videoEngine setVideoWrapper:[[VEVideoPlayerPipController shared] createVideoWrapper:self]];
+            }
             if (engineFrom == VECreateEngineFrom_Init) {
                 [self.videoEngine setVideoEngineVideoSource:mediaSource];
             } else {
@@ -198,10 +258,6 @@ AVPictureInPictureSampleBufferPlaybackDelegate>
     }
     _mediaSource = mediaSource;
     [self configurationVideoEngine];
-	
-	if (self.playerConfig.enablePip) {
-		[self __startObserveVideoFrame];
-	}
 }
 
 #pragma mark - Pip
@@ -210,7 +266,7 @@ AVPictureInPictureSampleBufferPlaybackDelegate>
 	[self __setupDisplayerView];
 	[self __setupPipController];
 	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(didBecomeActiveNotification)
+                                             selector:@selector(didBecomeActiveNotification:)
 												 name: UIApplicationDidBecomeActiveNotification
 											   object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self
@@ -222,42 +278,38 @@ AVPictureInPictureSampleBufferPlaybackDelegate>
 											 selector:@selector(didUnLockScreen:)
 												 name:UIApplicationProtectedDataDidBecomeAvailable
 											   object:nil];
+
+    @weakify(self);
+    [self.context addKey:VEPlayerContextKeySwitchPictureInPicture withObserver:self handler:^(NSNumber *pipActived, NSString *key) {
+        @strongify(self);
+        [self switchPip];
+        if ([pipActived integerValue] == 0) {
+            [[UIApplication sharedApplication] performSelector:NSSelectorFromString(@"suspend")];
+        }
+    }];
 }
 
 - (void)__setupDisplayerView {
-	self.displayView = [[VEVideoPlayerDisplayView alloc] init];
-	self.displayView.userInteractionEnabled = NO;
-	self.displayView.clipsToBounds = YES;
-	self.displayLayer = (AVSampleBufferDisplayLayer *)self.displayView.layer;
-	self.displayLayer.opaque = YES;
-	self.displayLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-	[self.view insertSubview:self.displayView aboveSubview:self.posterImageView];
-	[self.displayView mas_makeConstraints:^(MASConstraintMaker *make) {
-		make.edges.equalTo(self.view);
-	}];
-}
-
-- (void)__resetDisplayView {
-	[self.displayView removeFromSuperview];
-	[self.displayLayer stopRequestingMediaData];
-	self.displayView = nil;
+    [[VEVideoPlayerPipController shared].displayView removeFromSuperview];
+    [[VEVideoPlayerPipController shared].displayLayer flushAndRemoveImage];
+    [self.view insertSubview:[VEVideoPlayerPipController shared].displayView aboveSubview:self.posterImageView];
+    [[VEVideoPlayerPipController shared].displayView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
 }
 
 - (void)__setupPipController {
 	[self __updateAudioSession];
-	AVPictureInPictureControllerContentSource *contentSource = [[AVPictureInPictureControllerContentSource alloc] initWithSampleBufferDisplayLayer:self.displayLayer playbackDelegate:self];
-	self.pipController = [[AVPictureInPictureController alloc] initWithContentSource:contentSource];
-	self.pipController.canStartPictureInPictureAutomaticallyFromInline = YES;
-	self.pipController.requiresLinearPlayback = YES;
-	self.pipController.delegate = self;
+
+    [VEVideoPlayerPipController shared].delegate = self;
+    [[VEVideoPlayerPipController shared] invalidatePlaybackState];
 }
 
-- (void)__resetPipController {
-	if (@available(iOS 15.0, *)) {
-		[self.pipController stopPictureInPicture];
-		[self.pipController invalidatePlaybackState];
-		self.pipController = nil;
-	}
+- (void)__unsetPipController {
+    if (@available(iOS 15.0, *)) {
+        [[VEVideoPlayerPipController shared] stopPip];
+        [[VEVideoPlayerPipController shared] invalidatePlaybackState];
+    }
 }
 
 - (void)__updateAudioSession {
@@ -276,95 +328,44 @@ AVPictureInPictureSampleBufferPlaybackDelegate>
 	}
 }
 
-- (void)__startObserveVideoFrame {
-	EngineVideoWrapper *wrapper = malloc(sizeof(EngineAudioWrapper));
-	wrapper->process = process;
-	wrapper->release = release;
-	wrapper->context = (__bridge void *)self;
-	[self.videoEngine setVideoWrapper:wrapper];
+- (void)preparePip {
+    if (self.playerConfig.enablePip) {
+        [VEVideoPlayerPipController shared].currentController = self;
+        [self __setupPipEnv];
+    }
 }
 
-- (void)startPip {
-	if (self.playerConfig.enablePip) {
-		if (self.pipController.isPictureInPictureActive) {
-			[self.pipController stopPictureInPicture];
-		} else {
-			[self.pipController startPictureInPicture];
-		}
-	} else {
-		UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Tips"
-																				message:@"Only Support iOS15+"
-																		 preferredStyle:UIAlertControllerStyleAlert];
-		UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
-		[alertController addAction:okAction];
-		[self presentViewController:alertController animated:YES completion:nil];
-	}
+- (void)switchPip {
+    if (@available(iOS 15.0, *)) {
+        if (self.playerConfig.enablePip) {
+            if ([[VEVideoPlayerPipController shared] isPipActive]) {
+                [[VEVideoPlayerPipController shared] stopPip];
+            } else {
+                [[VEVideoPlayerPipController shared] startPip];
+            }
+        }
+    } else {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Tips"
+                                                                                message:@"Only Support iOS15+"
+                                                                         preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+        [alertController addAction:okAction];
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
 }
 
-- (void)__dispatchPixelBuffer:(CVPixelBufferRef)pixelBuffer {
-	if (!pixelBuffer) {
-		return;
-	}
-	CMSampleTimingInfo timing = {kCMTimeInvalid, kCMTimeInvalid, kCMTimeInvalid};
-	CMVideoFormatDescriptionRef videoInfo = NULL;
-	OSStatus result = CMVideoFormatDescriptionCreateForImageBuffer(NULL, pixelBuffer, &videoInfo);
-	NSParameterAssert(result == 0 && videoInfo != NULL);
-	
-	CMSampleBufferRef sampleBuffer = NULL;
-	result = CMSampleBufferCreateForImageBuffer(kCFAllocatorDefault,pixelBuffer, true, NULL, NULL, videoInfo, &timing, &sampleBuffer);
-	NSParameterAssert(result == 0 && sampleBuffer != NULL);
-	CFRelease(videoInfo);
-	CFArrayRef attachments = CMSampleBufferGetSampleAttachmentsArray(sampleBuffer, YES);
-	CFMutableDictionaryRef dict = (CFMutableDictionaryRef)CFArrayGetValueAtIndex(attachments, 0);
-	CFDictionarySetValue(dict, kCMSampleAttachmentKey_DisplayImmediately, kCFBooleanTrue);
-	[self enqueueSampleBuffer:sampleBuffer toLayer:self.displayLayer];
-	CFRelease(sampleBuffer);
-}
-
-- (void)enqueueSampleBuffer:(CMSampleBufferRef)sampleBuffer toLayer:(AVSampleBufferDisplayLayer*)layer {
-	if (!sampleBuffer || !layer.readyForMoreMediaData) {
-		NSLog(@"volc--sampleBuffer invalid");
-		return;
-	}
-	if (@available(iOS 16.0, *)) {
-		if (layer.status == AVQueuedSampleBufferRenderingStatusFailed) {
-			NSLog(@"volc--sampleBufferLayer error:%@",layer.error);
-			[layer flush];
-		}
-	} else {
-		[layer flush];
-	}
-	if (@available(iOS 15.0, *)) {
-		[layer enqueueSampleBuffer:sampleBuffer];
-	} else {
-		VEPlayerContextRunOnMainThread(^{
-			[layer enqueueSampleBuffer:sampleBuffer];
-		});
-	}
-}
-
-static void process(void *context, CVPixelBufferRef frame, int64_t timestamp) {
-	NSLog(@"volc--frame=%@, ts=%.f", frame, timestamp);
-	id ocContext = (__bridge id)context;
-	VEVideoPlayerController *controller = ocContext;
-	[controller __dispatchPixelBuffer:frame];
-}
-
-static void release(void *context) {
-	NSLog(@"volc--frame release");
-}
-
-- (void)didBecomeActiveNotification {
-	NSLog(@"volc--didBecomeActive");
-	if (self.playerConfig.enablePip) {
-		[self.pipController stopPictureInPicture];
-		[self.pipController invalidatePlaybackState];
-	}
+#pragma mark - notification handlers
+- (void)didBecomeActiveNotification:(NSNotification *)notification {
+    NSLog(@"volc--didBecomeActive");
+    if (self.playerConfig.enablePip) {
+        [[VEVideoPlayerPipController shared] stopPip];
+        [[VEVideoPlayerPipController shared] invalidatePlaybackState];
+    }
 }
 
 - (void)didLockScreen:(NSNotificationCenter *)notification {
 	if (self.playerConfig.enablePip) {
-		[self __resetPipController];
+		[self __unsetPipController];
 		[self pause];
 	}
 	NSLog(@"volc--didLockScreen");
@@ -377,66 +378,42 @@ static void release(void *context) {
 	NSLog(@"volc--didUnLockScreen");
 }
 
-#pragma mark - AVPictureInPictureControllerDelegate
-- (void)pictureInPictureControllerWillStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
-	NSLog(@"volc--pictureInPictureControllerWillStartPictureInPicture");
+#pragma mark - VEVideoPlayerPipControllerDelegate
+
+- (void)willStartPictureInPicture {
+    [self.context post:@(1) forKey:VEPlayerContextKeyPictureInPictureStateChanged];
 }
 
-- (void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
-	NSLog(@"volc--pictureInPictureControllerDidStartPictureInPicture");
+- (void)didStopPictureInPicture {
+    [self.context post:@(0) forKey:VEPlayerContextKeyPictureInPictureStateChanged];
 }
 
-- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController
-failedToStartPictureInPictureWithError:(NSError *)error {
-	NSLog(@"volc--failedToStartPictureInPictureWithError");
+- (VEVideoPlaybackState)getPlaybackState {
+    return self.playbackState;
 }
 
-- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController
-restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL))completionHandler {
-	NSLog(@"volc--restoreUserInterfaceForPictureInPictureStopWithCompletionHandler");
-	completionHandler(true);
+- (void)setPlaying:(BOOL)playing {
+    if (playing) {
+        // 如果当前已播放完毕、未起播或出错，重播
+        // 如果当前处于播放状态，跳过
+        // 如果当前处于暂停状态，续播
+        if (self.playbackState == VEVideoPlaybackStateStopped || self.playbackState == VEVideoPlaybackStateUnkown || self.playbackState == VEVideoPlaybackStateError) {
+            [self playWithMediaSource:self.mediaSource];
+        } else if (self.playbackState == VEVideoPlaybackStatePaused) {
+            [self play];
+        }
+    } else {
+        [self pause];
+    }
+    [[VEVideoPlayerPipController shared] invalidatePlaybackState];
 }
 
-- (void)pictureInPictureControllerWillStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
-	NSLog(@"volc--pictureInPictureControllerWillStopPictureInPicture");
+- (NSInteger)getDuration {
+    return (NSInteger)(self.videoEngine.duration);
 }
 
-- (void)pictureInPictureControllerDidStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
-	NSLog(@"volc--pictureInPictureControllerDidStopPictureInPicture");
-}
-
-
-#pragma mark - AVPictureInPictureSampleBufferPlaybackDelegate
-- (BOOL)pictureInPictureControllerIsPlaybackPaused:(nonnull AVPictureInPictureController *)pictureInPictureController {
-	NSLog(@"volc--pictureInPictureControllerIsPlaybackPaused");
-	return self.playbackState != VEVideoPlaybackStatePlaying;
-}
-
-- (CMTimeRange)pictureInPictureControllerTimeRangeForPlayback:(AVPictureInPictureController *)pictureInPictureController {
-	NSLog(@"volc--pictureInPictureControllerTimeRangeForPlayback");
-	// 需要在初始化时预设视频时长(从播放器读取有延迟)，此处以10min为例
-	return CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(10 * 60, NSEC_PER_SEC));
-}
-
-- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController
-		 didTransitionToRenderSize:(CMVideoDimensions)newRenderSize {
-	NSLog(@"volc--didTransitionToRenderSize");
-}
-
-- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController setPlaying:(BOOL)playing {
-	NSLog(@"volc--pictureInPictureController setPlaying");
-	if (playing) {
-		[self.videoEngine play];
-	} else {
-		[self.videoEngine pause];
-	}
-	[self.pipController invalidatePlaybackState];
-}
-
-- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController
-					skipByInterval:(CMTime)skipInterval
-				 completionHandler:(void (^)(void))completionHandler {
-	NSLog(@"volc--pictureInPictureController skipByInterval");
+- (NSInteger)getPosition {
+    return (NSInteger)self.videoEngine.currentPlaybackTime;
 }
 
 - (void)configurationVideoEngine {
@@ -449,7 +426,7 @@ restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL)
         self.startTime = self.playerConfig.startTime;
     }
     if (@available(iOS 14.0, *)) {
-        if (self.playerConfig.isSupportPictureInPictureMode) {
+        if (self.playerConfig.isSupportPictureInPictureMode && self.playerConfig.enablePip) {
             [self.videoEngine setSupportPictureInPictureMode:YES];
         }
     }
@@ -474,6 +451,8 @@ restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL)
     
     /// add observer
     [self addObserver];
+
+    [self setupSubtitle];
 }
 
 #pragma mark - UI
@@ -485,18 +464,23 @@ restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL)
     [self.posterImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
-	
-	[self __setupDisplayerView];
 }
 
 - (void)reLayoutVideoPlayerView {
-	if (!self.playerConfig.enablePip) {
-		self.videoEngine.playerView.clipsToBounds = YES;
-		[self.view insertSubview:self.videoEngine.playerView aboveSubview:self.posterImageView];
-		[self.videoEngine.playerView mas_makeConstraints:^(MASConstraintMaker *make) {
-			make.edges.equalTo(self.view);
-		}];
-	}
+    // 如果之前曾用prerender video engine做为封面图，但因个别情况其media source与
+    // 即将播放的media source不同，则先移除之前的prerender video engine，防止其遮挡
+    // 真正的video engine
+    for (UIView *view in self.view.subviews) {
+        if ([view isKindOfClass:[self.videoEngine.playerView class]] && view != self.videoEngine.playerView) {
+            [view removeFromSuperview];
+            break;
+        }
+    }
+    self.videoEngine.playerView.clipsToBounds = YES;
+    [self.view insertSubview:self.videoEngine.playerView aboveSubview:self.posterImageView];
+    [self.videoEngine.playerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
 }
 
 #pragma mark - Pirvate
@@ -568,6 +552,39 @@ restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL)
 - (void)setMediaSource:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource {
     _mediaSource = mediaSource;
     [self createVideoEngine:mediaSource needPrerenderEngine:NO];
+    [self reLayoutVideoPlayerView];
+}
+
+- (void)setupSubtitle {
+    if (!self.playerConfig.enableSubtitle) {
+        return;
+    }
+
+    [self.videoEngine setOptionForKey:VEKeyPlayerEnableSubThread_BOOL value:@(YES)];
+    [self.videoEngine setOptionForKey:VEKKeyPlayerSubtitleOptEnable_BOOL value:@(YES)];
+    [self.videoEngine setOptionForKey:VEKKeyPlayerSubEnabled_BOOL value:@(YES)];
+    [self.videoEngine setOptionForKey:VEKKeySubTitleEnableMDL_BOOL value:@(YES)];
+
+    [self.videoEngine setSubtitleDelegate:self];
+
+    if (self.playerConfig.subtitleSourceType == VEPlayerKitSubtitleSourceDirectUrl) {
+        [self.videoEngine setSubDecInfoModel:self.subtitleInfoModel];
+        [self.videoEngine setOptionForKey:VEKeyPlayerSwitchSubtitleId_NSInteger value:@(self.subtitleId)];
+    } else if (self.playerConfig.subtitleSourceType == VEPlayerKitSubtitleSourceAuthToken) {
+        [self.videoEngine setSubtitleAuthToken:self.subtitleAuthToken];
+    }
+}
+
+- (void)setSubtitleAuthToken:(NSString *)subtitleAuthToken {
+    _subtitleAuthToken = subtitleAuthToken;
+}
+
+- (void)setSubtitleInfoModel:(TTVideoEngineSubDecInfoModel *)subtitleInfoModel {
+    _subtitleInfoModel = subtitleInfoModel;
+}
+
+- (void)setSubtitleId:(NSInteger)subtitleId {
+    _subtitleId = subtitleId;
 }
 
 - (void)loadBackgourdImageWithMediaSource:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource {
@@ -744,6 +761,9 @@ restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL)
 
 - (void)videoEngine:(TTVideoEngine *)videoEngine loadStateDidChanged:(TTVideoEngineLoadState)loadState extra:(nullable NSDictionary<NSString *,id> *)extraInfo {
     [self __handleLoadStateChanged:[self __getLoadState:loadState]];
+    if (loadState == TTVideoEngineLoadStatePlayable) {
+        [[VEVideoPlayerPipController shared] invalidatePlaybackState];
+    }
 }
 
 - (void)videoEngine:(TTVideoEngine *)videoEngine mdlKey:(NSString *)key hitCacheSze:(NSInteger)cacheSize {
@@ -751,6 +771,10 @@ restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL)
         [self.delegate videoPlayer:self key:key hitVideoPreloadDataSize:cacheSize];
     }
     BTDLog(@"EngineStrategy: ===== hitCacheSze %@, vid = %@", @(cacheSize), [self.mediaSource getUniqueId]);
+}
+
+- (void)videoEngine:(TTVideoEngine *)videoEngine subtitleKey:(NSString *)key subtitleHitCacheSize:(NSInteger)cacheSize {
+    BTDLog(@"subtitle hit cache: key=%@, size=%ld", key, cacheSize);
 }
 
 - (void)videoEngineUserStopped:(TTVideoEngine *)videoEngine {
@@ -798,6 +822,41 @@ restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL)
     }
 }
 
+#pragma mark - TTVideoEngineSubtitleDelegate
+- (void)videoEngine:(TTVideoEngine *)videoEngine onSubtitleInfoCallBack:(NSString *)content pts:(NSUInteger)pts {
+    if (self.subtitleDelegate && [self.subtitleDelegate respondsToSelector:@selector(videoPlayerController:onSubtitleTextUpdated:)]) {
+        [self.subtitleDelegate videoPlayerController:self onSubtitleTextUpdated:content];
+    }
+}
+
+- (void)videoEngine:(TTVideoEngine *)videoEngine onSubtitleInfoCallBack:(TTVideoEngineSubInfo *)subInfo {
+
+}
+
+- (void)videoEngine:(TTVideoEngine *)videoEngine onSubtitleInfoRequestFinish:(TTVideoEngineSubDecInfoModel *)subtitleInfoModel error:(NSError * _Nullable)error {
+    if (self.subtitleDelegate && [self.subtitleDelegate respondsToSelector:@selector(videoPlayerController:onSubtitleRequestFinished:error:)]) {
+        [self.subtitleDelegate videoPlayerController:self onSubtitleRequestFinished:subtitleInfoModel error:error];
+    }
+    if (!subtitleInfoModel) {
+        return;
+    }
+    if (self.subtitleDelegate && [self.subtitleDelegate respondsToSelector:@selector(getMatchedSubtitleId:)]) {
+        NSInteger subtitleId = [self.subtitleDelegate getMatchedSubtitleId:subtitleInfoModel];
+        [videoEngine setOptionForKey:VEKeyPlayerSwitchSubtitleId_NSInteger value:@(subtitleId)];
+    }
+}
+
+- (void)videoEngine:(TTVideoEngine *)videoEngine onSubSwitchCompleted:(BOOL)success currentSubtitleId:(NSInteger)currentSubtitleId {
+    if (self.subtitleDelegate && [self.subtitleDelegate respondsToSelector:@selector(videoPlayerController:onSubtitleChanged:)]) {
+        [self.subtitleDelegate videoPlayerController:self onSubtitleChanged:currentSubtitleId];
+    }
+}
+
+- (void)videoEngine:(TTVideoEngine *)videoEngine onSubLoadFinished:(BOOL)success info:(TTVideoEngineLoadInfo * _Nullable)info {
+    if (self.subtitleDelegate && [self.subtitleDelegate respondsToSelector:@selector(videoPlayerController:onSubtitleLoadFinished:)]) {
+        [self.subtitleDelegate videoPlayerController:self onSubtitleLoadFinished:success];
+    }
+}
 
 #pragma mark - Private
 
@@ -838,7 +897,7 @@ restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL)
     }
     [self.context post:@(self.playbackState) forKey:VEPlayerContextKeyPlaybackState];
 	if (self.playerConfig.enablePip) {
-		[self.pipController invalidatePlaybackState];
+        [[VEVideoPlayerPipController shared] invalidatePlaybackState];
 	}
 }
 

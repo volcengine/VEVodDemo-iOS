@@ -42,6 +42,7 @@ typedef enum : NSUInteger {
     VESettingKeyUniversalHardwareDecode,
     VESettingKeyUniversalSR,
     VESettingKeyUniversalDeviceID,
+    VESettingKeyUniversalPip,
     VESettingKeyUniversalActionCleanCache = 1000,
     
     VESettingKeyShortVideoPreloadStrategy = 10000,
@@ -52,6 +53,11 @@ typedef enum : NSUInteger {
     VESettingKeyAdEnable = 1000000,
     VESettingKeyAdPreloadCount,
     VESettingKeyAdInterval,
+
+    VESettingKeySubtitleEnable = 10000000,
+    VESettingKeySubtitlePreloadEnable,
+    VESettingKeySubtitleSourceType,
+    VESettingKeySubtitleDefaultLang,
 } VESettingKey;
 
 @interface VESettingModel : NSObject
@@ -69,6 +75,10 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) NSString *detailText;
 
 @property (nonatomic, copy) void(^allAreaAction)(void);
+
+@property (nonatomic, copy) void(^switchAction)(void);
+
+@property (nonatomic, copy) void(^selectAction)(void);
 
 @end
 

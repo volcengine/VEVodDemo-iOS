@@ -16,4 +16,6 @@ Pod::Spec.new do |s|
 
   s.dependency 'VEPlayerKit'
   s.dependency 'VEBaseKit'
+
+  s.static_framework = true
 end

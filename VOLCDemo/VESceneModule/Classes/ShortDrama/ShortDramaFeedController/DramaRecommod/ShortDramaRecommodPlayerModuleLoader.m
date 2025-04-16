@@ -15,10 +15,13 @@
 #import "ShortDramaPlayerSpeedModule.h"
 #import "ShortDramaSeriesModule.h"
 #import "ShortDramaRecordStartTimeModule.h"
+#import "VEPlayerSubtitleModule.h"
 
 @interface ShortDramaRecommodPlayerModuleLoader () <ShortDramaSeriesModuleDelegate>
 
 @property (nonatomic, strong) ShortDramaSeriesModule *seriesModel;
+
+@property (nonatomic, strong) VEPlayerSubtitleModule *subtitleModule;
 
 @end
 
@@ -39,7 +42,14 @@
     self.seriesModel.delegate = self;
     [coreModules addObject:self.seriesModel];
     
+    self.subtitleModule = [VEPlayerSubtitleModule new];
+    [coreModules addObject:self.subtitleModule];
+
     return coreModules;
+}
+
+- (void)setSubtitle:(NSString *)subtitle {
+    [self.subtitleModule setSubtitle:subtitle];
 }
 
 #pragma mark - ShortDramaSeriesModuleDelegate

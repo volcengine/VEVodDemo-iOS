@@ -21,6 +21,7 @@
 #import "ExampleAdProvider.h"
 #import "VEAdActionResponderDelegate.h"
 #import "VEMediaCellFactory.h"
+#import "VEDataManager.h"
 
 static NSInteger VEShortDramaVideoFeedPageCount = 10;
 static NSInteger VEShortDramaVideoFeedLoadMoreDetection = 3;
@@ -56,6 +57,7 @@ static NSInteger VEShortDramaVideoFeedLoadMoreDetection = 3;
     [super viewDidAppear:animated];
     if (self.dramaVideoModels) {
         [self startVideoStategy];
+        [self setPrerenderSubtitleModels];
         [self setVideoStrategySource:YES];
     }
     self.viewDidAppear = YES;
@@ -139,9 +141,10 @@ static NSInteger VEShortDramaVideoFeedLoadMoreDetection = 3;
                         [self.pageContainer reloadData];
                     }
 
+                    [self setPrerenderSubtitleModels];
                     // set video strategy source
                     [self setVideoStrategySource:!isLoadMore];
-                    
+
                     self.pageOffset = self.dramaVideoModels.count;
                 }
                 if (resArray.count < VEShortDramaVideoFeedPageCount) {
@@ -163,13 +166,22 @@ static NSInteger VEShortDramaVideoFeedLoadMoreDetection = 3;
     NSMutableArray *sources = [NSMutableArray array];
     [self.dramaVideoModels enumerateObjectsUsingBlock:^(VEDramaVideoInfoModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj isKindOfClass:[VEDramaVideoInfoModel class]]) {
-            [sources addObject:[VEDramaVideoInfoModel toVideoEngineSource:obj]];
+            [sources addObject:[VEDramaVideoInfoModel toVideoEngineSource:obj forPreloadStrategy:YES]];
         }
     }];
     if (reset) {
         [VEVideoPlayerController setStrategyVideoSources:sources];
     } else {
         [VEVideoPlayerController addStrategyVideoSources:sources];
+    }
+}
+
+- (void)setPrerenderSubtitleModels {
+    if ([[VESettingManager universalManager] settingForKey:VESettingKeyShortVideoPreRenderStrategy].open) {
+        NSDictionary *subtitleModels = [VEDramaDataManager buildSubtitleModels:self.dramaVideoModels];
+        if (subtitleModels) {
+            [VEPreRenderVideoEngineMediatorDelegate shareInstance].subtitleModels = subtitleModels;
+        }
     }
 }
 

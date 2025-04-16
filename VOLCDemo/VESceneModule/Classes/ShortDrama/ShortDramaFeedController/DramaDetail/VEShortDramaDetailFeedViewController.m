@@ -24,6 +24,8 @@
 #import "VEAdActionResponderDelegate.h"
 #import "VEMediaCellFactory.h"
 #import "ExampleAdProvider.h"
+#import "VEDataManager.h"
+#import "VEVideoPlayerPipController.h"
 
 static NSInteger VEShortDramaDetailVideoFeedPageCount = -1; // default load all
 static NSInteger VEShortDramaDetailVideoFeedLoadMoreDetection = 3;
@@ -76,6 +78,12 @@ static NSInteger VEShortDramaDetailVideoFeedLoadMoreDetection = 3;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+
+    [[VEVideoPlayerPipController shared] setVideoViewMode:VEVideoViewModeAspectFill];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -188,9 +196,10 @@ static NSInteger VEShortDramaDetailVideoFeedLoadMoreDetection = 3;
                         }
                         [self onHandleFromDramaVideoInfo];
                     }
+                    [self setPrerenderSubtitleModels];
                     // set video strategy source
                     [self setVideoStrategySource:!isLoadMore];
-                    
+
                     self.pageContainer.scrollView.mj_header.hidden = YES;
                 }
                 self.isLoadingData = NO;
@@ -259,6 +268,13 @@ static NSInteger VEShortDramaDetailVideoFeedLoadMoreDetection = 3;
 }
 
 - (void)updateParentPlayDramaVideoInfo {
+    {
+        UIViewController<VEPageItem> *cell = self.pageContainer.currentViewController;
+        if ([cell isKindOfClass:[VEShortDramaDetailVideoCellController class]]) {
+            VEShortDramaDetailVideoCellController *detailCell = cell;
+            [detailCell recordPlaybackTime];
+        }
+    }
     if (self.delegate && [self.delegate respondsToSelector:@selector(shortDramaDetailFeedViewWillback:)]) {
         VEDramaVideoInfoModel *curDramaVideoInfo;
         id curMediaInfo = [self.dramaVideoModels objectAtIndex:self.pageContainer.currentIndex];
@@ -283,6 +299,8 @@ static NSInteger VEShortDramaDetailVideoFeedLoadMoreDetection = 3;
             }
         }
         [self.delegate shortDramaDetailFeedViewWillback:curDramaVideoInfo];
+    } else {
+        [[VEVideoPlayerPipController shared] stopPip];
     }
 }
 
@@ -304,13 +322,25 @@ static NSInteger VEShortDramaDetailVideoFeedLoadMoreDetection = 3;
     NSMutableArray *sources = [NSMutableArray array];
     [self.dramaVideoModels enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj isKindOfClass:[VEDramaVideoInfoModel class]]) {
-            [sources addObject:[VEDramaVideoInfoModel toVideoEngineSource:obj]];
+            VEDramaVideoInfoModel *videoInfo = obj;
+            if (videoInfo.payInfo.payStatus == VEDramaPayStatus_Paid) {
+                [sources addObject:[VEDramaVideoInfoModel toVideoEngineSource:obj forPreloadStrategy:YES]];
+            }
         }
     }];
     if (reset) {
         [VEVideoPlayerController setStrategyVideoSources:sources];
     } else {
         [VEVideoPlayerController addStrategyVideoSources:sources];
+    }
+}
+
+- (void)setPrerenderSubtitleModels {
+    if ([[VESettingManager universalManager] settingForKey:VESettingKeyShortVideoPreRenderStrategy].open) {
+        NSDictionary *subtitleModels = [VEDramaDataManager buildSubtitleModels:self.dramaVideoModels];
+        if (subtitleModels) {
+            [VEPreRenderVideoEngineMediatorDelegate shareInstance].subtitleModels = subtitleModels;
+        }
     }
 }
 
@@ -387,7 +417,19 @@ static NSInteger VEShortDramaDetailVideoFeedLoadMoreDetection = 3;
                 [hud hideAnimated:YES afterDelay:1.5];
             }
         }
-        [self.pageContainer reloadNextData];
+        BOOL playNext = YES;
+        if ([[VEVideoPlayerPipController shared] isPipActive]) {
+            id mediaModel = [self.dramaVideoModels btd_objectAtIndex:self.pageContainer.currentIndex + 1];
+            if ([mediaModel isKindOfClass:[VEDramaVideoInfoModel class]]) {
+                VEDramaVideoInfoModel *dramaModel = mediaModel;
+                if (dramaModel.payInfo.payStatus != VEDramaPayStatus_Paid) {
+                    playNext = NO;
+                }
+            }
+        }
+        if (playNext) {
+            [self.pageContainer reloadNextData];
+        }
     } else {
         [self needLoadMoreDramaVideoInfo];
     }
@@ -404,7 +446,7 @@ static NSInteger VEShortDramaDetailVideoFeedLoadMoreDetection = 3;
 - (void)onBackButtonHandle:(UIButton *)button {
     // Synchronize the current playing episode information of the parent page
     [self updateParentPlayDramaVideoInfo];
-        
+
     UIViewController *presentingViewController = self.presentingViewController;
     if (presentingViewController) {
         [presentingViewController dismissViewControllerAnimated:NO completion:nil];
@@ -420,7 +462,16 @@ static NSInteger VEShortDramaDetailVideoFeedLoadMoreDetection = 3;
 }
 
 - (__kindof UIViewController<VEPageItem> *)pageViewController:(VEPageViewController *)pageViewController pageForItemAtIndex:(NSUInteger)index {
-    return [VEMediaCellFactory createCellViewControllerByMediaModel:[self.dramaVideoModels objectAtIndex:index] pageViewController:pageViewController cellDelegate:self adDelegate:self.exampleAd adRespDelegate:self andSceneType:1];
+    id mediaModel = [self.dramaVideoModels objectAtIndex:index];
+    UIViewController<VEPageItem> * cell = [VEMediaCellFactory createCellViewControllerByMediaModel:mediaModel pageViewController:pageViewController cellDelegate:self adDelegate:self.exampleAd adRespDelegate:self andSceneType:1];
+    if (self.fromDramaVideoInfo && [cell isKindOfClass:[VEShortDramaDetailVideoCellController class]] && [mediaModel isKindOfClass:[VEDramaVideoInfoModel class]]) {
+        VEDramaVideoInfoModel *videoModel = mediaModel;
+        if ([self.fromDramaVideoInfo.dramaEpisodeInfo.dramaInfo.dramaId isEqualToString:videoModel.dramaEpisodeInfo.dramaInfo.dramaId] && self.fromDramaVideoInfo.dramaEpisodeInfo.episodeNumber == videoModel.dramaEpisodeInfo.episodeNumber) {
+            VEShortDramaDetailVideoCellController *detailCell = cell;
+            detailCell.continuePlay = YES;
+        }
+    }
+    return cell;
 }
 
 - (BOOL)shouldScrollVertically:(VEPageViewController *)pageViewController{

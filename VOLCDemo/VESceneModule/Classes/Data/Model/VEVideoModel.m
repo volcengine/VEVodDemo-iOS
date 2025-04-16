@@ -13,11 +13,12 @@
 #import <JSONModel/JSONModel.h>
 #import "VEDataManager.h"
 
-@implementation VEVideoEngineURLInfo
+@implementation VEVideoItemModel
 
 + (JSONKeyMapper*)keyMapper {
     return [[JSONKeyMapper alloc] initWithModelToJSONDictionary:@{
         @"playUrl": @"MainPlayUrl",
+        @"fileId": @"FileId",
     }];
 }
 
@@ -28,18 +29,17 @@
 @end
 
 
-@implementation VEVideoEngineInfoModel
+@implementation VEVideoInfoModel
 
 + (JSONKeyMapper*)keyMapper {
     return [[JSONKeyMapper alloc] initWithModelToJSONDictionary:@{
-        @"videoID": @"Vid",
         @"urlList": @"PlayInfoList",
     }];
 }
 
 + (Class)classForCollectionProperty:(NSString *)propertyName {
     if ([propertyName isEqualToString:@"urlList"]) {
-        return VEVideoEngineURLInfo.class;
+        return VEVideoItemModel.class;
     }
     return nil;
 }
@@ -60,6 +60,7 @@
         @"coverUrl": @"coverUrl",
         @"playAuthToken": @"playAuthToken",
         @"duration": @"duration",
+        @"subtitleAuthToken": @"subtitleAuthToken"
     }];
 }
 
@@ -67,7 +68,11 @@
     return YES;
 }
 
-+ (id<TTVideoEngineMediaSource>)ConvertVideoEngineSource:(VEVideoModel *)videoModel {
++ (id<TTVideoEngineMediaSource>_Nullable)ConvertVideoEngineSource:(VEVideoModel *_Nullable)videoModel {
+    return [VEVideoModel ConvertVideoEngineSource:videoModel forPreloadStrategy:NO];
+}
+
++ (id<TTVideoEngineMediaSource>)ConvertVideoEngineSource:(VEVideoModel *)videoModel forPreloadStrategy:(BOOL)forPreloadStrategy {
     if ([VEDataManager getRequestSourceType] == VERequestPlaySourceType_Vid) {
         VESettingModel *h265 = [[VESettingManager universalManager] settingForKey:VESettingKeyUniversalH265];
         TTVideoEngineEncodeType codec = h265.open ? TTVideoEngineh265 : TTVideoEngineH264;
@@ -77,13 +82,19 @@
         return source;
     } else if ([VEDataManager getRequestSourceType] == VERequestPlaySourceType_Url) {
         NSString *url = nil;
-        VEVideoEngineURLInfo *urlInfo = [videoModel.videoEngineInfoModel.urlList lastObject];
-        if (urlInfo) {
-            url = urlInfo.playUrl;
+        VEVideoItemModel *videoItem = [videoModel.videoInfoModel.urlList lastObject];
+        if (videoItem) {
+            url = videoItem.playUrl;
         } else {
             url = videoModel.playUrl;
         }
         TTVideoEngineUrlSource *source = [[TTVideoEngineUrlSource alloc] initWithUrl:url cacheKey:url.btd_md5String videoId:videoModel.videoId];
+        // 设置字幕预加载信息
+        if ([[VESettingManager universalManager] settingForKey:VESettingKeySubtitleEnable].open && videoModel.subtitleInfoDict && (!forPreloadStrategy || ([[VESettingManager universalManager] settingForKey:VESettingKeySubtitlePreloadEnable].open && [[VESettingManager universalManager] settingForKey:VESettingKeyShortVideoPreloadStrategy].open))) {
+            TTVideoEngineSubDecInfoModel *subtitleInfoModel = [[TTVideoEngineSubDecInfoModel alloc] initWithDictionary:videoModel.subtitleInfoDict];
+            source.subtitleId = [VEDataManager getMatchedSubtitleId:subtitleInfoModel];
+            source.subtitleInfoModel = subtitleInfoModel;
+        }
         source.title = videoModel.title;
         source.cover = videoModel.coverUrl;
         return source;

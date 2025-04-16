@@ -19,6 +19,7 @@ typedef void(^RequestDataComplete)(id _Nullable responseData, NSString * _Nullab
 
 + (void)requestDramaEpisodeList:(NSString *)dramaId episodeNumber:(NSInteger)episodeNumber offset:(NSInteger)offset pageSize:(NSInteger)pageSize result:(RequestDataComplete)complete;
 
++ (NSDictionary *)buildSubtitleModels:(NSArray<id> *)dramaVideoModels;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -8,10 +8,15 @@
 #import "VESettingModel.h"
 #import "ShortDramaCachePayManager.h"
 #import "BTDMacros.h"
+#import "VEDataManager.h"
+#import "NSString+BTDAdditions.h"
+#import "VEVideoPlayerConfiguration.h"
 
 static NSString *requestDramaListUrl = @"https://vevod-demo-server.volcvod.com/api/drama/v1/listDrama";
 static NSString *requestDramaRecommondListUrl = @"https://vevod-demo-server.volcvod.com/api/drama/episode/v1/getEpisodeFeedStreamWithPlayAuthToken";
 static NSString *requestDramaEpisodeUrl = @"https://vevod-demo-server.volcvod.com/api/drama/episode/v1/getDramaEpisodeWithPlayAuthToken";
+static NSString *requestDramaRecommondListDirectUrl = @"https://vevod-demo-server.volcvod.com/api/drama/episode/v1/getEpisodeFeedStreamWithVideoModel";
+static NSString *requestDramaEpisodeDirectUrl = @"https://vevod-demo-server.volcvod.com/api/drama/episode/v1/getDramaEpisodeWithVideoModel";
 
 @implementation VEDramaDataManager
 
@@ -55,12 +60,36 @@ static NSString *requestDramaEpisodeUrl = @"https://vevod-demo-server.volcvod.co
         [param setObject:@(VEVideoFormatType_MP4) forKey:@"format"];
         [param setObject:@(offset) forKey:@"offset"];
         [param setObject:@(pageSize) forKey:@"pageSize"];
-        [VENetworkHelper requestDataWithUrl:requestDramaRecommondListUrl httpMethod:@"POST" parameters:param success:^(id _Nonnull responseObject) {
+
+        NSString *urlString = requestDramaRecommondListUrl;
+        if ([VEDataManager getRequestSourceType] == VERequestPlaySourceType_Vid) {
+            urlString = requestDramaRecommondListUrl;
+        } else if ([VEDataManager getRequestSourceType] == VERequestPlaySourceType_Url) {
+            urlString = requestDramaRecommondListDirectUrl;
+        }
+
+        [VENetworkHelper requestDataWithUrl:urlString httpMethod:@"POST" parameters:param success:^(id _Nonnull responseObject) {
             if (responseObject && [ responseObject isKindOfClass:[NSDictionary class]]) {
                 NSArray* results = [responseObject objectForKey:@"result"];
                 for (NSDictionary *dic in results) {
-                    VEDramaVideoInfoModel *dramaVideoInfoModel = [[VEDramaVideoInfoModel alloc] initWithDictionary:dic error:nil];
-                    [dramas addObject:dramaVideoInfoModel];
+                    VEDramaVideoInfoModel *dramaVideoInfoModel = nil;
+                    if ([VEDataManager getRequestSourceType] == VERequestPlaySourceType_Vid) {
+                        dramaVideoInfoModel = [[VEDramaVideoInfoModel alloc] initWithDictionary:dic error:nil];
+                    } else if ([VEDataManager getRequestSourceType] == VERequestPlaySourceType_Url) {
+                        NSDictionary *videoModelDict = [self dictionaryWithJsonString:[dic objectForKey:@"videoModel"]];
+                        VEDramaVideoModel *videoModel = [[VEDramaVideoModel alloc] initWithDictionary:videoModelDict error:nil];
+                        dramaVideoInfoModel = [[VEDramaVideoInfoModel alloc] initWithDictionary:dic error:nil];
+                        dramaVideoInfoModel.videoModel = videoModel;
+                    }
+
+                    if (dramaVideoInfoModel) {
+                        // 解析对应的字幕信息subtitleModel，保存为NSDictionary，使用时直接通过dict转换为TTVideoEngineSubDecInfoModel
+                        if ([VEDataManager getSubtitleSourceType] == VESubtitleSourceType_Url) {
+                            NSDictionary *subtitleModelDict = [self dictionaryWithJsonString:[dic objectForKey:@"subtitleModel"]];
+                            dramaVideoInfoModel.subtitleInfoDict = [VEDataManager subtitleDictionaryFromSubtitleArray:subtitleModelDict];
+                        }
+                        [dramas addObject:dramaVideoInfoModel];
+                    }
                 }
             }
             if (complete) {
@@ -92,14 +121,38 @@ static NSString *requestDramaEpisodeUrl = @"https://vevod-demo-server.volcvod.co
         [param setObject:@(offset) forKey:@"offset"];
         [param setObject:@(pageSize) forKey:@"pageSize"];
         [param setObject:dramaId ?: @"" forKey:@"dramaId"];
+
+        NSString *urlString = requestDramaEpisodeUrl;
+        if ([VEDataManager getRequestSourceType] == VERequestPlaySourceType_Vid) {
+            urlString = requestDramaEpisodeUrl;
+        } else if ([VEDataManager getRequestSourceType] == VERequestPlaySourceType_Url) {
+            urlString = requestDramaEpisodeDirectUrl;
+        }
+
         @weakify(self);
-        [VENetworkHelper requestDataWithUrl:requestDramaEpisodeUrl httpMethod:@"POST" parameters:param success:^(id _Nonnull responseObject) {
+        [VENetworkHelper requestDataWithUrl:urlString httpMethod:@"POST" parameters:param success:^(id _Nonnull responseObject) {
             @strongify(self);
             if (responseObject && [ responseObject isKindOfClass:[NSDictionary class]]) {
                 NSArray* results = [responseObject objectForKey:@"result"];
                 for (NSDictionary *dic in results) {
-                    VEDramaVideoInfoModel *dramaVideoInfoModel = [[VEDramaVideoInfoModel alloc] initWithDictionary:dic error:nil];
-                    [dramas addObject:dramaVideoInfoModel];
+                    VEDramaVideoInfoModel *dramaVideoInfoModel = nil;
+                    if ([VEDataManager getRequestSourceType] == VERequestPlaySourceType_Vid) {
+                        dramaVideoInfoModel = [[VEDramaVideoInfoModel alloc] initWithDictionary:dic error:nil];
+                    } else if ([VEDataManager getRequestSourceType] == VERequestPlaySourceType_Url) {
+                        NSDictionary *videoModelDict = [self dictionaryWithJsonString:[dic objectForKey:@"videoModel"]];
+                        VEDramaVideoModel *videoModel = [[VEDramaVideoModel alloc] initWithDictionary:videoModelDict error:nil];
+                        dramaVideoInfoModel = [[VEDramaVideoInfoModel alloc] initWithDictionary:dic error:nil];
+                        dramaVideoInfoModel.videoModel = videoModel;
+                    }
+
+                    if (dramaVideoInfoModel) {
+                        // 解析对应的字幕信息subtitleModel，保存为NSDictionary，使用时直接通过dict转换为TTVideoEngineSubDecInfoModel
+                        if ([VEDataManager getSubtitleSourceType] == VESubtitleSourceType_Url) {
+                            NSDictionary *subtitleModelDict = [self dictionaryWithJsonString:[dic objectForKey:@"subtitleModel"]];
+                            dramaVideoInfoModel.subtitleInfoDict = [VEDataManager subtitleDictionaryFromSubtitleArray:subtitleModelDict];
+                        }
+                        [dramas addObject:dramaVideoInfoModel];
+                    }
                 }
                 // test drama pay
                 if ([ShortDramaCachePayManager shareInstance].openPayTest) {
@@ -142,6 +195,47 @@ static NSString *requestDramaEpisodeUrl = @"https://vevod-demo-server.volcvod.co
         return nil;
     }
     return dictionay;
+}
+
++ (NSDictionary *)buildSubtitleModels:(NSArray<id> *)dramaVideoModels {
+    NSMutableDictionary *models = nil;
+    if ([VEDataManager getSubtitleSourceType] == VEPlayerKitSubtitleSourceAuthToken) {
+        models = [NSMutableDictionary dictionary];
+        [dramaVideoModels enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[VEDramaVideoInfoModel class]]) {
+                VEDramaVideoInfoModel *videoInfoModel = obj;
+                if (videoInfoModel.subtitleAuthToken) {
+                    [models setObject: videoInfoModel.subtitleAuthToken forKey:videoInfoModel.videoId];
+                }
+            }
+        }];
+    } else if ([VEDataManager getSubtitleSourceType] == VEPlayerKitSubtitleSourceDirectUrl) {
+        models = [NSMutableDictionary dictionary];
+        [dramaVideoModels enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[VEDramaVideoInfoModel class]]) {
+                VEDramaVideoInfoModel *videoInfoModel = obj;
+                if (videoInfoModel.subtitleInfoDict) {
+                    TTVideoEngineSubDecInfoModel *subtitleInfoModel = [[TTVideoEngineSubDecInfoModel alloc] initWithDictionary:videoInfoModel.subtitleInfoDict];
+                    NSInteger subtitleId = [VEDataManager getMatchedSubtitleId:subtitleInfoModel];
+                    NSDictionary *subInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                             @(subtitleId),         @"id",
+                                             subtitleInfoModel,     @"model",
+                                             nil];
+                    if ([VEDataManager getRequestSourceType] == VERequestPlaySourceType_Vid) {
+                        [models setObject:subInfo forKey:videoInfoModel.videoId];
+                    } else if ([VEDataManager getRequestSourceType] == VERequestPlaySourceType_Url) {
+                        NSString *url = nil;
+                        VEDramaItemModel *videoItem = [videoInfoModel.videoModel.urlList lastObject];
+                        if (videoItem) {
+                            url = videoItem.playUrl;
+                        }
+                        [models setObject:subInfo forKey:url.btd_md5String];
+                    }
+                }
+            }
+        }];
+    }
+    return [models copy];
 }
 
 @end

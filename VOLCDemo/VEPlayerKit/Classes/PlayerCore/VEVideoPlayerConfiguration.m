@@ -6,7 +6,6 @@
 //
 
 #import "VEVideoPlayerConfiguration.h"
-#import "VESettingManager.h"
 #import <TTSDKFramework/TTSDKFramework.h>
 
 @implementation VEVideoPlayerConfiguration
@@ -26,14 +25,14 @@
         self.playbackRate = 1.0;
         self.startTime = 0;
         self.isSupportPictureInPictureMode = NO;
-        self.enableLoadSpeed = YES;
-        
-        VESettingModel *h265 = [[VESettingManager universalManager] settingForKey:VESettingKeyUniversalH265];
-        VESettingModel *hardwareDecode = [[VESettingManager universalManager] settingForKey:VESettingKeyUniversalHardwareDecode];
-        VESettingModel *sr = [[VESettingManager universalManager] settingForKey:VESettingKeyUniversalSR];
-        self.isH265 = h265; // 默认设置为 NO；
-        self.isOpenHardware = hardwareDecode; // 默认设置为 YES；
-        self.isOpenSR = sr; // 默认设置 NO；
+        self.enableLoadSpeed = NO;
+
+        self.isH265 = NO;
+        self.isOpenHardware = YES;
+        self.isOpenSR = NO;
+
+        self.enableSubtitle = YES;
+        self.subtitleSourceType = VEPlayerKitSubtitleSourceAuthToken;
     }
     return self;
 }

@@ -103,6 +103,8 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
         [self.playerInterface pause];
     } else if (playbackState == VEVideoPlaybackStatePaused) {
         [self.playerInterface play];
+    } else if (playbackState == VEVideoPlaybackStateStopped) {
+        [self.playerInterface playWithMediaSource:self.playerInterface.mediaSource];
     }
     [self.context post:@(self.playerInterface.playbackState) forKey:VEPlayerContextKeyPlayButtonSingleTap];
 }

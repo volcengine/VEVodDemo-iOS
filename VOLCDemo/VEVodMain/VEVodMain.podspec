@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.platform = :ios, '11.0'
   s.requires_arc = true
 
-  s.source_files = 'Entry/*'
+  s.source_files = 'Entry/*.{m,h}'
   s.public_header_files = 'Entry/*.{h}'
 
   s.resources = ['Resources/**/*.{xcassets,lproj}',
@@ -19,5 +19,7 @@ Pod::Spec.new do |s|
   ]
 
   s.dependency 'TTSDKFramework/Player-SR'
+  s.dependency 'VESceneModule'
 
+  s.static_framework = true
 end

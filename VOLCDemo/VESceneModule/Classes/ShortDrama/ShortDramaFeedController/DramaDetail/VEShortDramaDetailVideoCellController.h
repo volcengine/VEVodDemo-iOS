@@ -5,6 +5,7 @@
 
 #import <UIKit/UIKit.h>
 #import "VEPageViewController.h"
+#import "VEVideoPlayerController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,8 +25,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id<VEShortDramaDetailVideoCellControllerDelegate> delegate;
 @property (nonatomic, strong, readonly) VEDramaVideoInfoModel *dramaVideoInfo;
+@property (nonatomic, strong) VEVideoPlayerController *playerController;
+@property (nonatomic, assign) BOOL continuePlay;
 
 - (void)reloadData:(VEDramaVideoInfoModel *)dramaVideoInfo;
+
+- (void)recordPlaybackTime;
 
 @end
 

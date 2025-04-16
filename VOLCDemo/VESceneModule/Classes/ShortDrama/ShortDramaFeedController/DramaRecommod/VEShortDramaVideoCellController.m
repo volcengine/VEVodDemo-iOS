@@ -13,10 +13,13 @@
 #import "ShortDramaRecommodPlayerModuleLoader.h"
 #import "VEPlayerContextKeyDefine.h"
 #import "BTDMacros.h"
+#import "VEVideoPlayerConfigurationFactory.h"
+#import "VEDataManager.h"
+#import "ShortDramaRecordStartTimeModule.h"
 
 static NSInteger VEShortDramaVideoCellBottomOffset = 83;
 
-@interface VEShortDramaVideoCellController () <VEVideoPlaybackDelegate, ShortDramaRecommodPlayerModuleLoaderDelegate>
+@interface VEShortDramaVideoCellController () <VEVideoPlaybackDelegate, ShortDramaRecommodPlayerModuleLoaderDelegate, VEVideoPlayerControllerSubtitleDelegate>
 
 @property (nonatomic, strong, readwrite) VEDramaVideoInfoModel *dramaVideoInfo;
 @property (nonatomic, strong) VEVideoPlayerController *playerController;
@@ -62,7 +65,7 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [self playerStop:self.continuePlay];
+    [self playerStop];
 }
 
 #pragma mark - UI
@@ -105,15 +108,21 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
     if (!self.playerController) {
         [self createPlayer];
     }
+    if ([VEDataManager getSubtitleSourceType] == VESubtitleSourceType_Vid_AuthToken) {
+        [self.playerController setSubtitleAuthToken:self.dramaVideoInfo.subtitleAuthToken];
+    } else if ([VEDataManager getSubtitleSourceType] == VESubtitleSourceType_Url) {
+        TTVideoEngineSubDecInfoModel *subtitleInfoModel = [[TTVideoEngineSubDecInfoModel alloc] initWithDictionary:self.dramaVideoInfo.subtitleInfoDict];
+        [self.playerController setSubtitleInfoModel:subtitleInfoModel];
+        [self.playerController setSubtitleId:[VEDataManager getMatchedSubtitleId:subtitleInfoModel]];
+    }
     [self.playerController playWithMediaSource:[VEDramaVideoInfoModel toVideoEngineSource:self.dramaVideoInfo]];
     if (self.dramaVideoInfo.startTime > 0) {
         self.playerController.startTime = self.dramaVideoInfo.startTime;
         self.dramaVideoInfo.startTime = 0;
     }
-    [self.playerController play];
 }
 
-- (void)playerStop:(BOOL)continuePlay {
+- (void)playerStop {
     if (self.playerController) {
         // 处理无缝续播
         if (!self.continuePlay) {
@@ -132,14 +141,31 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
     }
 }
 
+#pragma mark ----- VEVideoPlayerControllerSubtitleDelegate
+- (void)videoPlayerController:(VEVideoPlayerController *)videoPlayerController onSubtitleTextUpdated:(NSString *)subtitle {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"on subtitle: %@", subtitle);
+        [self.moduleLoader setSubtitle:subtitle];
+    });
+}
+
+- (NSInteger)getMatchedSubtitleId:(TTVideoEngineSubDecInfoModel *)subtitleInfoModel {
+    return [VEDataManager getMatchedSubtitleId:subtitleInfoModel];
+}
+
+#pragma mark ----- Player
+
 - (void)createPlayer {
     if (self.playerController == nil) {
         self.moduleLoader = [[ShortDramaRecommodPlayerModuleLoader alloc] init];
         self.moduleLoader.delegate = self;
         
-        VEVideoPlayerConfiguration *playerConfig = [VEVideoPlayerConfiguration defaultPlayerConfiguration];
+        VEVideoPlayerConfiguration *playerConfig = [VEVideoPlayerConfigurationFactory getConfiguration];
+        playerConfig.enablePip = NO;
+        [VEPreRenderVideoEngineMediatorDelegate shareInstance].playerConfig = playerConfig;
         self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:playerConfig moduleLoader:self.moduleLoader playerContainerView:self.view];
         self.playerController.delegate = self;
+        self.playerController.subtitleDelegate = self;
         self.playerController.videoViewMode = VEVideoViewModeAspectFill;
         [self.view addSubview:self.playerController.view];
         [self.view bringSubviewToFront:self.collectViewController.view];
@@ -185,6 +211,7 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
 - (void)onClickSeriesViewCallback {
     if (self.delegate && [self.delegate respondsToSelector:@selector(dramaVideoWatchDetail:)]) {
         self.continuePlay = YES;
+        [self.moduleLoader.context post:nil forKey:VEPlayerContextKeyDramaSceneWillSwitch];
         [self.delegate dramaVideoWatchDetail:self.dramaVideoInfo];
     }
 }

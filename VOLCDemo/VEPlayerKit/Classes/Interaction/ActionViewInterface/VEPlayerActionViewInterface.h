@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 在playback control 的下面，比如弹幕
 @property (nonatomic, strong, readonly) VEPlayerControlView *underlayControlView;
 
-/// 播放控制层：所有能控制播放器的都叫做 control： part 中控制功能的控件会加到这个 view 上, 他控制着整体控件的消失和出现
+/// 播放控制层：所有能控制播放器的都叫做 control： module 中控制功能的控件会加到这个 view 上, 他控制着整体控件的消失和出现
 @property (nonatomic, strong, readonly) VEPlayerControlView * playbackControlView;
 
 /// 锁屏时的控制层

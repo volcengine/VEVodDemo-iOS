@@ -7,7 +7,7 @@
 
 @import UIKit;
 #import "VEPageViewController.h"
-#import "Data/Model/VEAdInfoModel.h"
+#import "VEAdInfoModel.h"
 
 @protocol VEAdManagerDelegate;
 @protocol VEAdActionResponderDelegate;

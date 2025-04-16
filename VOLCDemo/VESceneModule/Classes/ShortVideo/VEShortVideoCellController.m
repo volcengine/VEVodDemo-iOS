@@ -10,15 +10,16 @@
 #import "VEVideoModel.h"
 #import "VESettingManager.h"
 #import "VEShortVideoPlayerModuleLoader.h"
+#import "VEVideoPlayerConfigurationFactory.h"
 #import <Masonry/Masonry.h>
-#import "VEPlayerUIModule.h"
 #import "VEPlayerKit.h"
+#import "VEDataManager.h"
 
-
-@interface VEShortVideoCellController ()
+@interface VEShortVideoCellController () <VEVideoPlayerControllerSubtitleDelegate>
 
 @property (nonatomic, strong, readwrite) VEVideoModel *videoModel;
 @property (nonatomic, strong) VEVideoPlayerController *playerController;
+@property (nonatomic, strong) VEShortVideoPlayerModuleLoader *moduleLoader;
 
 @end
 
@@ -70,8 +71,15 @@
     if (!self.playerController) {
         [self createPlayer];
     }
+    [self.playerController preparePip];
+    if ([VEDataManager getSubtitleSourceType] == VESubtitleSourceType_Vid_AuthToken) {
+        [self.playerController setSubtitleAuthToken:self.videoModel.subtitleAuthToken];
+    } else if ([VEDataManager getSubtitleSourceType] == VESubtitleSourceType_Url) {
+        TTVideoEngineSubDecInfoModel *subtitleInfoModel = [[TTVideoEngineSubDecInfoModel alloc] initWithDictionary:self.videoModel.subtitleInfoDict];
+        [self.playerController setSubtitleInfoModel:subtitleInfoModel];
+        [self.playerController setSubtitleId:[VEDataManager getMatchedSubtitleId:subtitleInfoModel]];
+    }
     [self.playerController playWithMediaSource:[VEVideoModel ConvertVideoEngineSource:self.videoModel]];
-    [self.playerController play];
     self.playerController.looping = YES;
 }
 
@@ -83,15 +91,29 @@
         self.playerController = nil;
     }
 }
-  
+
+#pragma mark ----- VEVideoPlayerControllerSubtitleDelegate
+- (void)videoPlayerController:(VEVideoPlayerController *)videoPlayerController onSubtitleTextUpdated:(NSString *)subtitle {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"on subtitle: %@", subtitle);
+        [self.moduleLoader setSubtitle:subtitle];
+    });
+}
+
+- (NSInteger)getMatchedSubtitleId:(TTVideoEngineSubDecInfoModel *)subtitleInfoModel {
+    return [VEDataManager getMatchedSubtitleId:subtitleInfoModel];
+}
+
 #pragma mark ----- Player
 
 - (void)createPlayer {
     if (self.playerController == nil) {
-        VEShortVideoPlayerModuleLoader *moduleLoader = [[VEShortVideoPlayerModuleLoader alloc] init];
+        self.moduleLoader = [[VEShortVideoPlayerModuleLoader alloc] init];
         
-        VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfiguration defaultPlayerConfiguration];
-        self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:configration moduleLoader:moduleLoader playerContainerView:self.view];
+        VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfigurationFactory getConfiguration];
+        [VEPreRenderVideoEngineMediatorDelegate shareInstance].playerConfig = configration;
+        self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:configration moduleLoader:self.moduleLoader playerContainerView:self.view];
+        self.playerController.subtitleDelegate = self;
         [self.view addSubview:self.playerController.view];
         [self.view bringSubviewToFront:self.playerController.view];
         [self.playerController.view mas_makeConstraints:^(MASConstraintMaker *make) {

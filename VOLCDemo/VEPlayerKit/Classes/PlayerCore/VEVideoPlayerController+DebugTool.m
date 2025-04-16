@@ -7,7 +7,7 @@
 
 #import "VEVideoPlayerController+DebugTool.h"
 #import <objc/runtime.h>
-#import <RangersAppLog.h>
+#import <RangersAppLog/RangersAppLog.h>
 
 @implementation VEVideoPlayerController (DebugTool)
 

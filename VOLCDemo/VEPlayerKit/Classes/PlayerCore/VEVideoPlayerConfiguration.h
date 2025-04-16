@@ -10,6 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, VEPlayerKitSubtitleSourceType) {
+    VEPlayerKitSubtitleSourceAuthToken   = 0,   // SubtitleAuthToken类型的字幕源
+    VEPlayerKitSubtitleSourceDirectUrl   = 1,   // DirectUrl类型的字幕源
+};
+
 @interface VEVideoPlayerConfiguration : NSObject
 
 // 播放器默认显示模式, 默认值 VEVideoViewModeAspectFill
@@ -37,6 +42,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Pipture in picture , supported on iOS15+
 @property (nonatomic, assign) BOOL enablePip;
+
+// 是否开启字幕功能
+@property (nonatomic, assign) BOOL enableSubtitle;
+// 字幕源的类型
+@property (nonatomic, assign) VEPlayerKitSubtitleSourceType subtitleSourceType;
 
 + (VEVideoPlayerConfiguration *)defaultPlayerConfiguration;
 

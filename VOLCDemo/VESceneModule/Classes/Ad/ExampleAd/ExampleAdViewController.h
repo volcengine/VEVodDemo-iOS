@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)reloadData:(VEVideoModel *)adModel forAdId:(NSString*)adId andSceneType:(NSInteger)sceneType;
 - (void)play;
+- (void)ignore;
 
 @end
 

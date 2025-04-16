@@ -8,6 +8,7 @@
 
 #import "VEPageViewController.h"
 #import <objc/message.h>
+#import "VEVideoPlayerPipController.h"
 
 NSUInteger const VEPageMaxCount = NSIntegerMax;
 
@@ -127,6 +128,8 @@ static NSString *VEPageViewControllerExceptionKey = @"VEPageViewControllerExcept
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     [self.currentViewController endAppearanceTransition];
+    [self scrollViewDidStopScroll];
+    [self.currentViewController performSelector:@selector(viewDidDisappear:) withObject:@(YES)];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -280,12 +283,12 @@ static NSString *VEPageViewControllerExceptionKey = @"VEPageViewControllerExcept
         } else {
             self.scrollView.contentOffset = CGPointMake(0, currentIndex * self.view.frame.size.height);
         }
-        if (self.view.window) {
-            [lastViewController beginAppearanceTransition:NO animated:YES];
-            [lastViewController endAppearanceTransition];
-            [self.currentViewController beginAppearanceTransition:YES animated:YES];
-            [self.currentViewController endAppearanceTransition];
-        }
+    }
+    if (self.view.window) {
+        [lastViewController beginAppearanceTransition:NO animated:YES];
+        [lastViewController endAppearanceTransition];
+        [self.currentViewController beginAppearanceTransition:YES animated:YES];
+        [self.currentViewController endAppearanceTransition];
     }
 }
 
@@ -467,7 +470,11 @@ static NSString *VEPageViewControllerExceptionKey = @"VEPageViewControllerExcept
     } else if (self.currentIndex == (self.itemCount - 1) && self.currentDirection == VEPageItemMoveDirectionNext) {
         return;
     } else {
-        [self setCurrentIndex:(NSInteger)page autoAdjustOffset:NO];
+        if ([[VEVideoPlayerPipController shared] isPipActive]) {
+            [self setCurrentIndex:(NSInteger)page autoAdjustOffset:YES];
+        } else {
+            [self setCurrentIndex:(NSInteger)page autoAdjustOffset:NO];
+        }
     }
     if (_delegateHas.hasDidEndDisplayItem) {
         [self.delegate pageViewController:self didDisplayItem:lastViewController];
@@ -481,6 +488,43 @@ static NSString *VEPageViewControllerExceptionKey = @"VEPageViewControllerExcept
     self.shouldChangeToNextPage = NO;
 }
 
+- (void)_finishScroll {
+    UIViewController<VEPageItem> *lastViewController = self.currentViewController;
+    NSUInteger page = _currentIndex;
+
+    if (self.isVerticalScroll) {
+        page = (NSUInteger)(self.scrollView.contentOffset.y / self.scrollView.frame.size.height + 0.5);
+    } else {
+        page = (NSUInteger)(self.scrollView.contentOffset.x / self.scrollView.frame.size.width + 0.5);
+    }
+
+    if (self.currentIndex != page) {
+        [self setCurrentIndex:(NSInteger)page autoAdjustOffset:YES];
+        if (_delegateHas.hasDidEndDisplayItem) {
+            [self.delegate pageViewController:self didDisplayItem:lastViewController];
+        }
+    } else {
+        if (!self.isVerticalScroll) {
+            self.scrollView.contentOffset = CGPointMake(self.currentIndex * self.view.frame.size.width, 0);
+        } else {
+            self.scrollView.contentOffset = CGPointMake(0, self.currentIndex * self.view.frame.size.height);
+        }
+    }
+
+    if (self.currentIndex != page) {
+        if (lastViewController.veTransitioning) {
+            [lastViewController endAppearanceTransition];
+            lastViewController.veTransitioning = NO;
+        }
+        if (self.currentViewController.veTransitioning) {
+            [self.currentViewController endAppearanceTransition];
+            self.currentViewController.veTransitioning = NO;
+        }
+    }
+
+    self.scrollView.panGestureRecognizer.enabled = YES;
+    self.currentDirection = VEPageItemMoveDirectionUnknown;
+}
 
 #pragma mark - UIScrollViewDelegate
 
@@ -591,6 +635,9 @@ static NSString *VEPageViewControllerExceptionKey = @"VEPageViewControllerExcept
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     [self scrollViewDidStopScroll];
+    if (self.currentDirection != VEPageItemMoveDirectionUnknown) {
+        [self _finishScroll];
+    }
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {

@@ -68,5 +68,9 @@ extern NSString * const VEPlayerContextKeyShortDramaShowPayModule;
 #pragma mark - Toast
 extern NSString * const VEPlayerContextKeyShowToastModule;
 
+#pragma mark - Pip
+extern NSString * const VEPlayerContextKeySwitchPictureInPicture;
+extern NSString * const VEPlayerContextKeyPictureInPictureStateChanged;
+
 NS_ASSUME_NONNULL_END
 
