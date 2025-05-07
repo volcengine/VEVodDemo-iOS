@@ -106,8 +106,12 @@ static NSInteger VEShortDramaDetailVideoFeedLoadMoreDetection = 3;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationController.interactivePopGestureRecognizer.delegate = self;
-    
+    self.navigationController.interactivePopGestureRecognizer.delegate = nil;
+
+    UIScreenEdgePanGestureRecognizer *edgePanRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handleEdgePan:)];
+    edgePanRecognizer.edges = UIRectEdgeLeft;
+    [self.view addGestureRecognizer:edgePanRecognizer];
+
     [self configuratoinCustomView];
     [self firstUpdateDramaTitle];
     
@@ -452,6 +456,20 @@ static NSInteger VEShortDramaDetailVideoFeedLoadMoreDetection = 3;
         [presentingViewController dismissViewControllerAnimated:NO completion:nil];
     } else if (self.navigationController) {
         [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+- (void)handleEdgePan:(UIScreenEdgePanGestureRecognizer *)recognizer {
+    CGPoint translation = [recognizer translationInView:self.view];
+    CGPoint velocity = [recognizer velocityInView:self.view];
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
+        CGFloat screenWidth = CGRectGetWidth([UIScreen mainScreen].bounds);
+        CGFloat distanceThreshold = screenWidth / 5;
+        CGFloat velocityThreshold = 800.0;
+        CGFloat distance = translation.x;
+        if (distance > distanceThreshold && velocity.x > velocityThreshold) {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
     }
 }
 

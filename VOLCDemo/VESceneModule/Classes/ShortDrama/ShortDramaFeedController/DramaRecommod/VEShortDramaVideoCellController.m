@@ -153,6 +153,10 @@ static NSInteger VEShortDramaVideoCellBottomOffset = 83;
     return [VEDataManager getMatchedSubtitleId:subtitleInfoModel];
 }
 
+- (NSString *)generateSubtitleCachKey:(NSString *)subTitleUrl extendInfo:(NSDictionary *)extendInfo {
+    return [VEDataManager generateSubtitleCacheKey:subTitleUrl];
+}
+
 #pragma mark ----- Player
 
 - (void)createPlayer {

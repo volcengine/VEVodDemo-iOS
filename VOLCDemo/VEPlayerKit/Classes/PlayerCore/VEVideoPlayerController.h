@@ -35,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)videoPlayerController:(VEVideoPlayerController *)videoPlayerController onSubtitleRequestFinished:(TTVideoEngineSubDecInfoModel *)subtitleInfoModel error:(NSError * _Nullable)error;
 - (void)videoPlayerController:(VEVideoPlayerController *)videoPlayerController onSubtitleLoadFinished:(BOOL)success;
 - (NSInteger)getMatchedSubtitleId:(TTVideoEngineSubDecInfoModel *)subtitleInfoModel;
+- (NSString *)generateSubtitleCachKey:(NSString *)subTitleUrl extendInfo:(NSDictionary *)extendInfo;
 @end
 
 @interface VEVideoPlayerController : UIViewController <VEPlayCoreAbilityProtocol, VEVideoPlayback>

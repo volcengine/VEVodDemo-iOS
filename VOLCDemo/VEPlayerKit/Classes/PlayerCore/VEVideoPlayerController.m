@@ -858,6 +858,13 @@ VEVideoPlayerPipControllerDelegate>
     }
 }
 
+- (NSString *)videoEngine:(TTVideoEngine *)videoEngine generateSubtitleCachKey:(NSString *)subTitleUrl extendInfo:(NSDictionary *)extendInfo {
+    if (self.subtitleDelegate && [self.subtitleDelegate respondsToSelector:@selector(generateSubtitleCachKey:extendInfo:)]) {
+        return [self.subtitleDelegate generateSubtitleCachKey:subTitleUrl extendInfo:extendInfo];
+    }
+    return nil;
+}
+
 #pragma mark - Private
 
 - (void)__handleBeforePlayAction {

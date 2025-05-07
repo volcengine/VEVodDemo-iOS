@@ -37,4 +37,6 @@ typedef NS_ENUM(NSInteger, VESubtitleSourceType) {
 
 + (NSDictionary *)buildSubtitleModels:(NSArray<VEVideoModel *> *)videoModels;
 
++ (NSString *)generateSubtitleCacheKey:(NSString *)url;
+
 @end

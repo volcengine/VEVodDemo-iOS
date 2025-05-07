@@ -67,6 +67,8 @@ VEPlayerContextDILink(playerInterface, VEVideoPlayback, self.context);
     NSTimeInterval startTime = 0;
     if (curTime && duration && (duration - curTime > 5.0)) {
         startTime = curTime;
+    } else {
+        return;
     }
     
     // 内存级缓存，业务可以根据实际情况修改源码，例如做云端缓存等
