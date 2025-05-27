@@ -9,11 +9,6 @@
 #import "VEPlayerContextMacros.h"
 #import <TTSDKFramework/TTVideoEngine+Options.h>
 
-typedef struct EngineVideoWrapperContext{
-    EngineVideoWrapper *videoWrapper;
-    void *playerController;
-}EngineVideoWrapperContext;
-
 @implementation VEVideoPlayerPipDisplayView
 
 + (Class)layerClass {
@@ -105,48 +100,34 @@ typedef struct EngineVideoWrapperContext{
     });
 }
 
-- (EngineVideoWrapper *)createVideoWrapper:(id)playerController {
-    EngineVideoWrapper *videoWrapper = malloc(sizeof(EngineVideoWrapper));
-    videoWrapper->process = process;
-    videoWrapper->release = release;
-
-    EngineVideoWrapperContext *context = malloc(sizeof(EngineVideoWrapperContext));
-    context->videoWrapper = videoWrapper;
-    context->playerController = (__bridge void *)playerController;
-
-    videoWrapper->context = context;
+- (EngineVideoWrapper *)createVideoWrapper {
+    static EngineVideoWrapper *videoWrapper = 0;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        videoWrapper = malloc(sizeof(EngineVideoWrapper));
+        videoWrapper->process = process;
+        videoWrapper->release = release;
+    });
     return videoWrapper;
 }
 
 static void process(void *context, CVPixelBufferRef frame, int64_t timestamp) {
-    if (!context) {
-        return;
-    }
     if (!frame) {
         NSLog(@"pip invalid frame: %p", (void *)(frame));
+        return;
     }
 
-    EngineVideoWrapperContext *ctx = (EngineVideoWrapperContext *)context;
-    id playerController = (__bridge id)ctx->playerController;
-    if (playerController == [VEVideoPlayerPipController shared].currentController) {
-        CFTimeInterval currentTime = CACurrentMediaTime();
-        static CFTimeInterval prevInvalidateTime = 0;
-        if (currentTime - prevInvalidateTime >= 1.0) {
-            prevInvalidateTime = currentTime;
-            [[VEVideoPlayerPipController shared] invalidatePlaybackState];
-        }
-        [VEVideoPlayerPipController __dispatchPixelBuffer:frame];
+    CFTimeInterval currentTime = CACurrentMediaTime();
+    static CFTimeInterval prevInvalidateTime = 0;
+    if (currentTime - prevInvalidateTime >= 1.0) {
+        prevInvalidateTime = currentTime;
+        [[VEVideoPlayerPipController shared] invalidatePlaybackState];
     }
+    [VEVideoPlayerPipController __dispatchPixelBuffer:frame];
 }
 
 static void release(void *context) {
-    if (!context) {
-        return;
-    }
 
-    EngineVideoWrapperContext *ctx = (EngineVideoWrapperContext *)(context);
-    free(ctx->videoWrapper);
-    free(ctx);
 }
 
 + (void)__dispatchPixelBuffer:(CVPixelBufferRef)pixelBuffer {

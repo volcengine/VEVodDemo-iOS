@@ -53,8 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)invalidatePlaybackState;
 
-- (EngineVideoWrapper *)createVideoWrapper:(id)playerController;
-
+- (EngineVideoWrapper *)createVideoWrapper;
 @end
 
 NS_ASSUME_NONNULL_END

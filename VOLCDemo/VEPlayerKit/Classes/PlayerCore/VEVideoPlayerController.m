@@ -245,7 +245,7 @@ VEVideoPlayerPipControllerDelegate>
             self.videoEngine = engine;
             self.engineFrom = engineFrom;
             if (self.playerConfig.enablePip) {
-                [self.videoEngine setVideoWrapper:[[VEVideoPlayerPipController shared] createVideoWrapper:self]];
+                [self.videoEngine setVideoWrapper:[[VEVideoPlayerPipController shared] createVideoWrapper]];
             }
             if (engineFrom == VECreateEngineFrom_Init) {
                 [self.videoEngine setVideoEngineVideoSource:mediaSource];
