@@ -1,0 +1,18 @@
+// Copyright (c) 2025 Beijing Volcano Engine Technology Co., Ltd.
+// SPDX-License-Identifier: MIT
+//
+//  DebugToolOCViewController.h
+//  VEVodPlayerAPIExample
+//
+//  Created by ByteDance on 2025/6/4.
+//
+
+#import <UIKit/UIKit.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface DebugToolOCViewController : UIViewController
+
+@end
+
+NS_ASSUME_NONNULL_END

@@ -3,7 +3,7 @@
 1. VOLCDemo基于TTSDK点播SDK开发，目前完成了短、中、长等场景的视频基础能力展示。并提供了一些示例使用方式和工具层，后续会持续迭代。
 2. 通过展示各种场景化解决方案来协助业务侧快速完成各类视频业务的快速搭建。
 3. 新版本新增短剧场景示例。
-
+4. 新增 API Example 项目，详见 [VEVodPlayerAPIExample/README.md](/VEVodPlayerAPIExample/README.md) 文件。
 
 ## 目录结构说明
 
