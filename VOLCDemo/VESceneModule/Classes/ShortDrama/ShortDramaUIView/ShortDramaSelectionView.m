@@ -55,14 +55,6 @@
     [self addGestureRecognizer:tapGes];
 }
 
-- (void)showView:(BOOL)show {
-    [UIView animateWithDuration:.3f animations:^{
-        self.alpha = show ? 1 : 0;
-    } completion:^(BOOL finished) {
-        
-    }];
-}
-
 #pragma mark - Event
 
 - (void)onClickHandle {

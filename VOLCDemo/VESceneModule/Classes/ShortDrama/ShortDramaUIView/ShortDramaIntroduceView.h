@@ -13,8 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ShortDramaIntroduceView : UIView
 
-- (void)showView:(BOOL)show;
-
 - (void)reloadData:(VEDramaVideoInfoModel *)dramaVideoInfo;
 
 @end

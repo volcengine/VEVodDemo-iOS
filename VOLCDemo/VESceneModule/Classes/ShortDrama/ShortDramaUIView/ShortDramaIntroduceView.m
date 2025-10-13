@@ -29,14 +29,6 @@
     self.desLabel.text = [NSString stringWithFormat:@"第%@集 %@", @(dramaVideoInfo.dramaEpisodeInfo.episodeNumber), dramaVideoInfo.dramaEpisodeInfo.episodeDesc];
 }
 
-- (void)showView:(BOOL)show {
-    [UIView animateWithDuration:.3f animations:^{
-        self.alpha = show ? 1 : 0;
-    } completion:^(BOOL finished) {
-        
-    }];
-}
-
 - (void)configuratoinCustomView {
     [self addSubview:self.titleLabel];
     [self addSubview:self.desLabel];

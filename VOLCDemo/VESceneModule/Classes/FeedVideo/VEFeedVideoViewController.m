@@ -17,6 +17,7 @@
 #import <Masonry/Masonry.h>
 #import "VESettingModel.h"
 #import "VEVideoPlayerConfigurationFactory.h"
+#import "VEFeedVideoCellPlayerModuleLoader.h"
 
 static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
 
@@ -27,6 +28,8 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
 @property (nonatomic, strong) NSMutableArray *videoModels;
 
 @property (nonatomic, strong) VEVideoPlayerController *playerController;
+
+@property (nonatomic, strong) VEFeedVideoCellPlayerModuleLoader *moduleLoader;
 
 @end
 
@@ -118,6 +121,9 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
     VEFeedVideoDetailViewController *detailViewController = [VEFeedVideoDetailViewController new];
     detailViewController.delegate = self;
     detailViewController.videoModel = videoModel;
+    if (shouldGoOn) {
+        self.moduleLoader.backModule.curVC = detailViewController;
+    }
     [self.navigationController pushViewController:detailViewController animated:YES];
 }
 
@@ -126,7 +132,9 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
     } else {
         [self stopVideos:YES];
         VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfigurationFactory getConfiguration];
-        self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:configration];
+        self.moduleLoader = NULL;
+        self.moduleLoader = [[VEFeedVideoCellPlayerModuleLoader alloc] init];
+        self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:configration moduleLoader:self.moduleLoader playerContainerView:cell.centerContainerView];
         [self.playerController preparePip];
     }
     return self.playerController;

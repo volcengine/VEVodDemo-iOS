@@ -82,6 +82,12 @@
 - (BOOL)isPlaying;
 - (BOOL)isPause;
 
+- (TTVideoEngineResolutionType)currentResolution;
+
+- (void)setCurrentResolution:(TTVideoEngineResolutionType)resolution;
+
+- (NSArray *)resolutionSet;
+
 /// Seek to a given time.
 /// @param time the time to seek to, in seconds.
 /// @param finised the completion handler

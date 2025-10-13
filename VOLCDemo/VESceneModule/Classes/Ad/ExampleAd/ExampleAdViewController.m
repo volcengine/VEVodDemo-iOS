@@ -12,7 +12,6 @@
 #import "VEVideoPlayerController.h"
 #import "ExampleAdPlayerModuleLoader.h"
 #import "VEVideoModel.h"
-#import "VEPlayerUIModule.h"
 #import "VEPlayerKit.h"
 #import "VESettingManager.h"
 #import "VEVideoPlayerConfigurationFactory.h"

@@ -39,6 +39,8 @@ extern NSString * const VEPlayerContextKeyVideoTitleChanged;
 extern NSString * const VEPlayerContextKeyShowPanel;
 extern NSString * const VEPlayerContextKeySliderMarkPoints;
 extern NSString * const VEPlayerContextKeySliderCirclePoints;
+extern NSString * const VEPlayerContextKeyViewVisible;
+extern NSString * const VEPlayerContextKeyGestureEnabled;
 
 #pragma mark - Seek
 extern NSString * const VEPlayerContextKeySliderSeekBegin;

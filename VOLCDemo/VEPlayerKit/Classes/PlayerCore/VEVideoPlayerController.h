@@ -70,7 +70,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)switchPip;
 
+- (void)switchPlayerContainerView:(UIView *)containerView moduleLoader:(VEPlayerBaseModule *)moduleLoader;
+
 + (void)cleanCache;
+
++ (NSString *)transferResolutionTitleByType:(NSInteger)type;
 
 @end
 

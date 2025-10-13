@@ -56,14 +56,6 @@
 
 #pragma mark - Public
 
-- (void)showView:(BOOL)show {
-    [UIView animateWithDuration:.3f animations:^{
-        self.alpha = show ? 1 : 0;
-    } completion:^(BOOL finished) {
-        
-    }];
-}
-
 - (void)updateProgress:(NSInteger)playbackTime duration:(NSInteger)duration; {
     self.currentLabel.text = [self formatPlayTime:playbackTime];
     if (self.duration != duration) {

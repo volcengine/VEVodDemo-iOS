@@ -9,20 +9,22 @@
 #import "VEVideoModel.h"
 #import "VESettingManager.h"
 #import "VEVideoPlayerConfigurationFactory.h"
-#import "VEPlayerUIModule.h"
-#import "VEInterfaceSimpleBlockSceneConf.h"
 #import "VEPlayerKit.h"
 #import <Masonry/Masonry.h>
 #import "UIViewController+Orientation.h"
 #import "VEVideoPlayerPipController.h"
+#import "VELongVideoPlayerModuleLoader.h"
+#import "VEPlayerContextKeyDefine.h"
 
-@interface VELongVideoDetailViewController () <VEInterfaceDelegate>
+@interface VELongVideoDetailViewController ()
 
 @property (nonatomic, strong) VEVideoPlayerController *playerController; // player Container
 
-@property (nonatomic, strong) VEInterface *playerControlView; // player Control view
-
 @property (nonatomic, strong) UIView *playContainerView; // playerView & playerControlView Container
+
+@property (nonatomic, strong) VELongVideoPlayerModuleLoader *moduleLoader;
+
+@property (nonatomic, assign) NSInteger portraitTop;
 
 @end
 
@@ -35,8 +37,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self createPlayer];
     [self layoutUI];
     [self addObserver];
+    
+    self.playerController.playerTitle = self.videoModel.title;
+    [self.moduleLoader.context post:self.videoModel.title forKey:VEPlayerContextKeyDataModelChanged];
+    TTVideoEngineVidSource *vidSource = [VEVideoModel ConvertVideoEngineSource:self.videoModel];
+    [self playerOptions];
+    [self.playerController preparePip];
+    [self.playerController playWithMediaSource:vidSource];
+    [self.playerController play];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -64,33 +75,39 @@
     self.navigationController.navigationItem.title = @"";
     [self.view addSubview:self.playContainerView];
     [self.playContainerView addSubview:self.playerController.view];
-    [self.playContainerView addSubview:self.playerControlView];
+
     CGFloat screenRate = (self.preferredInterfaceOrientationForPresentation == UIInterfaceOrientationPortrait) ? (3.0 / 4.0) : (UIScreen.mainScreen.bounds.size.height / UIScreen.mainScreen.bounds.size.width);
     CGFloat height = UIScreen.mainScreen.bounds.size.width * (screenRate);
-    CGFloat top = (self.preferredInterfaceOrientationForPresentation == UIInterfaceOrientationPortrait) ? UIApplication.sharedApplication.statusBarFrame.size.height : 0.0;
+    if (UIApplication.sharedApplication.statusBarFrame.size.height > 0) {
+        self.portraitTop = UIApplication.sharedApplication.statusBarFrame.size.height;
+    }
+    CGFloat top = (self.preferredInterfaceOrientationForPresentation == UIInterfaceOrientationPortrait) ? self.portraitTop : 0.0;
+
     
     [self.playContainerView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view).offset(top);
         make.leading.trailing.equalTo(self.view);
-        make.height.equalTo(@(height));
+        make.height.equalTo(@(height + 80));
     }];
     
     [self.playerController.view mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.playContainerView);
-    }];
-    [self.playerControlView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.playContainerView);
+        make.top.left.right.equalTo(self.playContainerView);
+        make.bottom.equalTo(self.playContainerView).with.offset(-80);
     }];
 }
 
 - (void)setVideoModel:(VEVideoModel *)videoModel {
     _videoModel = videoModel;
-    self.playerController.playerTitle = videoModel.title;
-    TTVideoEngineVidSource *vidSource = [VEVideoModel ConvertVideoEngineSource:videoModel];
-    [self playerOptions];
-    [self.playerController preparePip];
-    [self.playerController playWithMediaSource:vidSource];
-    [self.playerController play];
+}
+
+- (void)createPlayer {
+    if (self.playerController == nil) {
+        self.moduleLoader = [[VELongVideoPlayerModuleLoader alloc] init];
+        self.moduleLoader.curVC = self;
+        VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfigurationFactory getConfiguration];
+        [VEPreRenderVideoEngineMediatorDelegate shareInstance].playerConfig = configration;
+        self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:configration moduleLoader:self.moduleLoader playerContainerView:self.playContainerView];
+    }
 }
 
 - (UIView *)playContainerView {
@@ -98,22 +115,6 @@
         _playContainerView = [UIView new];
     }
     return _playContainerView;
-}
-
-- (VEInterface *)playerControlView {
-    if (!_playerControlView) {
-        _playerControlView = [[VEInterface alloc] initWithPlayerCore:self.playerController scene:[VEInterfaceSimpleBlockSceneConf new]];
-        _playerControlView.delegate = self;
-    }
-    return _playerControlView;
-}
-
-- (VEVideoPlayerController *)playerController {
-    if (!_playerController) {
-        VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfigurationFactory getConfiguration];
-        _playerController = [[VEVideoPlayerController alloc] initWithConfiguration:configration];
-    }
-    return _playerController;
 }
 
 - (void)playerOptions {
@@ -126,29 +127,11 @@
 
 - (void)playerStop {
     @autoreleasepool {
-        [self.playerControlView removeFromSuperview];
-        [self.playerControlView destory];
-        self.playerControlView = nil;
         [self.playerController stop];
         [self.playerController.view removeFromSuperview];
         self.playerController = nil;
     }
 }
-
-
-#pragma mark ----- VEInterfaceDelegate
-
-
-- (void)interfaceCallScreenRotation:(UIView *)interface {
-    UIDeviceOrientation oriention = ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) ? UIDeviceOrientationLandscapeRight : UIDeviceOrientationPortrait;
-    [self setDeviceInterfaceOrientation:oriention];
-    [self layoutUI];
-}
-
-- (void)interfaceCallStartPip:(UIView *)interface {
-	[self.playerController switchPip];
-}
-
 
 #pragma mark ----- UIInterfaceOrientation
 
@@ -170,20 +153,6 @@
     }
     [self layoutUI];
     [self.view setNeedsLayout];
-}
-
-- (void)interfaceCallPageBack:(UIView *)interface {
-    switch (self.preferredInterfaceOrientationForPresentation) {
-        case UIInterfaceOrientationLandscapeRight: {
-            [self interfaceCallScreenRotation:nil];
-        }
-            break;
-        case UIInterfaceOrientationPortrait:
-        default: {
-            [self close];
-        }
-            break;
-    }
 }
 
 - (BOOL)prefersHomeIndicatorAutoHidden {

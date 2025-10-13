@@ -13,6 +13,7 @@
 #import "VEPlayerSeekState.h"
 #import "VEVideoPlayback.h"
 #import "VEVideoPlayerPipController.h"
+#import "UIView+BDShowView.h"
 
 @interface VEPlayerPipModule ()
 
@@ -24,6 +25,12 @@
 
 @property (nonatomic, assign) NSInteger pipActived;
 
+@property (nonatomic, assign) NSInteger leftOffset;
+
+@property (nonatomic, assign) NSInteger topOffset;
+
+@property (nonatomic, assign) BOOL isLocking;
+
 @end
 
 @implementation VEPlayerPipModule
@@ -32,6 +39,15 @@ VEPlayerContextDILink(playerInterface, VEVideoPlayback, self.context);
 VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.context);
 
 #pragma mark - Life Cycle
+
+- (instancetype)initWithLeftOffset:(NSInteger)left TopOffset:(NSInteger)top {
+    self = [super init];
+    if (self) {
+        _leftOffset = left;
+        _topOffset = top;
+    }
+    return self;
+}
 
 - (void)moduleDidLoad {
     [super moduleDidLoad];
@@ -48,6 +64,32 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
         @strongify(self);
         self.pipActived = [actived integerValue];
     }];
+    
+    [self.context addKey:VEPlayerContextKeyViewVisible withObserver:self handler:^(NSNumber *shown, NSString * _Nullable key) {
+        @strongify(self);
+        if (!self.isLocking) {
+            BOOL value = [shown boolValue];
+            [self.btnPip showView:value];
+        }
+    }];
+    
+    [self.context addKey:VEPlayerContextKeyRotateScreen withObserver:self handler:^(NSNumber *ori, NSString * _Nullable key) {
+        @strongify(self);
+        UIDeviceOrientation curOri = (UIDeviceOrientation)[ori intValue];
+        [self.btnPip mas_updateConstraints:^(MASConstraintMaker *make) {
+            if (curOri == UIDeviceOrientationPortrait) {
+                make.left.equalTo(self.actionViewInterface.overlayControlView).offset(self.leftOffset);
+            }else if (curOri == UIDeviceOrientationLandscapeRight) {
+                make.left.equalTo(self.actionViewInterface.overlayControlView).offset(self.leftOffset + 32);
+            }
+        }];
+    }];
+    
+    [self.context addKey:VEPlayerContextKeyLockControl withObserver:self handler:^(NSNumber *lock, NSString * _Nullable key) {
+        BOOL value = [lock boolValue];
+        self.isLocking = value;
+        [self.btnPip showView:!value];
+    }];
 }
 
 - (void)controlViewTemplateDidUpdate {
@@ -58,11 +100,19 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
 
     [self.actionViewInterface.overlayControlView addSubview:self.btnPip];
 
-    [self.btnPip mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.actionViewInterface.overlayControlView).offset(52);
-        make.right.equalTo(self.actionViewInterface.overlayControlView).offset(-12);
-        make.size.mas_equalTo(CGSizeMake(36, 36));
-    }];
+    if (self.leftOffset != 0 && self.topOffset != 0) {
+        [self.btnPip mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.actionViewInterface.overlayControlView).offset(self.topOffset);
+            make.left.equalTo(self.actionViewInterface.overlayControlView).offset(self.leftOffset);
+            make.size.mas_equalTo(CGSizeMake(36, 36));
+        }];
+    }else {
+        [self.btnPip mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.actionViewInterface.overlayControlView).offset(52);
+            make.right.equalTo(self.actionViewInterface.overlayControlView).offset(-12);
+            make.size.mas_equalTo(CGSizeMake(36, 36));
+        }];
+    }
 }
 
 - (void)moduleDidUnLoad {

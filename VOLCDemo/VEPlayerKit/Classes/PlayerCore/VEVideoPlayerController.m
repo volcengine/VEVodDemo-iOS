@@ -201,6 +201,13 @@ VEVideoPlayerPipControllerDelegate>
     return self;
 }
 
+- (void)switchPlayerContainerView:(UIView *)containerView moduleLoader:(VEPlayerBaseModule *)moduleLoader {
+    [self.interaction removeAllModules];
+    [self.interaction addModule:moduleLoader];
+    self.playerContainerView = containerView;
+    self.interaction.playerContainerView = containerView;
+}
+
 - (void)dealloc {
     [self removeObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -227,10 +234,26 @@ VEVideoPlayerPipControllerDelegate>
     if (self.playerConfig.enablePip) {
         [VEVideoPlayerPipController shared];
     }
+    
+    [self __setBasicEnv];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
 	[super viewDidDisappear:animated];
+}
+
+- (void)__setBasicEnv {
+    @weakify(self);
+    [self.context addKey:VEPlayerContextKeyPlaybackSpeedChanged withObserver:self handler:^(NSNumber *speed, NSString * _Nullable key) {
+        @strongify(self);
+        CGFloat value = [speed doubleValue];
+        [self setPlaybackRate:value];
+    }];
+    [self.context addKey:VEPlayerContextKeyResolutionChanged withObserver:self handler:^(NSNumber *resolution, NSString * _Nullable key) {
+        @strongify(self);
+        TTVideoEngineResolutionType selectedResolution = (TTVideoEngineResolutionType)[resolution intValue];
+        [self setCurrentResolution:selectedResolution];
+    }];
 }
 
 - (void)createVideoEngine:(id<TTVideoEngineMediaSource> _Nonnull)mediaSource needPrerenderEngine:(BOOL)needPrerender {
@@ -714,6 +737,105 @@ VEVideoPlayerPipControllerDelegate>
     _superResolutionEnable = superResolutionEnable;
     [self.videoEngine setOptionForKey:VEKKeyPlayerEnableNNSR_BOOL value:@(superResolutionEnable)];
     [self.videoEngine setOptionForKey:VEKKeyIsEnableVideoBmf_BOOL value:@(superResolutionEnable)];
+}
+
+- (void)setCurrentResolution:(TTVideoEngineResolutionType)resolution {
+    NSDictionary *param = @{};
+    [self.videoEngine configResolution:resolution params:param completion:^(BOOL success, TTVideoEngineResolutionType completeResolution) {
+        NSLog(@"resolution changed %@, current = %ld, param = %@", (success ? @"success" : @"fail"), completeResolution, param);
+    }];
+}
+
+- (TTVideoEngineResolutionType)currentResolution {
+    return self.videoEngine.currentResolution;
+}
+
+- (NSArray *)resolutionSet {
+    NSMutableArray *resolutionSet = [NSMutableArray array];
+    for (NSNumber *originTypeNum in self.videoEngine.supportedResolutionTypes) {
+        NSString *resolutionTitle = [VEVideoPlayerController transferResolutionTitleByType:originTypeNum.integerValue];
+        [resolutionSet addObject:@{resolutionTitle : originTypeNum}];
+    }
+    return resolutionSet;
+}
+
++ (NSString *)transferResolutionTitleByType:(NSInteger)type {
+    NSString *resolutionTitle;
+    switch (type) {
+        case TTVideoEngineResolutionTypeSD:
+            resolutionTitle = @"360P";
+            break;
+        case TTVideoEngineResolutionTypeHD:
+            resolutionTitle = @"480P";
+            break;
+        case TTVideoEngineResolutionTypeFullHD:
+            resolutionTitle = @"720P";
+            break;
+        case TTVideoEngineResolutionType1080P:
+            resolutionTitle = @"1080P";
+            break;
+        case TTVideoEngineResolutionType4K:
+            resolutionTitle = @"4K";
+            break;
+        case TTVideoEngineResolutionTypeABRAuto:
+            resolutionTitle = @"ABR自动";
+            break;
+        case TTVideoEngineResolutionTypeAuto:
+            resolutionTitle = @"自动";
+            break;
+        case TTVideoEngineResolutionTypeUnknown:
+            resolutionTitle = @"未知";
+            break;
+        case TTVideoEngineResolutionTypeSD_L:
+            resolutionTitle = @"240P";
+            break;
+        case TTVideoEngineResolutionTypeHD_H:
+            resolutionTitle = @"540P";
+            break;
+        case TTVideoEngineResolutionTypeHDR:
+            resolutionTitle = @"HDR";
+            break;
+        case TTVideoEngineResolutionTypeHDR_240P:
+            resolutionTitle = @"240p HDR";
+            break;
+        case TTVideoEngineResolutionTypeHDR_360P:
+            resolutionTitle = @"360p HDR";
+            break;
+        case TTVideoEngineResolutionTypeHDR_480P:
+            resolutionTitle = @"480p HDR";
+            break;
+        case TTVideoEngineResolutionTypeHDR_540P:
+            resolutionTitle = @"540p HDR";
+            break;
+        case TTVideoEngineResolutionTypeHDR_720P:
+            resolutionTitle = @"720p HDR";
+            break;
+        case TTVideoEngineResolutionTypeHDR_1080P:
+            resolutionTitle = @"1080p HDR";
+            break;
+        case TTVideoEngineResolutionTypeHDR_2K:
+            resolutionTitle = @"2k HDR";
+            break;
+        case TTVideoEngineResolutionTypeHDR_4K:
+            resolutionTitle = @"4k HDR";
+            break;
+        case TTVideoEngineResolutionType2K:
+            resolutionTitle = @"2k";
+            break;
+        case TTVideoEngineResolutionType1080P_120F:
+            resolutionTitle = @"1080P_120F";
+            break;
+        case TTVideoEngineResolutionType2K_120F:
+            resolutionTitle = @"2K_120F";
+            break;
+        case TTVideoEngineResolutionType4K_120F:
+            resolutionTitle = @"4K_120F";
+            break;
+        default:
+            resolutionTitle = @"默认";
+            break;
+    }
+    return resolutionTitle;
 }
 
 #pragma mark - TTVideoEnginePreloadDelegate

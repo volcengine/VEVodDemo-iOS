@@ -15,8 +15,9 @@
 #import "VESliderControlView.h"
 #import "VEPlayerSeekState.h"
 #import "VEVideoPlayback.h"
+#import "UIView+BDShowView.h"
 
-@interface VEPlayerSeekModule () <VESliderControlViewDelegate>
+@interface VEPlayerSeekModule () <VESliderControlViewDelegate, VEPlayerGestureHandlerProtocol>
 
 @property (nonatomic, strong) VESliderControlView *sliderControlView;
 
@@ -27,6 +28,7 @@
 @property (nonatomic, weak) id<VEPlayerActionViewInterface> actionViewInterface;
 
 @property (nonatomic, strong) NSTimer *timer;
+
 @end
 
 @implementation VEPlayerSeekModule
@@ -73,6 +75,12 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
         @strongify(self);
         BOOL showSpeedTipView = [object boolValue];
         self.sliderControlView.userInteractionEnabled = !showSpeedTipView;
+    }];
+    
+    [self.context addKey:VEPlayerContextKeyViewVisible withObserver:self handler:^(NSNumber *shown, NSString * _Nullable key) {
+        @strongify(self);
+        BOOL value = [shown boolValue];
+        [self.sliderControlView showView:value];
     }];
 }
 

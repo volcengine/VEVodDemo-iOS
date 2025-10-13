@@ -10,9 +10,7 @@
 #import "VESettingManager.h"
 #import "VEVideoModel.h"
 #import "UIColor+RGB.h"
-
-#import "VEPlayerUIModule.h"
-#import "VEInterfaceFeedBlockSceneConf.h"
+#import "VEFeedVideoCellPlayerModuleLoader.h"
 #import "VEPlayerKit.h"
 #import <SDWebImage/SDWebImage.h>
 #import <Masonry/Masonry.h>
@@ -31,15 +29,7 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *avaImgView;
 
-@property (weak, nonatomic) IBOutlet UIImageView *coverImgView;
-
-@property (weak, nonatomic) IBOutlet UIImageView *playIconView;
-
-@property (weak, nonatomic) IBOutlet UIView *centerContainerView;
-
 @property (nonatomic, weak) VEVideoPlayerController *playerController;
-
-@property (nonatomic, strong) VEInterface *playerControlInterface;
 
 @property (nonatomic, assign) NSInteger currentPlayState;
 
@@ -61,13 +51,12 @@
     self.playIconView.hidden = NO;
     [self.contentView bringSubviewToFront:self.playIconView];
     self.coverImgView.hidden = NO;
-    [self.playerControlInterface removeFromSuperview];
-    [self.playerControlInterface destory];
-    self.playerControlInterface = nil;
     if (force) {
         [self.playerController stop];
         [self.playerController.view removeFromSuperview];
         self.playerController = nil;
+    }else {
+        [self.playerController pause];
     }
 }
 
@@ -103,16 +92,7 @@
             make.edges.equalTo(self.centerContainerView);
         }];
         [self.playerController loadBackgourdImageWithMediaSource:[VEVideoModel ConvertVideoEngineSource:self.videoModel]];
-        [self createPlayerControl];
     }
-}
-
-- (void)createPlayerControl {
-    self.playerControlInterface = [[VEInterface alloc] initWithPlayerCore:self.playerController scene:[VEInterfaceFeedBlockSceneConf new]];
-    [self.centerContainerView addSubview:self.playerControlInterface];
-    [self.playerControlInterface mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.centerContainerView);
-    }];
 }
 
 - (void)playerStart {
@@ -132,6 +112,5 @@
     VESettingModel *preload = [[VESettingManager universalManager] settingForKey:VESettingKeyShortVideoPreloadStrategy];
     self.playerController.preloadOpen = preload.open;
 }
-
 
 @end

@@ -232,7 +232,7 @@
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     CGPoint touchPoint = [[touches anyObject] locationInView:self];
     CGFloat movedX = touchPoint.x - self.beginPoint.x;
-    if (!self.touching && (ABS(movedX) > 13)) {
+    if (!self.touching && (ABS(movedX) > 5)) {
         self.touching = YES;
         self.beginValue = movedX;
     }

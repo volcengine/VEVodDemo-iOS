@@ -119,7 +119,7 @@ Pod::Spec.new do |s|
   s.dependency 'JSONModel'
   
   s.dependency 'VEPlayerKit'
-  s.dependency 'VEPlayerUIModule'
+
   s.dependency 'MJRefresh'
   s.dependency 'VEBaseKit'
   

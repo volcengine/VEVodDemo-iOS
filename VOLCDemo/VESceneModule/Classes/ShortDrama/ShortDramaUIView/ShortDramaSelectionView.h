@@ -21,8 +21,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id<ShortDramaSelectionViewDelegate> delegate;
 
-- (void)showView:(BOOL)show;
-
 - (void)reloadData:(VEDramaVideoInfoModel *)dramaVideoInfo;
 
 @end

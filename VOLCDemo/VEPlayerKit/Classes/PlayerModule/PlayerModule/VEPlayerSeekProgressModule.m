@@ -13,6 +13,7 @@
 #import <Masonry/Masonry.h>
 #import "VEPlayerSeekState.h"
 #import "VEVideoPlayback.h"
+#import "UIView+BDShowView.h"
 
 @interface VEPlayerSeekProgressModule ()
 

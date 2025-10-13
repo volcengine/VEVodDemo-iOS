@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface VEPlayerPipModule : VEPlayerBaseModule
 
+- (instancetype)initWithLeftOffset:(NSInteger)left TopOffset:(NSInteger)top;
+
 @end
 
 NS_ASSUME_NONNULL_END

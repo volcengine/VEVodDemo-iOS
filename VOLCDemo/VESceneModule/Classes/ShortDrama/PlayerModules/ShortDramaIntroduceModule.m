@@ -12,6 +12,7 @@
 #import <Masonry/Masonry.h>
 #import "VEDramaVideoInfoModel.h"
 #import "VEVideoPlayback.h"
+#import "UIView+BDShowView.h"
 
 @interface ShortDramaIntroduceModule ()
 

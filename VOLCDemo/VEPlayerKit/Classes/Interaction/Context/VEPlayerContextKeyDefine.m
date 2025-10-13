@@ -35,6 +35,8 @@ NSString * const VEPlayerContextKeyVideoTitleChanged = @"VEPlayerContextKeyVideo
 NSString * const VEPlayerContextKeyShowPanel = @"VEPlayerContextKeyShowPanel";
 NSString * const VEPlayerContextKeySliderMarkPoints = @"VEPlayerContextKeySliderMarkPoints";
 NSString * const VEPlayerContextKeySliderCirclePoints = @"VEPlayerContextKeySliderCirclePoints";
+NSString * const VEPlayerContextKeyViewVisible = @"VEPlayerContextKeyViewVisible";
+NSString * const VEPlayerContextKeyGestureEnabled = @"VEPlayerContextKeyGestureEnabled";
 
 #pragma mark - Seek
 NSString * const VEPlayerContextKeySliderSeekBegin = @"VEPlayerContextKeySliderSeekBegin";

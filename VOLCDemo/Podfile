@@ -9,7 +9,7 @@ install! 'cocoapods', :disable_input_output_paths => true
 target 'VOLCDemo' do
   
   # TTSDK-Player
-  pod 'TTSDKFramework', '1.45.3.102-premium', :subspecs => ['Player-SR']
+  pod 'TTSDKFramework', '1.48.1.9-premium', :subspecs => ['Player-SR']
   
   # vod main
   pod 'VEVodMain', :path=> './VEVodMain/'
@@ -19,8 +19,7 @@ target 'VOLCDemo' do
   pod 'VESceneModule', :path=> './VESceneModule/'
   # vod player kit
   pod 'VEPlayerKit', :path=> './VEPlayerKit/'
-  # vod player control UI kit
-  pod 'VEPlayerUIModule', :path=> './VEPlayerUIModule/'
+
   
   # public SDK
   pod 'Masonry'

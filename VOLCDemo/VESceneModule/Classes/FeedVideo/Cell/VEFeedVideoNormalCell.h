@@ -20,6 +20,12 @@
 
 @property (nonatomic, strong) VEVideoModel *videoModel;
 
+@property (weak, nonatomic) IBOutlet UIView *centerContainerView;
+
+@property (weak, nonatomic) IBOutlet UIImageView *coverImgView;
+
+@property (weak, nonatomic) IBOutlet UIImageView *playIconView;
+
 @property (nonatomic, weak) id<VEFeedVideoNormalCellDelegate> delegate;
 
 - (void)cellDidEndDisplay:(BOOL)force;
