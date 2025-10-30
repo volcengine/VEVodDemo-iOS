@@ -89,6 +89,9 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
 
         if (self.playerInterface.playbackState == VEVideoPlaybackStatePlaying) {
             [self _startTimer];
+        }else if (self.playerInterface.playbackState == VEVideoPlaybackStateStopped) {
+            [self.playerInterface play];
+            [self.playerInterface pause];
         }
         
         NSTimeInterval playbackTime = seekState.progress * seekState.duration;
