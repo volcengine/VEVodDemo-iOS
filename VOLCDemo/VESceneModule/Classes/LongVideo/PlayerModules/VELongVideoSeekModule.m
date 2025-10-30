@@ -78,11 +78,19 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
     }];
     [self.context addKey:VEPlayerContextKeySliderCancel withObserver:self handler:^(id  _Nullable object, NSString *key) {
         @strongify(self);
-        [self _startTimer];
+        if (self.playerInterface.playbackState == VEVideoPlaybackStatePlaying) {
+            [self _startTimer];
+        }else {
+            [self _timerHandle];
+        }
     }];
     [self.context addKey:VEPlayerContextKeySliderSeekEnd withObserver:self handler:^(VEPlayerSeekState *seekState, NSString *key) {
         @strongify(self);
-        [self _startTimer];
+
+        if (self.playerInterface.playbackState == VEVideoPlaybackStatePlaying) {
+            [self _startTimer];
+        }
+        
         NSTimeInterval playbackTime = seekState.progress * seekState.duration;
         [self.playerInterface seekToTime:playbackTime complete:nil renderComplete:nil];
     }];
