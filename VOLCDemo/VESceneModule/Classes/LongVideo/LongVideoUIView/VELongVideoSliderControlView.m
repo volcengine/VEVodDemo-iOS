@@ -26,6 +26,8 @@
 @property (nonatomic, assign) CGPoint beginPoint;
 @property (nonatomic, assign) CGFloat beginValue;
 
+@property (nonatomic, assign) NSInteger widthForTime;
+
 @end
 
 @implementation VELongVideoSliderControlView
@@ -36,6 +38,7 @@
         _thumbHeight = 4;
         _thumbOffset = 12;
         _sliderCoefficient = 3;
+        _widthForTime = 40;
         _contentMode = contentMode;
         _thumbImage = [UIImage imageNamed:@"icon_dot"];
         _thumbTouchImage = [UIImage imageNamed:@"icon_dot_big"];
@@ -48,6 +51,7 @@
 
 - (void)updateCustomViewsWithOri:(UIDeviceOrientation)ori {
     if (ori == UIDeviceOrientationPortrait) {
+        self.widthForTime = 40;
         [self.backView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.leading.equalTo(self).offset(self.thumbOffset + 40);
             make.trailing.equalTo(self).offset(-(self.thumbOffset + 40));
@@ -78,6 +82,7 @@
             make.centerY.equalTo(self.backView);
         }];
     }else if (ori == UIDeviceOrientationLandscapeRight) {
+        self.widthForTime = 0;
         [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.leading.equalTo(self).offset(self.thumbOffset);
             make.trailing.equalTo(self).offset(-(self.thumbOffset));
@@ -361,7 +366,7 @@
 }
 
 - (void)singleTapEventByMovedX:(CGFloat)movedX {
-    movedX -= self.thumbOffset;
+    movedX -= (self.thumbOffset + self.widthForTime);
     CGFloat totalWidth = self.backView.frame.size.width ?: 0.0;
     self.progressValue = (movedX / totalWidth);
     [self _progressValueChanged:self.progressValue];
