@@ -132,6 +132,7 @@ static NSString *VEFeedVideoNormalCellReuseID = @"VEFeedVideoNormalCellReuseID";
     } else {
         [self stopVideos:YES];
         VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfigurationFactory getConfiguration];
+        configration.videoViewMode = VEVideoViewModeAspectFit;
         self.moduleLoader = NULL;
         self.moduleLoader = [[VEFeedVideoCellPlayerModuleLoader alloc] init];
         self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:configration moduleLoader:self.moduleLoader playerContainerView:cell.centerContainerView];

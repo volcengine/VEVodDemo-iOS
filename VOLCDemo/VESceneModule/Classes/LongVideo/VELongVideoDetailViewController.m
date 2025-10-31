@@ -105,6 +105,7 @@
         self.moduleLoader = [[VELongVideoPlayerModuleLoader alloc] init];
         self.moduleLoader.curVC = self;
         VEVideoPlayerConfiguration *configration = [VEVideoPlayerConfigurationFactory getConfiguration];
+        configration.videoViewMode = VEVideoViewModeAspectFit;
         [VEPreRenderVideoEngineMediatorDelegate shareInstance].playerConfig = configration;
         self.playerController = [[VEVideoPlayerController alloc] initWithConfiguration:configration moduleLoader:self.moduleLoader playerContainerView:self.playContainerView];
     }
