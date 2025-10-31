@@ -30,6 +30,7 @@
     [coreModules addObject:[VEPlayerVisibleModule new]];
     [coreModules addObject:[VELongVideoSeekModule new]];
     [coreModules addObject:[ShortDramaPlayerSpeedModule new]];
+    [coreModules addObject:[VEPlayerLoadingModule new]];
     [coreModules addObject:[VELongVideoIntroduceModule new]];
     [coreModules addObject:[VELongVideoPlayButtonModule new]];
     [coreModules addObject:[VELongVideoOtherFunctionsModule new]];

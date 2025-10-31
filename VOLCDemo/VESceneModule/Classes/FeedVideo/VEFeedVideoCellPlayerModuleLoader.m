@@ -10,12 +10,14 @@
 #import "VEPlayerBackModule.h"
 #import "VEPlayerVisibleModule.h"
 #import "VELongVideoSeekModule.h"
+#import "VEPlayerLoadingModule.h"
 
 @implementation VEFeedVideoCellPlayerModuleLoader
 
 - (NSArray<id<VEPlayerBaseModuleProtocol>> *)getCoreModules {
     NSMutableArray *coreModules = [NSMutableArray array];
     [coreModules addObject:[VELongVideoPlayButtonModule new]];
+    [coreModules addObject:[VEPlayerLoadingModule new]];
     [coreModules addObject:[VEPlayerVisibleModule new]];
     [coreModules addObject:[[VELongVideoSeekModule alloc] initForCell:YES]];
     

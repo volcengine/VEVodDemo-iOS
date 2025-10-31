@@ -75,6 +75,7 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
     }];
     
     [self.context addKey:VEPlayerContextKeyLockControl withObserver:self handler:^(NSNumber *lock, NSString * _Nullable key) {
+        @strongify(self);
         BOOL value = [lock boolValue];
         self.isLocking = value;
         [self.backButton showView:!value];

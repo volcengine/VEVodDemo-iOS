@@ -29,6 +29,7 @@
     NSMutableArray *coreModules = [NSMutableArray array];
     [coreModules addObject:[VEPlayerVisibleModule new]];
     [coreModules addObject:[VELongVideoSeekModule new]];
+    [coreModules addObject:[VEPlayerLoadingModule new]];
     [coreModules addObject:[ShortDramaPlayerSpeedModule new]];
     [coreModules addObject:[VELongVideoIntroduceModule new]];
     [coreModules addObject:[VELongVideoPlayButtonModule new]];

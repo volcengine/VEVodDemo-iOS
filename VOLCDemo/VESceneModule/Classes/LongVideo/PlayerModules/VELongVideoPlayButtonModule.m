@@ -22,6 +22,8 @@
 
 @property (nonatomic, assign) BOOL isLocking;
 
+@property (nonatomic, assign) BOOL isLoading;
+
 @end
 
 @implementation VELongVideoPlayButtonModule
@@ -45,6 +47,11 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
         @strongify(self);
         if (!self.isLocking) {
             BOOL value = [shown boolValue];
+            if (value && self.isLoading) {
+                // 需要显示，但是正在 loading，所以不显示
+                [self.playButton showView:NO];
+                return;
+            }
             [self.playButton showView:value];
         }
     }];
@@ -60,9 +67,22 @@ VEPlayerContextDILink(actionViewInterface, VEPlayerActionViewInterface, self.con
     }];
     
     [self.context addKey:VEPlayerContextKeyLockControl withObserver:self handler:^(NSNumber *lock, NSString * _Nullable key) {
+        @strongify(self);
         BOOL value = [lock boolValue];
         self.isLocking = value;
         [self.playButton showView:!value];
+    }];
+    
+    [self.context addKey:VEPlayerContextKeyStartLoading withObserver:self handler:^(NSNumber *loadState, NSString * _Nullable key) {
+        @strongify(self);
+        self.isLoading = YES;
+        [self.playButton showView:NO];
+    }];
+    
+    [self.context addKey:VEPlayerContextKeyFinishLoading withObserver:self handler:^(id  _Nullable object, NSString * _Nullable key) {
+        @strongify(self);
+        self.isLoading = NO;
+        [self.playButton showView:YES];
     }];
 }
 
