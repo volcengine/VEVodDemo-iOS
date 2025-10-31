@@ -74,9 +74,10 @@ VEPlayerContextDILink(gestureService, VEPlayerGestureServiceInterface, self.cont
         [self updateLoadingState];
     }];
     
-    [self.context addKeys:@[VEPlayerContextKeyShowLoadingNetWorkSpeed, VEPlayerContextKeyRotateScreen] withObserver:self handler:^(id  _Nullable object, NSString *key) {
+    [self.context addKeys:@[VEPlayerContextKeyShowLoadingNetWorkSpeed, VEPlayerContextKeyRotateScreen] withObserver:self handler:^(NSNumber *ori, NSString *key) {
         @strongify(self);
-        [self updateLoadingView];
+        UIDeviceOrientation orientation = (UIDeviceOrientation)[ori intValue];
+        [self updateLoadingView:orientation];
     }];
 }
 
@@ -94,8 +95,8 @@ VEPlayerContextDILink(gestureService, VEPlayerGestureServiceInterface, self.cont
 }
 
 #pragma mark - Private Mehtod
-- (void)updateLoadingView {
-    BOOL isFullScreen = [[self.context objectForHandlerKey:VEPlayerContextKeyRotateScreen] isFullScreen];
+- (void)updateLoadingView:(UIDeviceOrientation)ori {
+    BOOL isFullScreen = (ori == UIDeviceOrientationPortrait) ? NO : YES;
     self.loadingView.isFullScreen = isFullScreen;
     self.loadingView.showNetSpeedTip = [self.context boolForHandlerKey:VEPlayerContextKeyShowLoadingNetWorkSpeed];
     self.loadingView.dataSource = self;
