@@ -87,4 +87,8 @@ end
 ## ChangeLog
 链接：https://www.volcengine.com/docs/4/66438
 
+## Security and privacy
+This project takes security seriously. 
+For vulnerability reporting and supported versions, see [SECURITY.md](SECURITY.md)
+
 
